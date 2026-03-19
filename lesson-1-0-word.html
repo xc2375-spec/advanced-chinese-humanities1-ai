@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 1.0 Word Explorer | Advanced Chinese for Humanities (I) AI</title>
+  <meta
+    name="description"
+    content="Lesson 1.0 Word Explorer for Advanced Chinese for Humanities (I): 天·地·人 vocabulary system."
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .lesson-hero {
+      padding-top: 2.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .lesson-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1rem 0 0;
+    }
+
+    .breadcrumb {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .lesson-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.25rem;
+      margin-top: 1.6rem;
+    }
+
+    .group-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .group-card h3,
+    .focus-card h3,
+    .vocab-card h3,
+    .tool-card h3,
+    .result-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      font-size: 1.08rem;
+      color: var(--primary-dark);
+    }
+
+    .group-card p,
+    .focus-card p,
+    .vocab-card p,
+    .tool-card p,
+    .result-card p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 0.9rem;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.42rem 0.75rem;
+      border-radius: 999px;
+      background: #f6ecdf;
+      color: var(--primary-dark);
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: 1px solid #e2d0b8;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .chip:hover {
+      background: #f1e2cd;
+      transform: translateY(-1px);
+    }
+
+    .focus-stack {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .focus-list {
+      margin: 0.7rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+    }
+
+    .focus-list li + li {
+      margin-top: 0.35rem;
+    }
+
+    .vocab-table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    table.vocab-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .vocab-table th,
+    .vocab-table td {
+      padding: 0.78rem 0.85rem;
+      border-bottom: 1px solid #eadfce;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.95rem;
+    }
+
+    .vocab-table th {
+      background: #f7efe3;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .vocab-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .vocab-table tr:hover {
+      background: #fcf8f2;
+    }
+
+    .hanzi {
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    .section-block + .section-block {
+      margin-top: 1.25rem;
+    }
+
+    .ai-prompt-box {
+      background: linear-gradient(180deg, #fffaf3 0%, #f6ede1 100%);
+      border: 1px solid #dfcfbd;
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+    }
+
+    .ai-prompt-box ul {
+      margin: 0.8rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+    }
+
+    .ai-prompt-box li + li {
+      margin-top: 0.35rem;
+    }
+
+    .tools-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 1.25rem;
+      margin-top: 1.2rem;
+    }
+
+    .tool-grid {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .tool-card label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--primary-dark);
+      font-size: 0.95rem;
+    }
+
+    .tool-card input,
+    .tool-card textarea,
+    .tool-card select {
+      width: 100%;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid #d9c7b1;
+      border-radius: 12px;
+      background: #fffdf9;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .tool-card textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .tool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .tool-btn {
+      border: none;
+      min-height: 44px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .tool-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .tool-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .tool-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .result-card {
+      min-height: 420px;
+    }
+
+    .result-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .result-box {
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fffdf9;
+      border: 1px solid #e7dac7;
+      border-radius: 14px;
+      padding: 1rem;
+      min-height: 290px;
+    }
+
+    .loading {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .error-text {
+      color: #a33a2b;
+      font-weight: 700;
+    }
+
+    .small-note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 0.7rem;
+    }
+
+    @media (max-width: 960px) {
+      .lesson-grid,
+      .group-grid,
+      .tools-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH1 AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities (I)</h1>
+          <p class="site-subtitle">人文天下：高级汉语教程·上</p>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="word-explorer.html">Word Explorer</a>
+        <a href="#vocabulary">Vocabulary</a>
+        <a href="#ai-tools">AI Tools</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <div class="container">
+        <div class="breadcrumb">Home → Word Explorer → Unit 1 → Lesson 1.0</div>
+        <p class="eyebrow">Lesson 1.0</p>
+        <h2 class="page-title">天·地·人</h2>
+        <p class="page-intro">
+          This opening lesson introduces a vocabulary network around the universe,
+          creation myths, civilization, science, and the human search for origins.
+          Instead of memorizing words one by one, students are encouraged to see how
+          these words connect to larger concepts.
+        </p>
+
+        <div class="lesson-meta">
+          <span class="tag">Unit 1: 上下五千年</span>
+          <span class="tag">Theme: Cosmos, Myth, Civilization</span>
+          <span class="tag">Module: Word Explorer</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Concept groups</p>
+          <h2>Vocabulary as a network</h2>
+        </div>
+
+        <div class="group-grid">
+          <div class="card group-card">
+            <h3>A. 宇宙与起源</h3>
+            <p>How do people explain where the world comes from?</p>
+            <div class="chip-list">
+              <button class="chip quick-word" data-word="宇宙">宇宙</button>
+              <button class="chip quick-word" data-word="形成">形成</button>
+              <button class="chip quick-word" data-word="起源">起源</button>
+              <button class="chip quick-word" data-word="天文">天文</button>
+              <button class="chip quick-word" data-word="望远镜">望远镜</button>
+              <button class="chip quick-word" data-word="科学家">科学家</button>
+              <button class="chip quick-word" data-word="提出">提出</button>
+              <button class="chip quick-word" data-word="理论">理论</button>
+              <button class="chip quick-word" data-word="爆炸">爆炸</button>
+              <button class="chip quick-word" data-word="继续">继续</button>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>B. 神话与文明</h3>
+            <p>Myths and legends are also ways for civilizations to describe the world.</p>
+            <div class="chip-list">
+              <button class="chip quick-word" data-word="神">神</button>
+              <button class="chip quick-word" data-word="神话">神话</button>
+              <button class="chip quick-word" data-word="传说">传说</button>
+              <button class="chip quick-word" data-word="描述">描述</button>
+              <button class="chip quick-word" data-word="文明">文明</button>
+              <button class="chip quick-word" data-word="记载">记载</button>
+              <button class="chip quick-word" data-word="创造">创造</button>
+              <button class="chip quick-word" data-word="英雄">英雄</button>
+              <button class="chip quick-word" data-word="开天辟地">开天辟地</button>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>C. 世界的构成</h3>
+            <p>Words that describe how the world and life take shape.</p>
+            <div class="chip-list">
+              <button class="chip quick-word" data-word="混沌">混沌</button>
+              <button class="chip quick-word" data-word="山川">山川</button>
+              <button class="chip quick-word" data-word="海洋">海洋</button>
+              <button class="chip quick-word" data-word="黑夜">黑夜</button>
+              <button class="chip quick-word" data-word="陆地">陆地</button>
+              <button class="chip quick-word" data-word="植物">植物</button>
+              <button class="chip quick-word" data-word="泥土">泥土</button>
+              <button class="chip quick-word" data-word="血">血</button>
+              <button class="chip quick-word" data-word="一切">一切</button>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>D. 对立、结合与变化</h3>
+            <p>Pairs and process words help students see contrast, division, and union.</p>
+            <div class="chip-list">
+              <button class="chip quick-word" data-word="阳性">阳性</button>
+              <button class="chip quick-word" data-word="阴性">阴性</button>
+              <button class="chip quick-word" data-word="混合">混合</button>
+              <button class="chip quick-word" data-word="混乱">混乱</button>
+              <button class="chip quick-word" data-word="结合">结合</button>
+              <button class="chip quick-word" data-word="分成">分成</button>
+              <button class="chip quick-word" data-word="浮">浮</button>
+              <button class="chip quick-word" data-word="沉">沉</button>
+              <button class="chip quick-word" data-word="反映">反映</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container lesson-grid">
+        <div>
+          <div class="card focus-card section-block">
+            <h3>Focus patterns</h3>
+            <ul class="focus-list">
+              <li><strong>混</strong> family: 混沌 / 混合 / 混乱</li>
+              <li><strong>神</strong> family: 神 / 神话</li>
+              <li>Process words: 形成 / 分成 / 结合 / 创造</li>
+              <li>Contrast pair: 浮 / 沉</li>
+              <li>Concept pair: 阳性 / 阴性</li>
+            </ul>
+          </div>
+
+          <div class="card focus-card section-block">
+            <h3>Proper nouns in this lesson</h3>
+            <div class="chip-list">
+              <span class="chip">盘古</span>
+              <span class="chip">埃及</span>
+              <span class="chip">巴比伦</span>
+              <span class="chip">印度</span>
+              <span class="chip">希腊</span>
+              <span class="chip">圣经</span>
+              <span class="chip">夏娃</span>
+              <span class="chip">女娲</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="focus-stack">
+          <div class="ai-prompt-box">
+            <h3 style="margin-top: 0; margin-bottom: 0.55rem;">AI-ready directions</h3>
+            <p style="margin: 0; color: var(--muted);">
+              Click a word chip below or use the tools section to explore explanation,
+              comparison, sentence building, and discussion support.
+            </p>
+            <ul>
+              <li>Explain the difference between <strong>神话</strong> and <strong>传说</strong>.</li>
+              <li>Compare <strong>混沌</strong>, <strong>混合</strong>, and <strong>混乱</strong>.</li>
+              <li>Use <strong>形成</strong> and <strong>起源</strong> in two different sentences.</li>
+              <li>Discuss how <strong>神话</strong> and science explain the world differently.</li>
+            </ul>
+          </div>
+
+          <div class="card focus-card">
+            <h3>Learning goal</h3>
+            <p>
+              Students should begin to notice that advanced vocabulary is often easier
+              to remember when grouped by concept, structure, and contrast.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg" id="ai-tools">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">AI tools</p>
+          <h2>Explore, compare, and discuss</h2>
+        </div>
+
+        <div class="tools-layout">
+          <div class="tool-grid">
+            <div class="card tool-card">
+              <h3>Word tool</h3>
+              <p>Use one word for explanation or sentence generation.</p>
+
+              <label for="singleWordInput">Target word</label>
+              <input
+                id="singleWordInput"
+                type="text"
+                placeholder="e.g. 混沌 / 神话 / 起源"
+              />
+
+              <label for="lessonContextInput" style="margin-top: 0.9rem;">Lesson context</label>
+              <textarea id="lessonContextInput">This lesson discusses mythology, creation stories, scientific explanations of origin, and the human search for where the world comes from.</textarea>
+
+              <div class="tool-actions">
+                <button class="tool-btn" id="explainWordBtn">Explain Word</button>
+                <button class="tool-btn secondary" id="makeSentenceBtn">Make Sentence</button>
+              </div>
+            </div>
+
+            <div class="card tool-card">
+              <h3>Compare two words</h3>
+              <p>Useful for concept pairs and similar words.</p>
+
+              <label for="wordAInput">Word A</label>
+              <input id="wordAInput" type="text" placeholder="e.g. 神话" />
+
+              <label for="wordBInput" style="margin-top: 0.9rem;">Word B</label>
+              <input id="wordBInput" type="text" placeholder="e.g. 传说" />
+
+              <div class="tool-actions">
+                <button class="tool-btn" id="compareWordsBtn">Compare Words</button>
+              </div>
+            </div>
+
+            <div class="card tool-card">
+              <h3>Support discussion</h3>
+              <p>Prepare students to speak and respond in class discussion.</p>
+
+              <label for="discussionQuestionInput">Discussion question</label>
+              <textarea id="discussionQuestionInput">神话和科学在解释世界起源时有什么不同？</textarea>
+
+              <div class="tool-actions">
+                <button class="tool-btn" id="supportDiscussionBtn">Support Discussion</button>
+              </div>
+
+              <p class="small-note">
+                Tip: click a word chip above first, then compare or discuss around that concept.
+              </p>
+            </div>
+          </div>
+
+          <div class="card result-card">
+            <h3>AI response</h3>
+
+            <div class="result-meta">
+              <span class="tag">Course: humanities1</span>
+              <span class="tag">Lesson: 1-0</span>
+              <span class="tag" id="currentTaskTag">Task: —</span>
+            </div>
+
+            <div id="resultBox" class="result-box">
+Choose a tool to get started.
+            </div>
+
+            <div class="tool-actions" style="margin-top: 1rem;">
+              <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg" id="vocabulary">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Vocabulary list</p>
+          <h2>Lesson 1.0 New Words</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <p>
+            This is the full vocabulary list for the lesson. Later, this table can be
+            turned into searchable cards, filters, and clickable word-family links.
+          </p>
+
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>词语</th>
+                  <th>Pinyin</th>
+                  <th>POS</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">宇宙</td><td>yǔzhòu</td><td>N</td><td>universe, cosmos</td></tr>
+                <tr><td>2</td><td class="hanzi">形成</td><td>xíngchéng</td><td>V</td><td>to form</td></tr>
+                <tr><td>3</td><td class="hanzi">自</td><td>zì</td><td>Prep</td><td>from, since</td></tr>
+                <tr><td>4</td><td class="hanzi">人类</td><td>rénlèi</td><td>N</td><td>mankind, humanity</td></tr>
+                <tr><td>5</td><td class="hanzi">起源</td><td>qǐyuán</td><td>N/V</td><td>origin; to originate</td></tr>
+                <tr><td>6</td><td class="hanzi">牵动</td><td>qiāndòng</td><td>V</td><td>to influence, to affect</td></tr>
+                <tr><td>7</td><td class="hanzi">好奇心</td><td>hàoqíxīn</td><td>N</td><td>curiosity</td></tr>
+                <tr><td>8</td><td class="hanzi">文明</td><td>wénmíng</td><td>N</td><td>civilization</td></tr>
+                <tr><td>9</td><td class="hanzi">描述</td><td>miáoshù</td><td>V</td><td>to describe</td></tr>
+                <tr><td>10</td><td class="hanzi">传说</td><td>chuánshuō</td><td>N/V</td><td>legend; legend has it that...</td></tr>
+                <tr><td>11</td><td class="hanzi">太阳</td><td>tàiyáng</td><td>N</td><td>sun</td></tr>
+                <tr><td>12</td><td class="hanzi">神</td><td>shén</td><td>N</td><td>god, deity</td></tr>
+                <tr><td>13</td><td class="hanzi">神话</td><td>shénhuà</td><td>N</td><td>myth, mythology</td></tr>
+                <tr><td>14</td><td class="hanzi">至于</td><td>zhìyú</td><td>Prep</td><td>as for, as to</td></tr>
+                <tr><td>15</td><td class="hanzi">世纪</td><td>shìjì</td><td>N</td><td>century</td></tr>
+                <tr><td>16</td><td class="hanzi">天文</td><td>tiānwén</td><td>N</td><td>astronomy</td></tr>
+                <tr><td>17</td><td class="hanzi">望远镜</td><td>wàngyuǎnjìng</td><td>N</td><td>telescope</td></tr>
+                <tr><td>18</td><td class="hanzi">猜测</td><td>cāicè</td><td>V</td><td>to conjecture, to guess</td></tr>
+                <tr><td>19</td><td class="hanzi">科学家</td><td>kēxuéjiā</td><td>N</td><td>scientist</td></tr>
+                <tr><td>20</td><td class="hanzi">提出</td><td>tíchū</td><td>V</td><td>to put forward, to raise, to propose</td></tr>
+                <tr><td>21</td><td class="hanzi">爆炸</td><td>bàozhà</td><td>V</td><td>to explode</td></tr>
+                <tr><td>22</td><td class="hanzi">理论</td><td>lǐlùn</td><td>N</td><td>theory, principle</td></tr>
+                <tr><td>23</td><td class="hanzi">亿</td><td>yì</td><td>Num</td><td>100 million</td></tr>
+                <tr><td>24</td><td class="hanzi">继续</td><td>jìxù</td><td>V</td><td>to continue, to go on</td></tr>
+                <tr><td>25</td><td class="hanzi">片</td><td>piàn</td><td>M</td><td>for a stretch of land, space, etc.</td></tr>
+                <tr><td>26</td><td class="hanzi">混沌</td><td>hùndùn</td><td>N</td><td>chaos, turbid</td></tr>
+                <tr><td>27</td><td class="hanzi">山川</td><td>shānchuān</td><td>N</td><td>mountains and rivers</td></tr>
+                <tr><td>28</td><td class="hanzi">海洋</td><td>hǎiyáng</td><td>N</td><td>seas and ocean, ocean</td></tr>
+                <tr><td>29</td><td class="hanzi">英雄</td><td>yīngxióng</td><td>N</td><td>hero</td></tr>
+                <tr><td>30</td><td class="hanzi">记载</td><td>jìzǎi</td><td>V</td><td>to record</td></tr>
+                <tr><td>31</td><td class="hanzi">创造</td><td>chuàngzào</td><td>V</td><td>to create, to produce</td></tr>
+                <tr><td>32</td><td class="hanzi">黑夜</td><td>hēiyè</td><td>N</td><td>night, evening</td></tr>
+                <tr><td>33</td><td class="hanzi">陆地</td><td>lùdì</td><td>N</td><td>dry land, land</td></tr>
+                <tr><td>34</td><td class="hanzi">植物</td><td>zhíwù</td><td>N</td><td>plant, flora</td></tr>
+                <tr><td>35</td><td class="hanzi">肋骨</td><td>lèigǔ</td><td>N</td><td>rib</td></tr>
+                <tr><td>36</td><td class="hanzi">伊甸园</td><td>yīdiànyuán</td><td>N</td><td>Garden of Eden, paradise</td></tr>
+                <tr><td>37</td><td class="hanzi">淡</td><td>dàn</td><td>Adj</td><td>tasteless, not salty enough, fresh</td></tr>
+                <tr><td>38</td><td class="hanzi">阳性</td><td>yángxìng</td><td>N</td><td>masculine</td></tr>
+                <tr><td>39</td><td class="hanzi">咸</td><td>xián</td><td>Adj</td><td>salty</td></tr>
+                <tr><td>40</td><td class="hanzi">阴性</td><td>yīnxìng</td><td>N</td><td>feminine</td></tr>
+                <tr><td>41</td><td class="hanzi">混合</td><td>hùnhé</td><td>V</td><td>to mix, to blend</td></tr>
+                <tr><td>42</td><td class="hanzi">混乱</td><td>hùnluàn</td><td>Adj</td><td>chaotic</td></tr>
+                <tr><td>43</td><td class="hanzi">力气</td><td>lìqi</td><td>N</td><td>physical strength, effort</td></tr>
+                <tr><td>44</td><td class="hanzi">杀死</td><td>shāsǐ</td><td>VC</td><td>to kill, to slay</td></tr>
+                <tr><td>45</td><td class="hanzi">血</td><td>xiě</td><td>N</td><td>blood</td></tr>
+                <tr><td>46</td><td class="hanzi">泥土</td><td>nítǔ</td><td>N</td><td>soil, earth</td></tr>
+                <tr><td>47</td><td class="hanzi">侍奉</td><td>shìfèng</td><td>V</td><td>to wait upon, to attend to (somebody)</td></tr>
+                <tr><td>48</td><td class="hanzi">唾液</td><td>tuòyè</td><td>N</td><td>saliva, spittle</td></tr>
+                <tr><td>49</td><td class="hanzi">结合</td><td>jiéhé</td><td>V</td><td>to combine, to be united in wedlock</td></tr>
+                <tr><td>50</td><td class="hanzi">一切</td><td>yíqiè</td><td>Pron</td><td>every, everything, all</td></tr>
+                <tr><td>51</td><td class="hanzi">怪物</td><td>guàiwù</td><td>N</td><td>monster, eccentric person</td></tr>
+                <tr><td>52</td><td class="hanzi">吓</td><td>xià</td><td>V</td><td>to frighten, to scare, to intimidate</td></tr>
+                <tr><td>53</td><td class="hanzi">开天辟地</td><td>kāitiān-pìdì</td><td>IE</td><td>the creation of heaven and earth; the beginning of history</td></tr>
+                <tr><td>54</td><td class="hanzi">踢</td><td>tī</td><td>V</td><td>to kick, to play</td></tr>
+                <tr><td>55</td><td class="hanzi">碎</td><td>suì</td><td>V/Adj</td><td>to break into pieces; broken</td></tr>
+                <tr><td>56</td><td class="hanzi">浮</td><td>fú</td><td>V</td><td>to float</td></tr>
+                <tr><td>57</td><td class="hanzi">沉</td><td>chén</td><td>V</td><td>to sink, to immerse</td></tr>
+                <tr><td>58</td><td class="hanzi">荒凉</td><td>huāngliáng</td><td>Adj</td><td>desolate, bleak, wild</td></tr>
+                <tr><td>59</td><td class="hanzi">生气</td><td>shēngqì</td><td>N</td><td>vitality</td></tr>
+                <tr><td>60</td><td class="hanzi">不禁</td><td>bùjīn</td><td>Adv</td><td>can't help (doing sth.)</td></tr>
+                <tr><td>61</td><td class="hanzi">孤独</td><td>gūdú</td><td>Adj</td><td>lonely, solitary</td></tr>
+                <tr><td>62</td><td class="hanzi">延续</td><td>yánxù</td><td>V</td><td>to last, to go on</td></tr>
+                <tr><td>63</td><td class="hanzi">分成</td><td>fēnchéng</td><td>VC</td><td>to divide into, to separate into</td></tr>
+                <tr><td>64</td><td class="hanzi">反映</td><td>fǎnyìng</td><td>V</td><td>to reflect, to mirror</td></tr>
+                <tr><td>65</td><td class="hanzi">征服</td><td>zhēngfú</td><td>V</td><td>to conquer</td></tr>
+                <tr><td>66</td><td class="hanzi">愿望</td><td>yuànwàng</td><td>N</td><td>desire, wish</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="hero-actions">
+          <a class="btn btn-secondary" href="word-explorer.html">Back to Word Explorer</a>
+          <a class="btn btn-primary" href="lesson-1-1-word.html">Next lesson</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Advanced Chinese for Humanities (I) AI</p>
+      <p>Lesson 1.0 Word Explorer</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const WORKER_URL = "https://quiet-field-a529.xc2375.workers.dev";
+    const singleWordInput = document.getElementById("singleWordInput");
+    const lessonContextInput = document.getElementById("lessonContextInput");
+    const wordAInput = document.getElementById("wordAInput");
+    const wordBInput = document.getElementById("wordBInput");
+    const discussionQuestionInput = document.getElementById("discussionQuestionInput");
+    const resultBox = document.getElementById("resultBox");
+    const currentTaskTag = document.getElementById("currentTaskTag");
+
+    const explainWordBtn = document.getElementById("explainWordBtn");
+    const makeSentenceBtn = document.getElementById("makeSentenceBtn");
+    const compareWordsBtn = document.getElementById("compareWordsBtn");
+    const supportDiscussionBtn = document.getElementById("supportDiscussionBtn");
+    const clearResultBtn = document.getElementById("clearResultBtn");
+
+    function setLoading(taskName) {
+      currentTaskTag.textContent = `Task: ${taskName}`;
+      resultBox.innerHTML = '<span class="loading">Thinking…</span>';
+    }
+
+    function setError(message) {
+      resultBox.innerHTML = `<span class="error-text">${message}</span>`;
+    }
+
+    function setResult(text) {
+      resultBox.textContent = text;
+    }
+
+    async function callHumanitiesTool(payload, taskLabel) {
+      try {
+        setLoading(taskLabel);
+
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed.");
+        }
+
+        const resultText = data.result || data.feedback || "No response returned.";
+        setResult(resultText);
+      } catch (error) {
+        setError(error.message || "Something went wrong.");
+      }
+    }
+
+    explainWordBtn.addEventListener("click", async () => {
+      const word = singleWordInput.value.trim();
+      if (!word) {
+        setError("Please enter a target word first.");
+        return;
+      }
+
+      await callHumanitiesTool(
+        {
+          course: "humanities1",
+          lesson: "1-0",
+          task: "explain_word",
+          input: word,
+          context: lessonContextInput.value.trim()
+        },
+        "Explain Word"
+      );
+    });
+
+    makeSentenceBtn.addEventListener("click", async () => {
+      const word = singleWordInput.value.trim();
+      if (!word) {
+        setError("Please enter a target word first.");
+        return;
+      }
+
+      await callHumanitiesTool(
+        {
+          course: "humanities1",
+          lesson: "1-0",
+          task: "make_sentence",
+          input: word,
+          context: lessonContextInput.value.trim()
+        },
+        "Make Sentence"
+      );
+    });
+
+    compareWordsBtn.addEventListener("click", async () => {
+      const wordA = wordAInput.value.trim();
+      const wordB = wordBInput.value.trim();
+
+      if (!wordA || !wordB) {
+        setError("Please enter both Word A and Word B.");
+        return;
+      }
+
+      await callHumanitiesTool(
+        {
+          course: "humanities1",
+          lesson: "1-0",
+          task: "compare_words",
+          wordA,
+          wordB,
+          context: lessonContextInput.value.trim()
+        },
+        "Compare Words"
+      );
+    });
+
+    supportDiscussionBtn.addEventListener("click", async () => {
+      const question = discussionQuestionInput.value.trim();
+      if (!question) {
+        setError("Please enter a discussion question.");
+        return;
+      }
+
+      await callHumanitiesTool(
+        {
+          course: "humanities1",
+          lesson: "1-0",
+          task: "support_discussion",
+          discussionQuestion: question,
+          context: lessonContextInput.value.trim()
+        },
+        "Support Discussion"
+      );
+    });
+
+    clearResultBtn.addEventListener("click", () => {
+      currentTaskTag.textContent = "Task: —";
+      resultBox.textContent = "Choose a tool to get started.";
+    });
+
+    document.querySelectorAll(".quick-word").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const word = chip.dataset.word || chip.textContent.trim();
+        singleWordInput.value = word;
+        window.location.hash = "ai-tools";
+      });
+    });
+  </script>
+</body>
+</html>
