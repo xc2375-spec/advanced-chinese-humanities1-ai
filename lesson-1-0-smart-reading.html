@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 1.0 Smart Reading | Advanced Chinese for Humanities (I) AI</title>
+  <meta
+    name="description"
+    content="Smart Reading for Lesson 1.0: 中秋节的传说"
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .lesson-hero {
+      padding-top: 2.5rem;
+      padding-bottom: 1.2rem;
+    }
+
+    .breadcrumb {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .lesson-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+
+    .reading-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .audio-card h3,
+    .reading-card h3,
+    .quiz-card h3,
+    .question-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.65rem;
+      color: var(--primary-dark);
+    }
+
+    .audio-card p,
+    .reading-card p,
+    .quiz-card p,
+    .question-card p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .audio-player-wrap {
+      margin-top: 0.8rem;
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      background: #fbf6f0;
+      border: 1px solid #eadfce;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .reading-text {
+      font-size: 1.08rem;
+      line-height: 2.1;
+      color: var(--text);
+    }
+
+    .reading-text p {
+      margin: 0 0 1.2rem 0;
+      text-indent: 2em;
+    }
+
+    .gloss {
+      color: var(--primary-dark);
+      border-bottom: 1.5px dotted #c89d6b;
+      cursor: pointer;
+      transition: background 0.18s ease;
+      padding: 0 0.05em;
+      border-radius: 4px;
+    }
+
+    .gloss:hover {
+      background: #fbf1e5;
+    }
+
+    .word-tooltip {
+      position: fixed;
+      z-index: 9999;
+      min-width: 170px;
+      max-width: 250px;
+      background: #fffdf9;
+      border: 1px solid #decbb2;
+      border-radius: 14px;
+      box-shadow: 0 12px 28px rgba(80, 56, 32, 0.14);
+      padding: 0.75rem 0.85rem;
+      display: none;
+      pointer-events: none;
+    }
+
+    .word-tooltip.show {
+      display: block;
+    }
+
+    .tooltip-word {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.2rem;
+      font-size: 1rem;
+    }
+
+    .tooltip-pinyin {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 0.22rem;
+    }
+
+    .tooltip-english {
+      color: var(--text);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .quiz-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .question-card {
+      padding: 1rem;
+      border: 1px solid #eadfce;
+      border-radius: 16px;
+      background: #fffdf9;
+    }
+
+    .question-title {
+      font-weight: 700;
+      line-height: 1.55;
+      margin-bottom: 0.85rem;
+      color: var(--text);
+    }
+
+    .options {
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .option {
+      display: flex;
+      gap: 0.55rem;
+      align-items: flex-start;
+      padding: 0.65rem 0.7rem;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #eadfce;
+    }
+
+    .option input {
+      margin-top: 0.15rem;
+    }
+
+    .question-actions {
+      margin-top: 0.85rem;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: none;
+      min-height: 38px;
+      padding: 0 0.95rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .small-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .small-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .small-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .feedback {
+      margin-top: 0.9rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      border: 1px solid #eadfce;
+      display: none;
+      white-space: pre-wrap;
+      line-height: 1.65;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.correct {
+      background: #f7fbf5;
+      border-color: #cdddc6;
+    }
+
+    .feedback.incorrect {
+      background: #fff8f6;
+      border-color: #e4c8c1;
+    }
+
+    .reading-note {
+      margin-top: 0.8rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+      .reading-text {
+        font-size: 1.02rem;
+        line-height: 1.95;
+      }
+
+      .word-tooltip {
+        max-width: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH1 AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities (I)</h1>
+          <p class="site-subtitle">人文天下：高级汉语教程·上</p>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="smart-reading.html">Smart Reading</a>
+        <a href="#reading-text">Reading</a>
+        <a href="#quiz">Quiz</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <div class="container">
+        <div class="breadcrumb">Home → Smart Reading → Unit 1 → Lesson 1.0</div>
+        <p class="eyebrow">Lesson 1.0 Smart Reading</p>
+        <h2 class="page-title">中秋节的传说</h2>
+        <p class="page-intro">
+          Read the story, listen to the audio, and use word pop-ups to support comprehension.
+        </p>
+
+        <div class="lesson-meta">
+          <span class="tag">Unit 1: 上下五千年</span>
+          <span class="tag">Reading: Extended Reading</span>
+          <span class="tag">Theme: Legend, 嫦娥, 中秋节</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container reading-layout">
+        <div class="card audio-card">
+          <h3>Audio Reading</h3>
+          <p>
+            Listen first, then read. After you upload the audio file, replace the
+            <strong>src</strong> below with your final mp3 path.
+          </p>
+
+          <div class="audio-player-wrap">
+            <div><strong>Current placeholder:</strong> <code>audio/lesson-1-0-reading.mp3</code></div>
+            <audio controls>
+              <source src="audio/lesson-1-0-reading.mp3" type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+
+        <div class="card reading-card" id="reading-text">
+          <h3>Reading Text</h3>
+          <p>
+            On desktop: hover over highlighted words.<br />
+            On mobile: tap a word to see pinyin and English, then tap elsewhere to close it.
+          </p>
+
+          <div class="reading-note">
+            Try this order: <strong>listen once → read once → check pop-up words → answer the questions</strong>.
+          </div>
+
+          <div class="reading-text">
+            <p>
+              据说<span class="gloss" data-word="远古" data-pinyin="yuǎngǔ" data-english="remote antiquity; ancient times">远古</span>的时候，
+              有一年天上出现了十个太阳。这十个太阳把大地烤得很热，把海水都快烤干了，
+              老百姓没办法再继续生活下去。就在这个时候，不知从哪儿来了一个名叫
+              <span class="gloss" data-word="后羿" data-pinyin="Hòuyì" data-english="Hou Yi, a legendary hero">后羿</span>的英雄。
+              他拿着一把很长的<span class="gloss" data-word="弓箭" data-pinyin="gōngjiàn" data-english="bow and arrow">弓箭</span>，
+              爬到西边一座高山上，用全身的力气拉开弓，不一会儿就
+              <span class="gloss" data-word="射" data-pinyin="shè" data-english="to shoot">射</span>下了九个太阳。
+            </p>
+
+            <p>
+              天上只<span class="gloss" data-word="剩下" data-pinyin="shèngxià" data-english="to be left">剩下</span>一个太阳，
+              大地上的一切又都<span class="gloss" data-word="正常" data-pinyin="zhèngcháng" data-english="normal">正常</span>了。
+              人们很<span class="gloss" data-word="感谢" data-pinyin="gǎnxiè" data-english="to thank; to appreciate">感谢</span>后羿，
+              也非常<span class="gloss" data-word="佩服" data-pinyin="pèifú" data-english="to admire">佩服</span>他的能力，
+              因此，大家从各地来找后羿，希望跟他学习
+              <span class="gloss" data-word="箭术" data-pinyin="jiànshù" data-english="archery">箭术</span>。
+              后羿的学生一年比一年多，有一个叫
+              <span class="gloss" data-word="逢蒙" data-pinyin="Pángméng" data-english="Pang Meng, name of a person">逢蒙</span>的年轻人
+              也从很远的东方来到这里，成了后羿的学生。
+            </p>
+
+            <p>
+              几年后，后羿<span class="gloss" data-word="娶" data-pinyin="qǔ" data-english="to marry (for a man)">娶</span>了一个
+              美丽<span class="gloss" data-word="善良" data-pinyin="shànliáng" data-english="kind-hearted">善良</span>的妻子，
+              名叫<span class="gloss" data-word="嫦娥" data-pinyin="Cháng'é" data-english="Chang'e, name of a person">嫦娥</span>。
+              夫妻俩感情很好，后羿一有空就回家帮助妻子做家务。
+              人们都很<span class="gloss" data-word="羡慕" data-pinyin="xiànmù" data-english="to envy">羡慕</span>这对
+              <span class="gloss" data-word="恩爱" data-pinyin="ēn'ài" data-english="affectionate; loving">恩爱</span>的夫妻。
+              一天，后羿到西山上去看一个老朋友，没想到在路上遇到了从这里经过的女神
+              <span class="gloss" data-word="王母娘娘" data-pinyin="Wángmǔniángniang" data-english="an ancient goddess">王母娘娘</span>。
+            </p>
+
+            <p>
+              后羿早就听说王母娘娘住在西山附近，而且有不死药，他就
+              <span class="gloss" data-word="求" data-pinyin="qiú" data-english="to beg; to request">求</span>王母娘娘给自己一包不死药。
+              王母娘娘听说过后羿射日的事，也很喜欢这个年轻人，就给了他一小包不死药。
+              据说，人吃下这种药，能马上升天
+              <span class="gloss" data-word="成仙" data-pinyin="chéngxiān" data-english="to become an immortal">成仙</span>。
+              但后羿不想离开妻子一个人成仙，回到家后，后羿让嫦娥把不死药先
+              <span class="gloss" data-word="藏" data-pinyin="cáng" data-english="to hide">藏</span>起来，
+              等以后需要的时候再用。嫦娥就把药
+              <span class="gloss" data-word="锁" data-pinyin="suǒ" data-english="to lock">锁</span>在一个小
+              <span class="gloss" data-word="盒子" data-pinyin="hézi" data-english="box">盒子</span>里。
+              但这一切都让后羿的学生逢蒙看到了。
+            </p>
+
+            <p>
+              八月十五那天，后羿带学生们出去
+              <span class="gloss" data-word="打猎" data-pinyin="dǎliè" data-english="to hunt">打猎</span>，
+              逢蒙就找借口说自己身体不舒服，想待在家里。等后羿带大家离开后，
+              逢蒙就拿着一把刀来到后羿的家，
+              <span class="gloss" data-word="逼" data-pinyin="bī" data-english="to force">逼</span>嫦娥拿出不死药。
+              嫦娥知道自己打不过逢蒙，她
+              <span class="gloss" data-word="当机立断" data-pinyin="dāngjī-lìduàn" data-english="to make an immediate decision">当机立断</span>，
+              打开小盒子，拿出不死药一口
+              <span class="gloss" data-word="吞" data-pinyin="tūn" data-english="to swallow">吞</span>了下去。
+            </p>
+
+            <p>
+              嫦娥一吞下药，就感觉身子轻飘飘的。她离开了地面，很快向天上飞去，
+              不一会儿就飞得很高很高。嫦娥心里
+              <span class="gloss" data-word="牵挂" data-pinyin="qiānguà" data-english="to worry about; to think of constantly">牵挂</span>着后羿，
+              她用力想落下来，最后落到了离地球最近的月亮上。
+            </p>
+
+            <p>
+              晚上，后羿回到家，
+              <span class="gloss" data-word="侍女" data-pinyin="shìnǚ" data-english="maid; maidservant">侍女</span>哭着讲了白天发生的事。
+              后羿非常生气，拿着一把大刀去找逢蒙，可逢蒙早跑了。
+              后羿痛苦地看着天空，不停地叫着嫦娥的名字。
+              这时他
+              <span class="gloss" data-word="惊奇" data-pinyin="jīngqí" data-english="surprise">惊奇</span>地发现，
+              今天的月亮跟以前不同，非常明亮，而且上面有个晃动的身影，像极了嫦娥。
+            </p>
+
+            <p>
+              后羿马上叫侍女到花园里，点上
+              <span class="gloss" data-word="香" data-pinyin="xiāng" data-english="incense">香</span>，
+              放上嫦娥平时最爱吃的小吃和水果，
+              <span class="gloss" data-word="祭拜" data-pinyin="jìbài" data-english="to offer sacrifice to; to worship">祭拜</span>
+              孤独一个人待在月亮上的嫦娥。
+            </p>
+
+            <p>
+              老百姓们听说了嫦娥升天成仙的消息后，也都在八月十五这一天在月下摆上香案，
+              向善良的嫦娥
+              <span class="gloss" data-word="祈求" data-pinyin="qíqiú" data-english="to pray for">祈求</span>平安。
+              从此，中秋节拜月的
+              <span class="gloss" data-word="风俗" data-pinyin="fēngsú" data-english="custom">风俗</span>
+              就在民间传开了。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="quiz">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Reading Check</p>
+          <h2>Comprehension Questions</h2>
+        </div>
+
+        <div class="quiz-grid">
+          <div class="question-card">
+            <div class="question-title">
+              1. Why did people admire 后羿?
+            </div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q1" value="A" /> A. Because he married 嫦娥</label>
+              <label class="option"><input type="radio" name="q1" value="B" /> B. Because he shot down nine suns and saved people’s lives</label>
+              <label class="option"><input type="radio" name="q1" value="C" /> C. Because he found the moon first</label>
+              <label class="option"><input type="radio" name="q1" value="D" /> D. Because he gave everyone medicine</label>
+            </div>
+            <div class="question-actions">
+              <button class="small-btn" onclick="checkAnswer('q1','B',`Correct.\nPeople admired 后羿 because he shot down nine suns when the world was too hot to live in. He saved the people.`)">Check</button>
+              <button class="small-btn secondary" onclick="resetQuestion('q1')">Reset</button>
+            </div>
+            <div id="feedback-q1" class="feedback"></div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-title">
+              2. Why did 后羿 not use the immortal medicine right away?
+            </div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q2" value="A" /> A. Because he forgot where it was</label>
+              <label class="option"><input type="radio" name="q2" value="B" /> B. Because the medicine was not real</label>
+              <label class="option"><input type="radio" name="q2" value="C" /> C. Because he did not want to leave 嫦娥 and become immortal alone</label>
+              <label class="option"><input type="radio" name="q2" value="D" /> D. Because 逢蒙 told him not to</label>
+            </div>
+            <div class="question-actions">
+              <button class="small-btn" onclick="checkAnswer('q2','C',`Correct.\n后羿 did not want to leave his wife alone and become immortal by himself, so he asked 嫦娥 to keep the medicine for later.`)">Check</button>
+              <button class="small-btn secondary" onclick="resetQuestion('q2')">Reset</button>
+            </div>
+            <div id="feedback-q2" class="feedback"></div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-title">
+              3. Why did 嫦娥 swallow the medicine?
+            </div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q3" value="A" /> A. Because she wanted to leave 后羿</label>
+              <label class="option"><input type="radio" name="q3" value="B" /> B. Because she wanted to live on the moon from the beginning</label>
+              <label class="option"><input type="radio" name="q3" value="C" /> C. Because 逢蒙 forced her to hand over the medicine</label>
+              <label class="option"><input type="radio" name="q3" value="D" /> D. Because 王母娘娘 asked her to do it</label>
+            </div>
+            <div class="question-actions">
+              <button class="small-btn" onclick="checkAnswer('q3','C',`Correct.\n逢蒙 came with a knife and tried to force 嫦娥 to give him the medicine. She swallowed it first so he could not take it.`)">Check</button>
+              <button class="small-btn secondary" onclick="resetQuestion('q3')">Reset</button>
+            </div>
+            <div id="feedback-q3" class="feedback"></div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-title">
+              4. How did the Mid-Autumn moon-worship custom begin in the story?
+            </div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q4" value="A" /> A. People began praying to 嫦娥 on the fifteenth day of the eighth month</label>
+              <label class="option"><input type="radio" name="q4" value="B" /> B. 后羿 ordered everyone to worship the moon</label>
+              <label class="option"><input type="radio" name="q4" value="C" /> C. 王母娘娘 created the holiday</label>
+              <label class="option"><input type="radio" name="q4" value="D" /> D. 逢蒙 taught people the custom</label>
+            </div>
+            <div class="question-actions">
+              <button class="small-btn" onclick="checkAnswer('q4','A',`Correct.\nAfter people heard that 嫦娥 had gone to the moon, they placed offerings under the moon and prayed to her for peace. That became the custom.`)">Check</button>
+              <button class="small-btn secondary" onclick="resetQuestion('q4')">Reset</button>
+            </div>
+            <div id="feedback-q4" class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Advanced Chinese for Humanities (I) AI</p>
+      <p>Lesson 1.0 Smart Reading</p>
+    </div>
+  </footer>
+
+  <div id="wordTooltip" class="word-tooltip" aria-hidden="true">
+    <div class="tooltip-word" id="tooltipWord"></div>
+    <div class="tooltip-pinyin" id="tooltipPinyin"></div>
+    <div class="tooltip-english" id="tooltipEnglish"></div>
+  </div>
+
+  <script>
+    const tooltip = document.getElementById("wordTooltip");
+    const tooltipWord = document.getElementById("tooltipWord");
+    const tooltipPinyin = document.getElementById("tooltipPinyin");
+    const tooltipEnglish = document.getElementById("tooltipEnglish");
+    const glossWords = document.querySelectorAll(".gloss");
+
+    let mobilePinnedWord = null;
+
+    function placeTooltip(el) {
+      const rect = el.getBoundingClientRect();
+      const tooltipWidth = 230;
+      let left = rect.left + window.scrollX;
+      let top = rect.bottom + window.scrollY + 10;
+
+      if (left + tooltipWidth > window.innerWidth - 16) {
+        left = window.innerWidth - tooltipWidth - 16;
+      }
+      if (left < 10) left = 10;
+
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+    }
+
+    function showTooltip(el) {
+      tooltipWord.textContent = el.dataset.word || "";
+      tooltipPinyin.textContent = el.dataset.pinyin || "";
+      tooltipEnglish.textContent = el.dataset.english || "";
+      placeTooltip(el);
+      tooltip.classList.add("show");
+      tooltip.setAttribute("aria-hidden", "false");
+    }
+
+    function hideTooltip() {
+      tooltip.classList.remove("show");
+      tooltip.setAttribute("aria-hidden", "true");
+    }
+
+    glossWords.forEach((word) => {
+      word.addEventListener("mouseenter", () => {
+        if (window.innerWidth > 768) {
+          showTooltip(word);
+        }
+      });
+
+      word.addEventListener("mouseleave", () => {
+        if (window.innerWidth > 768) {
+          hideTooltip();
+        }
+      });
+
+      word.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+          e.stopPropagation();
+          if (mobilePinnedWord === word && tooltip.classList.contains("show")) {
+            mobilePinnedWord = null;
+            hideTooltip();
+          } else {
+            mobilePinnedWord = word;
+            showTooltip(word);
+          }
+        }
+      });
+    });
+
+    window.addEventListener("scroll", () => {
+      if (tooltip.classList.contains("show") && mobilePinnedWord) {
+        placeTooltip(mobilePinnedWord);
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (tooltip.classList.contains("show") && mobilePinnedWord) {
+        placeTooltip(mobilePinnedWord);
+      }
+    });
+
+    document.addEventListener("click", () => {
+      if (window.innerWidth <= 768) {
+        mobilePinnedWord = null;
+        hideTooltip();
+      }
+    });
+
+    tooltip.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+
+    function checkAnswer(name, correct, message) {
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      const box = document.getElementById(`feedback-${name}`);
+
+      if (!selected) {
+        box.className = "feedback show incorrect";
+        box.textContent = "Please choose an answer first.";
+        return;
+      }
+
+      if (selected.value === correct) {
+        box.className = "feedback show correct";
+        box.textContent = message;
+      } else {
+        let wrongMsg = "";
+
+        if (name === "q1") {
+          wrongMsg = "Not quite. The key event is that 后羿 shot down nine suns and saved the people.";
+        } else if (name === "q2") {
+          wrongMsg = "Not quite. 后羿 did not eat the medicine because he did not want to leave 嫦娥 and become immortal alone.";
+        } else if (name === "q3") {
+          wrongMsg = "Not quite. 嫦娥 swallowed the medicine because 逢蒙 tried to force her to hand it over.";
+        } else if (name === "q4") {
+          wrongMsg = "Not quite. In the story, people began placing offerings under the moon and praying to 嫦娥 on 八月十五.";
+        }
+
+        box.className = "feedback show incorrect";
+        box.textContent = wrongMsg;
+      }
+    }
+
+    function resetQuestion(name) {
+      document.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
+        input.checked = false;
+      });
+      const box = document.getElementById(`feedback-${name}`);
+      box.className = "feedback";
+      box.textContent = "";
+    }
+  </script>
+</body>
+</html>
