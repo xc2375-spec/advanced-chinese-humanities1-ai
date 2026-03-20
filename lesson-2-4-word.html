@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 2.4 Word Explorer | Advanced Chinese for Humanities (I) AI</title>
+  <meta
+    name="description"
+    content="Lesson 2.4 Word Explorer for Advanced Chinese for Humanities (I): 成语故事一则·塞翁失马 vocabulary system."
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .lesson-hero {
+      padding-top: 2.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .lesson-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1rem 0 0;
+    }
+
+    .breadcrumb {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .group-grid,
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .group-card h3,
+    .pattern-card h3,
+    .tool-card h3,
+    .result-card h3,
+    .vocab-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      font-size: 1.08rem;
+      color: var(--primary-dark);
+    }
+
+    .group-card p,
+    .pattern-card p,
+    .tool-card p,
+    .result-card p,
+    .vocab-card p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .concept-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+    }
+
+    .concept-chip-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .concept-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: #f6ecdf;
+      color: var(--primary-dark);
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: 1px solid #e2d0b8;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .concept-chip:hover {
+      background: #f1e2cd;
+      transform: translateY(-1px);
+    }
+
+    .concept-tooltip {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.45rem);
+      min-width: 210px;
+      max-width: 295px;
+      background: #fffdf9;
+      border: 1px solid #decbb2;
+      border-radius: 14px;
+      box-shadow: 0 12px 26px rgba(80, 56, 32, 0.12);
+      padding: 0.75rem 0.85rem;
+      z-index: 30;
+      display: none;
+    }
+
+    .concept-tooltip.show {
+      display: block;
+    }
+
+    .tooltip-word {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-pinyin {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-english {
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-bottom: 0.22rem;
+      line-height: 1.4;
+    }
+
+    .tooltip-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .char-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .char-badge {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      border: 1px solid #e7d7c2;
+      min-width: 88px;
+    }
+
+    .char-badge strong {
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .char-badge span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.24;
+    }
+
+    .memory-tip {
+      margin-top: 0.8rem;
+      padding: 0.85rem 0.95rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      color: var(--text);
+      font-size: 0.94rem;
+      line-height: 1.58;
+    }
+
+    .mcq-box {
+      margin-top: 1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid #eadfce;
+    }
+
+    .mcq-question {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.7rem;
+      line-height: 1.5;
+    }
+
+    .mcq-options {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .mcq-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 10px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+    }
+
+    .mcq-actions {
+      margin-top: 0.85rem;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: none;
+      min-height: 38px;
+      padding: 0 0.95rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .small-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .small-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .small-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .mcq-feedback {
+      margin-top: 0.9rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      line-height: 1.6;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    .mcq-feedback.show {
+      display: block;
+    }
+
+    .mcq-feedback.correct {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .mcq-feedback.incorrect {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
+    .tools-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 1.25rem;
+      margin-top: 1.2rem;
+    }
+
+    .tool-card label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--primary-dark);
+      font-size: 0.95rem;
+    }
+
+    .tool-card textarea,
+    .tool-card input {
+      width: 100%;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid #d9c7b1;
+      border-radius: 12px;
+      background: #fffdf9;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .tool-card textarea {
+      min-height: 170px;
+      resize: vertical;
+    }
+
+    .tool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .tool-btn {
+      border: none;
+      min-height: 44px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .tool-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .tool-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .tool-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .result-card {
+      min-height: 400px;
+    }
+
+    .result-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .result-box {
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fffdf9;
+      border: 1px solid #e7dac7;
+      border-radius: 14px;
+      padding: 1rem;
+      min-height: 270px;
+    }
+
+    .loading {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .error-text {
+      color: #a33a2b;
+      font-weight: 700;
+    }
+
+    .helper-list {
+      margin: 0.85rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+    }
+
+    .helper-list li + li {
+      margin-top: 0.35rem;
+    }
+
+    .vocab-table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    table.vocab-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .vocab-table th,
+    .vocab-table td {
+      padding: 0.78rem 0.85rem;
+      border-bottom: 1px solid #eadfce;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.95rem;
+    }
+
+    .vocab-table th {
+      background: #f7efe3;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .vocab-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .vocab-table tr:hover {
+      background: #fcf8f2;
+    }
+
+    .hanzi {
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    @media (max-width: 960px) {
+      .group-grid,
+      .pattern-grid,
+      .tools-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .concept-tooltip {
+        max-width: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH1 AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities (I)</h1>
+          <p class="site-subtitle">人文天下：高级汉语教程·上</p>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="word-explorer.html">Word Explorer</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#ai-tools">AI Box</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <div class="container">
+        <div class="breadcrumb">Home → Word Explorer → Unit 2 → Lesson 2.4</div>
+        <p class="eyebrow">Lesson 2.4</p>
+        <h2 class="page-title">成语故事一则：塞翁失马</h2>
+        <p class="page-intro">
+          This lesson centers on the idiom “塞翁失马，焉知非福,” and explores
+          loss, luck, foresight, misfortune, life, and the unexpected turning of events.
+        </p>
+
+        <div class="lesson-meta">
+          <span class="tag">Unit 2: 人文天下</span>
+          <span class="tag">Theme: Fortune, Misfortune, Reversal</span>
+          <span class="tag">Module: Word Explorer</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Concept Net</p>
+          <h2>Hover or tap to preview key words</h2>
+        </div>
+
+        <div class="group-grid">
+          <div class="card group-card">
+            <h3>A. 失去与转机</h3>
+            <p>Words about loss, possibility, luck, and reversal.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">损失</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">损失</div>
+                  <div class="tooltip-pinyin">sǔnshī</div>
+                  <div class="tooltip-english">loss; to lose</div>
+                  <div class="tooltip-note">something valuable is lost, or someone suffers loss</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">没准儿</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">没准儿</div>
+                  <div class="tooltip-pinyin">méizhǔnr</div>
+                  <div class="tooltip-english">possibly, perhaps</div>
+                  <div class="tooltip-note">used when the result is uncertain</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">福气</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">福气</div>
+                  <div class="tooltip-pinyin">fúqì</div>
+                  <div class="tooltip-english">good luck, good fortune</div>
+                  <div class="tooltip-note">a fortunate condition or blessing</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">祸</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">祸</div>
+                  <div class="tooltip-pinyin">huò</div>
+                  <div class="tooltip-english">misfortune, disaster</div>
+                  <div class="tooltip-note">something bad or harmful that happens</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">反倒</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">反倒</div>
+                  <div class="tooltip-pinyin">fǎndào</div>
+                  <div class="tooltip-english">but on the contrary, instead</div>
+                  <div class="tooltip-note">used when the outcome goes in the opposite direction from expectation</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">塞翁失马，焉知非福</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">塞翁失马，焉知非福</div>
+                  <div class="tooltip-pinyin">sàiwēng-shīmǎ, yān zhī fēi fú</div>
+                  <div class="tooltip-english">Who knows whether a loss may turn out to be a blessing?</div>
+                  <div class="tooltip-note">an idiom about not judging events too quickly</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>B. 人、生活与价值</h3>
+            <p>Words about daily life, work, money, and usefulness.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">穷</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">穷</div>
+                  <div class="tooltip-pinyin">qióng</div>
+                  <div class="tooltip-english">poor</div>
+                  <div class="tooltip-note">having little money or few resources</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">养</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">养</div>
+                  <div class="tooltip-pinyin">yǎng</div>
+                  <div class="tooltip-english">to raise, to rear</div>
+                  <div class="tooltip-note">to keep and take care of animals or people</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">值钱</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">值钱</div>
+                  <div class="tooltip-pinyin">zhíqián</div>
+                  <div class="tooltip-english">valuable</div>
+                  <div class="tooltip-note">worth a lot of money</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">劳动</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">劳动</div>
+                  <div class="tooltip-pinyin">láodòng</div>
+                  <div class="tooltip-english">labor; to work</div>
+                  <div class="tooltip-note">physical or productive work</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">工具</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">工具</div>
+                  <div class="tooltip-pinyin">gōngjù</div>
+                  <div class="tooltip-english">tool</div>
+                  <div class="tooltip-note">something used to do work more effectively</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">邻居</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">邻居</div>
+                  <div class="tooltip-pinyin">línjū</div>
+                  <div class="tooltip-english">neighbor</div>
+                  <div class="tooltip-note">someone who lives nearby</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>C. 预见、祝贺与评价</h3>
+            <p>Words about foresight, praise, admiration, and public reaction.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">佩服</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">佩服</div>
+                  <div class="tooltip-pinyin">pèifú</div>
+                  <div class="tooltip-english">to admire</div>
+                  <div class="tooltip-note">to admire someone sincerely</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">预见</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">预见</div>
+                  <div class="tooltip-pinyin">yùjiàn</div>
+                  <div class="tooltip-english">foresight; to foresee</div>
+                  <div class="tooltip-note">to know or predict something before it happens</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">道贺</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">道贺</div>
+                  <div class="tooltip-pinyin">dàohè</div>
+                  <div class="tooltip-english">to congratulate</div>
+                  <div class="tooltip-note">to offer congratulations, often in a formal way</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">祝贺</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">祝贺</div>
+                  <div class="tooltip-pinyin">zhùhè</div>
+                  <div class="tooltip-english">to congratulate</div>
+                  <div class="tooltip-note">a common and general word for congratulating</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">表情</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">表情</div>
+                  <div class="tooltip-pinyin">biǎoqíng</div>
+                  <div class="tooltip-english">expression</div>
+                  <div class="tooltip-note">the expression on a face</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">好笑</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">好笑</div>
+                  <div class="tooltip-pinyin">hǎoxiào</div>
+                  <div class="tooltip-english">funny</div>
+                  <div class="tooltip-note">causing laughter or seeming ridiculous</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>D. 身体、危险与保命</h3>
+            <p>Words about bodily safety, injury, and survival.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">壮</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">壮</div>
+                  <div class="tooltip-pinyin">zhuàng</div>
+                  <div class="tooltip-english">strong</div>
+                  <div class="tooltip-note">physically strong and vigorous</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">摔</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">摔</div>
+                  <div class="tooltip-pinyin">shuāi</div>
+                  <div class="tooltip-english">to fall, to tumble, to throw</div>
+                  <div class="tooltip-note">to fall heavily or throw something down</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">摔断</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">摔断</div>
+                  <div class="tooltip-pinyin">shuāiduàn</div>
+                  <div class="tooltip-english">to fall and break</div>
+                  <div class="tooltip-note">to break something because of a fall</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">保住</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">保住</div>
+                  <div class="tooltip-pinyin">bǎozhù</div>
+                  <div class="tooltip-english">to preserve, to save, to secure</div>
+                  <div class="tooltip-note">to keep something from being lost</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">性命</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">性命</div>
+                  <div class="tooltip-pinyin">xìngmìng</div>
+                  <div class="tooltip-english">life</div>
+                  <div class="tooltip-note">a person’s life, especially in danger</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">免于</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">免于</div>
+                  <div class="tooltip-pinyin">miǎn yú</div>
+                  <div class="tooltip-english">to be saved from, to be spared</div>
+                  <div class="tooltip-note">to avoid suffering something bad</div>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="patterns" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Focus on Patterns</p>
+          <h2>Only safe, useful patterns for students</h2>
+        </div>
+
+        <div class="pattern-grid">
+          <div class="card pattern-card">
+            <h3>1. 礻 can help in fortune / blessing words</h3>
+            <p>
+              In this lesson, <strong>福</strong>, <strong>祸</strong>, and <strong>祝</strong>
+              all contain the 礻 form. This is a fairly reliable clue for words linked to
+              blessing, ritualized wishing, fortune, or fate-related meaning.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>福</strong><span>fú</span><span>good fortune</span></div>
+              <div class="char-badge"><strong>祸</strong><span>huò</span><span>misfortune</span></div>
+              <div class="char-badge"><strong>祝</strong><span>zhù</span><span>wish / congratulate</span></div>
+              <div class="char-badge"><strong>福气</strong><span>fúqì</span><span>good luck</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> do not overgeneralize every 礻 word, but in this lesson
+              it is a good clue for the semantic area of blessing, congratulations, luck, and misfortune.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                Why is 礻 a helpful clue in this lesson?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q1" value="A" /> A. Because it often helps connect words about blessing, luck, wishing, or misfortune</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="B" /> B. Because it always means “person”</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="C" /> C. Because it only appears in verbs of motion</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="D" /> D. Because it marks all adjectives</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q1','A',`Correct. In this lesson, 礻 helps build a reliable semantic cluster around blessing, luck, congratulation, and misfortune.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q1')">Reset</button>
+              </div>
+              <div id="feedback-q1" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>2. Clear contrast pair: 福气 vs 祸</h3>
+            <p>
+              This is the central contrast in the idiom story. One points to good fortune,
+              the other to disaster or misfortune.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>福气</strong><span>fúqì</span><span>good luck</span></div>
+              <div class="char-badge"><strong>祸</strong><span>huò</span><span>misfortune</span></div>
+              <div class="char-badge"><strong>损失</strong><span>sǔnshī</span><span>loss</span></div>
+              <div class="char-badge"><strong>反倒</strong><span>fǎndào</span><span>instead</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> the idiom works because the story keeps reversing your judgment:
+              what looks like a loss may become fortune, and what looks fortunate may turn into trouble.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                What is the strongest learning link between 福气 and 祸?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q2" value="A" /> A. They are identical in meaning</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="B" /> B. They form a strong opposite pair: fortune vs misfortune</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="C" /> C. They are both only about animals</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="D" /> D. They are both measure words</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q2','B',`Correct. 福气 and 祸 are best remembered as a central contrast pair: good fortune versus misfortune.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q2')">Reset</button>
+              </div>
+              <div id="feedback-q2" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>3. Useful expression distinction: 道贺 vs 祝贺</h3>
+            <p>
+              These two are close in meaning, but not exactly the same in feel.
+              This is a better memory point than forcing a weak radical explanation.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>道贺</strong><span>dàohè</span><span>offer congratulations</span></div>
+              <div class="char-badge"><strong>祝贺</strong><span>zhùhè</span><span>congratulate</span></div>
+              <div class="char-badge"><strong>佩服</strong><span>pèifú</span><span>admire</span></div>
+              <div class="char-badge"><strong>表情</strong><span>biǎoqíng</span><span>expression</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong>
+              <strong>祝贺</strong> is the more general and common verb for “congratulate.”
+              <strong>道贺</strong> sounds more formal or literary, like “go and offer congratulations.”
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                What is the best way to remember 道贺 and 祝贺?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q3" value="A" /> A. They are exactly the same in every context</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="B" /> B. 祝贺 is more general, while 道贺 feels more formal or literary</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="C" /> C. One means “to cry” and the other means “to laugh”</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="D" /> D. They are unrelated words</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q3','B',`Correct. 祝贺 is the more general word, while 道贺 often feels more formal or literary in tone.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q3')">Reset</button>
+              </div>
+              <div id="feedback-q3" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>4. Action-result survival cluster</h3>
+            <p>
+              This lesson includes a very clear story logic:
+              accident → injury → survival → escape from danger.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>摔</strong><span>shuāi</span><span>fall</span></div>
+              <div class="char-badge"><strong>摔断</strong><span>shuāiduàn</span><span>fall and break</span></div>
+              <div class="char-badge"><strong>保住</strong><span>bǎozhù</span><span>save / preserve</span></div>
+              <div class="char-badge"><strong>性命</strong><span>xìngmìng</span><span>life</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> some words are easiest to remember as a chain of events.
+              Here the meaning network is: falling, injury, keeping one’s life, and being spared from worse disaster.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                Why is it useful to study 摔, 摔断, 保住, and 性命 together?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q4" value="A" /> A. Because they form a story sequence of danger and survival</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="B" /> B. Because they are all names of places</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="C" /> C. Because they are all abstract philosophy words</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="D" /> D. Because they all contain the same radical in the same position</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q4','A',`Correct. These words are easiest to learn as a survival sequence: falling, injury, preserving life, and escaping a worse outcome.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q4')">Reset</button>
+              </div>
+              <div id="feedback-q4" class="mcq-feedback"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-tools" class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">AI Question Box</p>
+          <h2>Ask about words, patterns, usage, or examples</h2>
+        </div>
+
+        <div class="tools-layout">
+          <div class="card tool-card">
+            <h3>Ask AI about this lesson</h3>
+            <p>
+              You can ask about meaning, usage, contrast pairs, or sentence examples.
+            </p>
+
+            <label for="studentQuestionInput">Your question</label>
+            <textarea id="studentQuestionInput" placeholder="Examples:
+What is the difference between 道贺 and 祝贺?
+How should I understand 塞翁失马，焉知非福?
+Please give me a sentence with 反倒.
+What is the difference between 福气 and 祸?"></textarea>
+
+            <div class="tool-actions">
+              <button class="tool-btn" id="askAiBtn">Ask AI</button>
+              <button class="tool-btn secondary" id="fillExampleBtn">Use Example Question</button>
+            </div>
+
+            <ul class="helper-list">
+              <li>Ask one clear question at a time.</li>
+              <li>Use Chinese words when possible.</li>
+              <li>Comparing two related words often gives the best answer.</li>
+            </ul>
+          </div>
+
+          <div class="card result-card">
+            <h3>AI response</h3>
+            <div class="result-meta">
+              <span class="tag">Course: humanities1</span>
+              <span class="tag">Lesson: 2-4</span>
+              <span class="tag" id="currentTaskTag">Task: student question</span>
+            </div>
+
+            <div id="resultBox" class="result-box">
+Ask a question to get started.
+            </div>
+
+            <div class="tool-actions" style="margin-top: 1rem;">
+              <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vocabulary" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Vocabulary list</p>
+          <h2>Lesson 2.4 New Words</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <p>This is the full vocabulary list for the lesson.</p>
+
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>词语</th>
+                  <th>Pinyin</th>
+                  <th>POS</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">塞翁</td><td>sàiwēng</td><td>N</td><td>an old man in China’s northern frontier</td></tr>
+                <tr><td>2</td><td class="hanzi">穷</td><td>qióng</td><td>Adj</td><td>poor</td></tr>
+                <tr><td>3</td><td class="hanzi">养</td><td>yǎng</td><td>V</td><td>to raise, to rear</td></tr>
+                <tr><td>4</td><td class="hanzi">值钱</td><td>zhíqián</td><td>Adj</td><td>valuable</td></tr>
+                <tr><td>5</td><td class="hanzi">劳动</td><td>láodòng</td><td>N/V</td><td>labor; to work</td></tr>
+                <tr><td>6</td><td class="hanzi">工具</td><td>gōngjù</td><td>N</td><td>tool</td></tr>
+                <tr><td>7</td><td class="hanzi">邻居</td><td>línjū</td><td>N</td><td>neighbor</td></tr>
+                <tr><td>8</td><td class="hanzi">其实</td><td>qíshí</td><td>Adv</td><td>actually</td></tr>
+                <tr><td>9</td><td class="hanzi">难过</td><td>nánguò</td><td>Adj</td><td>upset, sad</td></tr>
+                <tr><td>10</td><td class="hanzi">损失</td><td>sǔnshī</td><td>N/V</td><td>loss; to lose</td></tr>
+                <tr><td>11</td><td class="hanzi">没准儿</td><td>méizhǔnr</td><td>VO</td><td>possibly, perhaps</td></tr>
+                <tr><td>12</td><td class="hanzi">福气</td><td>fúqì</td><td>N</td><td>good luck, good fortune</td></tr>
+                <tr><td>13</td><td class="hanzi">好笑</td><td>hǎoxiào</td><td>Adj</td><td>funny</td></tr>
+                <tr><td>14</td><td class="hanzi">明明</td><td>míngmíng</td><td>Adv</td><td>obviously, plainly, undoubtedly</td></tr>
+                <tr><td>15</td><td class="hanzi">显然</td><td>xiǎnrán</td><td>Adj</td><td>clear, obvious</td></tr>
+                <tr><td>16</td><td class="hanzi">马驹</td><td>mǎjū</td><td>N</td><td>colt</td></tr>
+                <tr><td>17</td><td class="hanzi">佩服</td><td>pèifú</td><td>V</td><td>to admire</td></tr>
+                <tr><td>18</td><td class="hanzi">预见</td><td>yùjiàn</td><td>N/V</td><td>foresight; to foresee</td></tr>
+                <tr><td>19</td><td class="hanzi">道贺</td><td>dàohè</td><td>VO</td><td>to congratulate</td></tr>
+                <tr><td>20</td><td class="hanzi">祝贺</td><td>zhùhè</td><td>V</td><td>to congratulate</td></tr>
+                <tr><td>21</td><td class="hanzi">表情</td><td>biǎoqíng</td><td>N</td><td>expression</td></tr>
+                <tr><td>22</td><td class="hanzi">反倒</td><td>fǎndào</td><td>Adv</td><td>but on the contrary, but instead of as expected</td></tr>
+                <tr><td>23</td><td class="hanzi">忧虑</td><td>yōulǜ</td><td>V</td><td>to worry</td></tr>
+                <tr><td>24</td><td class="hanzi">白</td><td>bái</td><td>Adv</td><td>free of charge; in vain; without results, gain or compensation</td></tr>
+                <tr><td>25</td><td class="hanzi">祸</td><td>huò</td><td>N</td><td>misfortune, disaster</td></tr>
+                <tr><td>26</td><td class="hanzi">糊涂</td><td>hútu</td><td>Adj</td><td>confused, muddled</td></tr>
+                <tr><td>27</td><td class="hanzi">壮</td><td>zhuàng</td><td>Adj</td><td>strong</td></tr>
+                <tr><td>28</td><td class="hanzi">嘹亮</td><td>liáoliàng</td><td>Adj</td><td>loud and clear</td></tr>
+                <tr><td>29</td><td class="hanzi">摔</td><td>shuāi</td><td>V</td><td>to fall, to tumble, to plunge, to throw</td></tr>
+                <tr><td>30</td><td class="hanzi">摔断</td><td>shuāiduàn</td><td>VC</td><td>to fall and break</td></tr>
+                <tr><td>31</td><td class="hanzi">保住</td><td>bǎozhù</td><td>VC</td><td>to preserve, to save, to secure</td></tr>
+                <tr><td>32</td><td class="hanzi">性命</td><td>xìngmìng</td><td>N</td><td>life</td></tr>
+                <tr><td>33</td><td class="hanzi">命令</td><td>mìnglìng</td><td>V/N</td><td>to order, to command; military or official order</td></tr>
+                <tr><td>34</td><td class="hanzi">青壮年</td><td>qīng-zhuàngnián</td><td>N</td><td>young adults</td></tr>
+                <tr><td>35</td><td class="hanzi">免于</td><td>miǎn yú</td><td>VP</td><td>to be saved from, to be spared</td></tr>
+                <tr><td>36</td><td class="hanzi">应征</td><td>yìngzhēng</td><td>V</td><td>to be recruited, to respond to a call</td></tr>
+                <tr><td>37</td><td class="hanzi">超越</td><td>chāoyuè</td><td>V</td><td>to surpass, to transcend</td></tr>
+                <tr><td>38</td><td class="hanzi">塞翁失马，焉知非福</td><td>sàiwēng-shīmǎ, yān zhī fēi fú</td><td>IE</td><td>You think you lost your horse? Who knows this may be a blessing in disguise?</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="hero-actions">
+          <a class="btn btn-secondary" href="word-explorer.html">Back to Word Explorer</a>
+          <a class="btn btn-primary" href="index.html">Back Home</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Advanced Chinese for Humanities (I) AI</p>
+      <p>Lesson 2.4 Word Explorer</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const WORKER_URL = "https://quiet-field-a529.xc2375.workers.dev";
+
+    const resultBox = document.getElementById("resultBox");
+    const studentQuestionInput = document.getElementById("studentQuestionInput");
+    const askAiBtn = document.getElementById("askAiBtn");
+    const fillExampleBtn = document.getElementById("fillExampleBtn");
+    const clearResultBtn = document.getElementById("clearResultBtn");
+
+    function setLoading() {
+      resultBox.innerHTML = '<span class="loading">Thinking…</span>';
+    }
+
+    function setError(message) {
+      resultBox.innerHTML = `<span class="error-text">${message}</span>`;
+    }
+
+    function setResult(text) {
+      resultBox.textContent = text;
+    }
+
+    function checkPatternQuestion(questionName, correctAnswer, correctFeedback) {
+      const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+
+      if (!selected) {
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = "Please choose an answer first.";
+        return;
+      }
+
+      if (selected.value === correctAnswer) {
+        feedbackBox.className = "mcq-feedback show correct";
+        feedbackBox.textContent = correctFeedback;
+      } else {
+        let message = "";
+
+        if (questionName === "q1") {
+          message = "Not quite. In this lesson, 礻 is helpful because it connects several words about blessing, congratulation, luck, or misfortune.";
+        } else if (questionName === "q2") {
+          message = "Not quite. 福气 and 祸 are most useful as a strong opposite pair: good fortune versus misfortune.";
+        } else if (questionName === "q3") {
+          message = "Not quite. 祝贺 is the more general word, while 道贺 is closer to ‘offer congratulations’ and often feels more formal or literary.";
+        } else if (questionName === "q4") {
+          message = "Not quite. These words are easiest to learn as a story sequence of danger, injury, and survival.";
+        }
+
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = message;
+      }
+    }
+
+    function resetPatternQuestion(questionName) {
+      document.querySelectorAll(`input[name="${questionName}"]`).forEach(input => input.checked = false);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+      feedbackBox.className = "mcq-feedback";
+      feedbackBox.textContent = "";
+    }
+
+    async function askStudentWordHelp(questionText) {
+      try {
+        setLoading();
+
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            course: "humanities1",
+            lesson: "2-4",
+            task: "student_word_help",
+            question: questionText,
+            context: "Lesson 2.4 discusses blessing and misfortune, loss and reversal, congratulation, foresight, and the idiom 塞翁失马，焉知非福."
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed.");
+        }
+
+        const resultText = data.result || "No response returned.";
+        setResult(resultText);
+      } catch (error) {
+        setError(error.message || "Something went wrong.");
+      }
+    }
+
+    askAiBtn.addEventListener("click", async () => {
+      const question = studentQuestionInput.value.trim();
+      if (!question) {
+        setError("Please enter a question first.");
+        return;
+      }
+      await askStudentWordHelp(question);
+    });
+
+    fillExampleBtn.addEventListener("click", () => {
+      studentQuestionInput.value = "What is the difference between 道贺 and 祝贺?";
+    });
+
+    clearResultBtn.addEventListener("click", () => {
+      resultBox.textContent = "Ask a question to get started.";
+    });
+
+    const chipWraps = document.querySelectorAll(".concept-chip-wrap");
+
+    chipWraps.forEach((wrap) => {
+      const chip = wrap.querySelector(".concept-chip");
+      const tooltip = wrap.querySelector(".concept-tooltip");
+
+      chip.addEventListener("mouseenter", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.add("show");
+        }
+      });
+
+      chip.addEventListener("mouseleave", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.remove("show");
+        }
+      });
+
+      chip.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+          e.stopPropagation();
+          document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+            if (tip !== tooltip) tip.classList.remove("show");
+          });
+          tooltip.classList.toggle("show");
+        } else {
+          studentQuestionInput.value = `What does ${chip.textContent.trim()} mean in this lesson?`;
+          window.location.hash = "ai-tools";
+        }
+      });
+
+      tooltip.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+        tip.classList.remove("show");
+      });
+    });
+  </script>
+</body>
+</html>
