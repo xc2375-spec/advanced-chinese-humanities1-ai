@@ -40,7 +40,8 @@
     .pattern-card h3,
     .tool-card h3,
     .result-card h3,
-    .vocab-card h3 {
+    .vocab-card h3,
+    .name-card h3 {
       margin-top: 0;
       margin-bottom: 0.6rem;
       font-size: 1.08rem;
@@ -51,12 +52,12 @@
     .pattern-card p,
     .tool-card p,
     .result-card p,
-    .vocab-card p {
+    .vocab-card p,
+    .name-card p {
       color: var(--muted);
       margin-top: 0;
     }
 
-    /* Concept net */
     .concept-list {
       display: flex;
       flex-wrap: wrap;
@@ -69,7 +70,8 @@
       display: inline-block;
     }
 
-    .concept-chip {
+    .concept-chip,
+    .name-chip {
       display: inline-flex;
       align-items: center;
       padding: 0.45rem 0.8rem;
@@ -83,7 +85,8 @@
       transition: background 0.2s ease, transform 0.2s ease;
     }
 
-    .concept-chip:hover {
+    .concept-chip:hover,
+    .name-chip:hover {
       background: #f1e2cd;
       transform: translateY(-1px);
     }
@@ -130,15 +133,6 @@
       font-size: 0.88rem;
       color: var(--muted);
       line-height: 1.45;
-    }
-
-    /* Patterns */
-    .pattern-top {
-      margin-bottom: 0.9rem;
-    }
-
-    .pattern-top p {
-      margin: 0.3rem 0;
     }
 
     .char-cluster {
@@ -269,7 +263,6 @@
       background: #fff8f6;
     }
 
-    /* AI box */
     .tools-layout {
       display: grid;
       grid-template-columns: 0.95fr 1.05fr;
@@ -378,7 +371,6 @@
       margin-top: 0.35rem;
     }
 
-    /* Vocabulary table */
     .vocab-table-wrap {
       overflow-x: auto;
       margin-top: 1rem;
@@ -499,7 +491,6 @@
                   <div class="tooltip-note">the whole physical world</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">形成</button>
                 <span class="concept-tooltip">
@@ -509,7 +500,6 @@
                   <div class="tooltip-note">to take shape over time</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">起源</button>
                 <span class="concept-tooltip">
@@ -519,7 +509,6 @@
                   <div class="tooltip-note">where something begins</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">天文</button>
                 <span class="concept-tooltip">
@@ -529,7 +518,6 @@
                   <div class="tooltip-note">the study of the heavens</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">科学家</button>
                 <span class="concept-tooltip">
@@ -539,7 +527,6 @@
                   <div class="tooltip-note">a person who studies science</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">理论</button>
                 <span class="concept-tooltip">
@@ -566,7 +553,6 @@
                   <div class="tooltip-note">a divine being</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">神话</button>
                 <span class="concept-tooltip">
@@ -576,7 +562,6 @@
                   <div class="tooltip-note">a story about gods or origins</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">传说</button>
                 <span class="concept-tooltip">
@@ -586,7 +571,6 @@
                   <div class="tooltip-note">a traditional story passed down</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">文明</button>
                 <span class="concept-tooltip">
@@ -596,7 +580,6 @@
                   <div class="tooltip-note">an advanced human culture</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">描述</button>
                 <span class="concept-tooltip">
@@ -606,7 +589,6 @@
                   <div class="tooltip-note">to give an account in words</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">创造</button>
                 <span class="concept-tooltip">
@@ -633,7 +615,6 @@
                   <div class="tooltip-note">a state before clear separation</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">山川</button>
                 <span class="concept-tooltip">
@@ -643,7 +624,6 @@
                   <div class="tooltip-note">major natural landforms</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">海洋</button>
                 <span class="concept-tooltip">
@@ -653,7 +633,6 @@
                   <div class="tooltip-note">large bodies of salt water</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">陆地</button>
                 <span class="concept-tooltip">
@@ -663,7 +642,6 @@
                   <div class="tooltip-note">the dry surface of the earth</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">植物</button>
                 <span class="concept-tooltip">
@@ -673,7 +651,6 @@
                   <div class="tooltip-note">living things that grow from soil</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">泥土</button>
                 <span class="concept-tooltip">
@@ -700,7 +677,6 @@
                   <div class="tooltip-note">one side of a contrast pair</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">阴性</button>
                 <span class="concept-tooltip">
@@ -710,7 +686,6 @@
                   <div class="tooltip-note">the opposite side in a pair</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">混合</button>
                 <span class="concept-tooltip">
@@ -720,7 +695,6 @@
                   <div class="tooltip-note">to bring parts together</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">结合</button>
                 <span class="concept-tooltip">
@@ -730,7 +704,6 @@
                   <div class="tooltip-note">to join into a whole</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">浮</button>
                 <span class="concept-tooltip">
@@ -740,7 +713,6 @@
                   <div class="tooltip-note">to stay up on water</div>
                 </span>
               </span>
-
               <span class="concept-chip-wrap">
                 <button class="concept-chip">沉</button>
                 <span class="concept-tooltip">
@@ -751,6 +723,20 @@
                 </span>
               </span>
             </div>
+          </div>
+        </div>
+
+        <div class="card name-card" style="margin-top: 1rem;">
+          <h3>Key names in this lesson</h3>
+          <div class="concept-list">
+            <span class="name-chip">盘古</span>
+            <span class="name-chip">埃及</span>
+            <span class="name-chip">巴比伦</span>
+            <span class="name-chip">印度</span>
+            <span class="name-chip">希腊</span>
+            <span class="name-chip">圣经</span>
+            <span class="name-chip">夏娃</span>
+            <span class="name-chip">女娲</span>
           </div>
         </div>
       </div>
@@ -765,13 +751,11 @@
 
         <div class="pattern-grid">
           <div class="card pattern-card">
-            <div class="pattern-top">
-              <h3>1. 氵 and water-related meaning</h3>
-              <p>
-                In this lesson, the <strong>氵</strong> radical often suggests
-                water, movement, or an unstable physical state.
-              </p>
-            </div>
+            <h3>1. 氵 and water-related meaning</h3>
+            <p>
+              In this lesson, the <strong>氵</strong> radical often suggests
+              water, movement, or an unstable physical state.
+            </p>
 
             <div class="char-cluster">
               <div class="char-badge"><strong>混</strong><span>hùn</span><span>mix</span></div>
@@ -805,13 +789,11 @@
           </div>
 
           <div class="card pattern-card">
-            <div class="pattern-top">
-              <h3>2. 礻 and the sacred or ritual world</h3>
-              <p>
-                The component <strong>礻</strong> often appears in characters connected
-                with belief, ritual, blessing, or the sacred.
-              </p>
-            </div>
+            <h3>2. 礻 and the sacred or ritual world</h3>
+            <p>
+              The component <strong>礻</strong> often appears in characters connected
+              with belief, ritual, blessing, or the sacred.
+            </p>
 
             <div class="char-cluster">
               <div class="char-badge"><strong>神</strong><span>shén</span><span>god</span></div>
@@ -844,13 +826,11 @@
           </div>
 
           <div class="card pattern-card">
-            <div class="pattern-top">
-              <h3>3. 文 as a bridge to knowledge and culture</h3>
-              <p>
-                The shared character <strong>文</strong> can connect ideas of writing,
-                patterned knowledge, and civilization.
-              </p>
-            </div>
+            <h3>3. 文 as a bridge to knowledge and culture</h3>
+            <p>
+              The shared character <strong>文</strong> can connect ideas of writing,
+              patterned knowledge, and civilization.
+            </p>
 
             <div class="char-cluster">
               <div class="char-badge"><strong>文</strong><span>wén</span><span>writing / culture</span></div>
@@ -883,13 +863,11 @@
           </div>
 
           <div class="card pattern-card">
-            <div class="pattern-top">
-              <h3>4. Learn contrast pairs together</h3>
-              <p>
-                Some characters are easier to remember when they are learned as a pair.
-                This is especially true when they share a radical and express opposite movement.
-              </p>
-            </div>
+            <h3>4. Learn contrast pairs together</h3>
+            <p>
+              Some characters are easier to remember when they are learned as a pair.
+              This is especially true when they share a radical and express opposite movement.
+            </p>
 
             <div class="char-cluster">
               <div class="char-badge"><strong>浮</strong><span>fú</span><span>float</span></div>
@@ -986,9 +964,7 @@ Ask a question to get started.
         </div>
 
         <div class="card vocab-card">
-          <p>
-            This is the main vocabulary list for the lesson.
-          </p>
+          <p>This is the full vocabulary list for the lesson.</p>
 
           <div class="vocab-table-wrap">
             <table class="vocab-table">
@@ -1027,17 +1003,49 @@ Ask a question to get started.
                 <tr><td>23</td><td class="hanzi">亿</td><td>yì</td><td>Num</td><td>100 million</td></tr>
                 <tr><td>24</td><td class="hanzi">继续</td><td>jìxù</td><td>V</td><td>to continue, to go on</td></tr>
                 <tr><td>25</td><td class="hanzi">片</td><td>piàn</td><td>M</td><td>for a stretch of land, space, etc.</td></tr>
+
                 <tr><td>26</td><td class="hanzi">混沌</td><td>hùndùn</td><td>N</td><td>chaos, turbid</td></tr>
                 <tr><td>27</td><td class="hanzi">山川</td><td>shānchuān</td><td>N</td><td>mountains and rivers</td></tr>
-                <tr><td>28</td><td class="hanzi">海洋</td><td>hǎiyáng</td><td>N</td><td>ocean</td></tr>
+                <tr><td>28</td><td class="hanzi">海洋</td><td>hǎiyáng</td><td>N</td><td>seas and ocean, ocean</td></tr>
                 <tr><td>29</td><td class="hanzi">英雄</td><td>yīngxióng</td><td>N</td><td>hero</td></tr>
                 <tr><td>30</td><td class="hanzi">记载</td><td>jìzǎi</td><td>V</td><td>to record</td></tr>
-                <tr><td>31</td><td class="hanzi">创造</td><td>chuàngzào</td><td>V</td><td>to create</td></tr>
-                <tr><td>32</td><td class="hanzi">黑夜</td><td>hēiyè</td><td>N</td><td>night</td></tr>
-                <tr><td>33</td><td class="hanzi">陆地</td><td>lùdì</td><td>N</td><td>land</td></tr>
-                <tr><td>34</td><td class="hanzi">植物</td><td>zhíwù</td><td>N</td><td>plant</td></tr>
+                <tr><td>31</td><td class="hanzi">创造</td><td>chuàngzào</td><td>V</td><td>to create, to produce</td></tr>
+                <tr><td>32</td><td class="hanzi">黑夜</td><td>hēiyè</td><td>N</td><td>night, evening</td></tr>
+                <tr><td>33</td><td class="hanzi">陆地</td><td>lùdì</td><td>N</td><td>dry land, land</td></tr>
+                <tr><td>34</td><td class="hanzi">植物</td><td>zhíwù</td><td>N</td><td>plant, flora</td></tr>
                 <tr><td>35</td><td class="hanzi">肋骨</td><td>lèigǔ</td><td>N</td><td>rib</td></tr>
-                <tr><td>36</td><td class="hanzi">伊甸园</td><td>yīdiànyuán</td><td>N</td><td>Garden of Eden</td></tr>
+                <tr><td>36</td><td class="hanzi">伊甸园</td><td>yīdiànyuán</td><td>N</td><td>Garden of Eden, paradise</td></tr>
+                <tr><td>37</td><td class="hanzi">淡</td><td>dàn</td><td>Adj</td><td>tasteless, not salty enough, fresh</td></tr>
+                <tr><td>38</td><td class="hanzi">阳性</td><td>yángxìng</td><td>N</td><td>masculine</td></tr>
+                <tr><td>39</td><td class="hanzi">咸</td><td>xián</td><td>Adj</td><td>salty</td></tr>
+                <tr><td>40</td><td class="hanzi">阴性</td><td>yīnxìng</td><td>N</td><td>feminine</td></tr>
+                <tr><td>41</td><td class="hanzi">混合</td><td>hùnhé</td><td>V</td><td>to mix, to blend</td></tr>
+                <tr><td>42</td><td class="hanzi">混乱</td><td>hùnluàn</td><td>Adj</td><td>chaotic</td></tr>
+                <tr><td>43</td><td class="hanzi">力气</td><td>lìqi</td><td>N</td><td>physical strength, effort</td></tr>
+                <tr><td>44</td><td class="hanzi">杀死</td><td>shāsǐ</td><td>VC</td><td>to kill, to slay</td></tr>
+                <tr><td>45</td><td class="hanzi">血</td><td>xiě</td><td>N</td><td>blood</td></tr>
+                <tr><td>46</td><td class="hanzi">泥土</td><td>nítǔ</td><td>N</td><td>soil, earth</td></tr>
+                <tr><td>47</td><td class="hanzi">侍奉</td><td>shìfèng</td><td>V</td><td>to wait upon, to attend to (somebody)</td></tr>
+                <tr><td>48</td><td class="hanzi">唾液</td><td>tuòyè</td><td>N</td><td>saliva, spittle</td></tr>
+                <tr><td>49</td><td class="hanzi">结合</td><td>jiéhé</td><td>V</td><td>to combine, to be united in wedlock</td></tr>
+                <tr><td>50</td><td class="hanzi">一切</td><td>yíqiè</td><td>Pron</td><td>every, everything, all</td></tr>
+                <tr><td>51</td><td class="hanzi">怪物</td><td>guàiwù</td><td>N</td><td>monster, eccentric person</td></tr>
+                <tr><td>52</td><td class="hanzi">吓</td><td>xià</td><td>V</td><td>to frighten, to scare, to intimidate</td></tr>
+
+                <tr><td>53</td><td class="hanzi">开天辟地</td><td>kāitiān-pìdì</td><td>IE</td><td>the creation of heaven and earth; the beginning of history</td></tr>
+                <tr><td>54</td><td class="hanzi">踢</td><td>tī</td><td>V</td><td>to kick, to play (e.g. soccer)</td></tr>
+                <tr><td>55</td><td class="hanzi">碎</td><td>suì</td><td>V/Adj</td><td>to break into pieces; broken</td></tr>
+                <tr><td>56</td><td class="hanzi">浮</td><td>fú</td><td>V</td><td>to float</td></tr>
+                <tr><td>57</td><td class="hanzi">沉</td><td>chén</td><td>V</td><td>to sink, to immerse</td></tr>
+                <tr><td>58</td><td class="hanzi">荒凉</td><td>huāngliáng</td><td>Adj</td><td>desolate, bleak, wild</td></tr>
+                <tr><td>59</td><td class="hanzi">生气</td><td>shēngqì</td><td>N</td><td>vitality</td></tr>
+                <tr><td>60</td><td class="hanzi">不禁</td><td>bùjīn</td><td>Adv</td><td>can't help (doing sth.), can't refrain from</td></tr>
+                <tr><td>61</td><td class="hanzi">孤独</td><td>gūdú</td><td>Adj</td><td>lonely, solitary</td></tr>
+                <tr><td>62</td><td class="hanzi">延续</td><td>yánxù</td><td>V</td><td>to last, to go on</td></tr>
+                <tr><td>63</td><td class="hanzi">分成</td><td>fēnchéng</td><td>VC</td><td>to divide into, to separate into</td></tr>
+                <tr><td>64</td><td class="hanzi">反映</td><td>fǎnyìng</td><td>V</td><td>to reflect, to mirror</td></tr>
+                <tr><td>65</td><td class="hanzi">征服</td><td>zhēngfú</td><td>V</td><td>to conquer</td></tr>
+                <tr><td>66</td><td class="hanzi">愿望</td><td>yuànwàng</td><td>N</td><td>desire, wish</td></tr>
               </tbody>
             </table>
           </div>
