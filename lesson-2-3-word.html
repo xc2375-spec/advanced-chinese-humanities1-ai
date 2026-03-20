@@ -1187,5 +1187,16 @@ Ask a question to get started.
         }
       });
 
-      tooltip.addEventListener("click", (e) => {
-        e
+       tooltip.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+        tip.classList.remove("show");
+      });
+    });
+  </script>
+</body>
+</html>
