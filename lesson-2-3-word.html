@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 2.3 Word Explorer | Advanced Chinese for Humanities (I) AI</title>
+  <meta
+    name="description"
+    content="Lesson 2.3 Word Explorer for Advanced Chinese for Humanities (I): 聪明人和傻子和奴才 vocabulary system."
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .lesson-hero {
+      padding-top: 2.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .lesson-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1rem 0 0;
+    }
+
+    .breadcrumb {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .group-grid,
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .group-card h3,
+    .pattern-card h3,
+    .tool-card h3,
+    .result-card h3,
+    .vocab-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      font-size: 1.08rem;
+      color: var(--primary-dark);
+    }
+
+    .group-card p,
+    .pattern-card p,
+    .tool-card p,
+    .result-card p,
+    .vocab-card p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .concept-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+    }
+
+    .concept-chip-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .concept-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: #f6ecdf;
+      color: var(--primary-dark);
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: 1px solid #e2d0b8;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .concept-chip:hover {
+      background: #f1e2cd;
+      transform: translateY(-1px);
+    }
+
+    .concept-tooltip {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.45rem);
+      min-width: 210px;
+      max-width: 280px;
+      background: #fffdf9;
+      border: 1px solid #decbb2;
+      border-radius: 14px;
+      box-shadow: 0 12px 26px rgba(80, 56, 32, 0.12);
+      padding: 0.75rem 0.85rem;
+      z-index: 30;
+      display: none;
+    }
+
+    .concept-tooltip.show {
+      display: block;
+    }
+
+    .tooltip-word {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-pinyin {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-english {
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-bottom: 0.22rem;
+      line-height: 1.4;
+    }
+
+    .tooltip-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .char-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .char-badge {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      border: 1px solid #e7d7c2;
+      min-width: 88px;
+    }
+
+    .char-badge strong {
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .char-badge span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.24;
+    }
+
+    .memory-tip {
+      margin-top: 0.8rem;
+      padding: 0.85rem 0.95rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      color: var(--text);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .mcq-box {
+      margin-top: 1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid #eadfce;
+    }
+
+    .mcq-question {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.7rem;
+      line-height: 1.5;
+    }
+
+    .mcq-options {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .mcq-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 10px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+    }
+
+    .mcq-actions {
+      margin-top: 0.85rem;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: none;
+      min-height: 38px;
+      padding: 0 0.95rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .small-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .small-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .small-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .mcq-feedback {
+      margin-top: 0.9rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      line-height: 1.6;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    .mcq-feedback.show {
+      display: block;
+    }
+
+    .mcq-feedback.correct {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .mcq-feedback.incorrect {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
+    .tools-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 1.25rem;
+      margin-top: 1.2rem;
+    }
+
+    .tool-card label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--primary-dark);
+      font-size: 0.95rem;
+    }
+
+    .tool-card textarea,
+    .tool-card input {
+      width: 100%;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid #d9c7b1;
+      border-radius: 12px;
+      background: #fffdf9;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .tool-card textarea {
+      min-height: 170px;
+      resize: vertical;
+    }
+
+    .tool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .tool-btn {
+      border: none;
+      min-height: 44px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .tool-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .tool-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .tool-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .result-card {
+      min-height: 400px;
+    }
+
+    .result-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .result-box {
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fffdf9;
+      border: 1px solid #e7dac7;
+      border-radius: 14px;
+      padding: 1rem;
+      min-height: 270px;
+    }
+
+    .loading {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .error-text {
+      color: #a33a2b;
+      font-weight: 700;
+    }
+
+    .helper-list {
+      margin: 0.85rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+    }
+
+    .helper-list li + li {
+      margin-top: 0.35rem;
+    }
+
+    .vocab-table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    table.vocab-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .vocab-table th,
+    .vocab-table td {
+      padding: 0.78rem 0.85rem;
+      border-bottom: 1px solid #eadfce;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.95rem;
+    }
+
+    .vocab-table th {
+      background: #f7efe3;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .vocab-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .vocab-table tr:hover {
+      background: #fcf8f2;
+    }
+
+    .hanzi {
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    @media (max-width: 960px) {
+      .group-grid,
+      .pattern-grid,
+      .tools-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .concept-tooltip {
+        max-width: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH1 AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities (I)</h1>
+          <p class="site-subtitle">人文天下：高级汉语教程·上</p>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="word-explorer.html">Word Explorer</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#ai-tools">AI Box</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <div class="container">
+        <div class="breadcrumb">Home → Word Explorer → Unit 2 → Lesson 2.3</div>
+        <p class="eyebrow">Lesson 2.3</p>
+        <h2 class="page-title">聪明人和傻子和奴才</h2>
+        <p class="page-intro">
+          This lesson focuses on suffering, sympathy, unfairness, appearance,
+          social judgment, and how people respond to weakness and injustice.
+        </p>
+
+        <div class="lesson-meta">
+          <span class="tag">Unit 2: 人文天下</span>
+          <span class="tag">Theme: Sympathy, Injustice, Social Judgment</span>
+          <span class="tag">Module: Word Explorer</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Concept Net</p>
+          <h2>Hover or tap to preview key words</h2>
+        </div>
+
+        <div class="group-grid">
+          <div class="card group-card">
+            <h3>A. 苦难与情绪</h3>
+            <p>Words about sorrow, tears, sighing, and emotional pain.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">诉苦</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">诉苦</div>
+                  <div class="tooltip-pinyin">sùkǔ</div>
+                  <div class="tooltip-english">to complain, to grumble</div>
+                  <div class="tooltip-note">to speak about one’s suffering or hardship</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">悲哀</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">悲哀</div>
+                  <div class="tooltip-pinyin">bēi'āi</div>
+                  <div class="tooltip-english">grieved, sad</div>
+                  <div class="tooltip-note">deep sorrow or sadness</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">眼泪</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">眼泪</div>
+                  <div class="tooltip-pinyin">yǎnlèi</div>
+                  <div class="tooltip-english">tears</div>
+                  <div class="tooltip-note">drops from the eyes when crying</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">叹息</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">叹息</div>
+                  <div class="tooltip-pinyin">tànxī</div>
+                  <div class="tooltip-english">to sigh</div>
+                  <div class="tooltip-note">to breathe out heavily because of sadness or helplessness</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">落泪</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">落泪</div>
+                  <div class="tooltip-pinyin">luò lèi</div>
+                  <div class="tooltip-english">to shed tears, to weep</div>
+                  <div class="tooltip-note">to begin crying</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">安慰</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">安慰</div>
+                  <div class="tooltip-pinyin">ānwèi</div>
+                  <div class="tooltip-english">to comfort; comforting</div>
+                  <div class="tooltip-note">to make someone feel less sad or worried</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>B. 观察与外貌细节</h3>
+            <p>Words connected to the face, body, weather, and visible scene.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">眼角</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">眼角</div>
+                  <div class="tooltip-pinyin">yǎnjiǎo</div>
+                  <div class="tooltip-english">the corner of the eye</div>
+                  <div class="tooltip-note">the outer or inner edge of the eye</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">晴天</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">晴天</div>
+                  <div class="tooltip-pinyin">qíngtiān</div>
+                  <div class="tooltip-english">sunny day</div>
+                  <div class="tooltip-note">a day with clear weather</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">湿</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">湿</div>
+                  <div class="tooltip-pinyin">shī</div>
+                  <div class="tooltip-english">wet, moist</div>
+                  <div class="tooltip-note">not dry</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">阴</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">阴</div>
+                  <div class="tooltip-pinyin">yīn</div>
+                  <div class="tooltip-english">dark</div>
+                  <div class="tooltip-note">dim, shaded, or lacking light</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">窗</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">窗</div>
+                  <div class="tooltip-pinyin">chuāng</div>
+                  <div class="tooltip-english">window</div>
+                  <div class="tooltip-note">an opening that lets in light or air</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">墙</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">墙</div>
+                  <div class="tooltip-pinyin">qiáng</div>
+                  <div class="tooltip-english">wall</div>
+                  <div class="tooltip-note">a vertical surface enclosing a space</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>C. 社会态度与评价</h3>
+            <p>Words about sympathy, blame, unfairness, praise, and judgment.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">同情</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">同情</div>
+                  <div class="tooltip-pinyin">tóngqíng</div>
+                  <div class="tooltip-english">to sympathize</div>
+                  <div class="tooltip-note">to feel sorry for someone’s suffering</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">不平</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">不平</div>
+                  <div class="tooltip-pinyin">bùpíng</div>
+                  <div class="tooltip-english">unfair</div>
+                  <div class="tooltip-note">not just or not equal</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">天理</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">天理</div>
+                  <div class="tooltip-pinyin">tiānlǐ</div>
+                  <div class="tooltip-english">justice</div>
+                  <div class="tooltip-note">moral rightness or the proper order of things</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">夸奖</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">夸奖</div>
+                  <div class="tooltip-pinyin">kuājiǎng</div>
+                  <div class="tooltip-english">to praise</div>
+                  <div class="tooltip-note">to speak positively about someone’s action</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">慰问</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">慰问</div>
+                  <div class="tooltip-pinyin">wèiwèn</div>
+                  <div class="tooltip-english">to express sympathy or regards</div>
+                  <div class="tooltip-note">to show concern for someone in difficulty</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">功</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">功</div>
+                  <div class="tooltip-pinyin">gōng</div>
+                  <div class="tooltip-english">meritorious service; achievement</div>
+                  <div class="tooltip-note">a deed worthy of recognition</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>D. 粗陋环境与伤害</h3>
+            <p>Words about poor living conditions, dirt, damage, and attack.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">猪窝</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">猪窝</div>
+                  <div class="tooltip-pinyin">zhūwō</div>
+                  <div class="tooltip-english">pigsty, pigpen</div>
+                  <div class="tooltip-note">a filthy or rough animal enclosure</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">臭虫</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">臭虫</div>
+                  <div class="tooltip-pinyin">chòuchóng</div>
+                  <div class="tooltip-english">bedbug</div>
+                  <div class="tooltip-note">a biting insect found in dirty bedding</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">咬</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">咬</div>
+                  <div class="tooltip-pinyin">yǎo</div>
+                  <div class="tooltip-english">to bite</div>
+                  <div class="tooltip-note">to use the mouth or teeth to attack</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">强盗</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">强盗</div>
+                  <div class="tooltip-pinyin">qiángdào</div>
+                  <div class="tooltip-english">robber, bandit</div>
+                  <div class="tooltip-note">someone who steals by force</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">窟窿</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">窟窿</div>
+                  <div class="tooltip-pinyin">kūlong</div>
+                  <div class="tooltip-english">hole, cavity</div>
+                  <div class="tooltip-note">an opening or damaged empty space</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">砸</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">砸</div>
+                  <div class="tooltip-pinyin">zá</div>
+                  <div class="tooltip-english">to pound, to smash</div>
+                  <div class="tooltip-note">to hit hard and break something</div>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="patterns" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Focus on Patterns</p>
+          <h2>Reliable clues only: fewer, but more accurate</h2>
+        </div>
+
+        <div class="pattern-grid">
+          <div class="card pattern-card">
+            <h3>1. 扌 often signals hand action</h3>
+            <p>
+              This is a relatively stable clue in this lesson. The hand component
+              <strong>扌</strong> often points to an action done with the hand or body.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>挑</strong><span>tiāo</span><span>carry on shoulder</span></div>
+              <div class="char-badge"><strong>打</strong><span>dǎ</span><span>hit / hold / roll</span></div>
+              <div class="char-badge"><strong>打伞</strong><span>dǎ sǎn</span><span>hold an umbrella</span></div>
+              <div class="char-badge"><strong>打滚儿</strong><span>dǎgǔnr</span><span>roll about</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> when you see 扌, first ask whether the word involves a physical action done by hand. It is a clue, not a perfect rule.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                What is the safest character clue in 挑水, 打伞, and 打滚儿?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q1" value="A" /> A. 扌 often suggests hand-directed physical action</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="B" /> B. 扌 always means sadness</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="C" /> C. 扌 marks only nouns</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="D" /> D. 扌 always means speaking</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q1','A',`Correct. In this lesson, 扌 is best treated as a clue for hand-directed physical action, especially in 挑水, 打伞, and 打滚儿.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q1')">Reset</button>
+              </div>
+              <div id="feedback-q1" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>2. Eye-and-tears meaning network</h3>
+            <p>
+              Here the most reliable link is semantic, not radical. These words belong
+              to one clear meaning field: seeing, crying, and visible emotional response.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>眼角</strong><span>yǎnjiǎo</span><span>corner of the eye</span></div>
+              <div class="char-badge"><strong>眼泪</strong><span>yǎnlèi</span><span>tears</span></div>
+              <div class="char-badge"><strong>落泪</strong><span>luò lèi</span><span>weep</span></div>
+              <div class="char-badge"><strong>叹息</strong><span>tànxī</span><span>sigh</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> some words should be remembered as a scene: eye → tears → weeping → sighing. This is more accurate here than forcing a shared-radical explanation.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                Why is it useful to study 眼角, 眼泪, 落泪, and 叹息 together?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q2" value="A" /> A. They are all exactly the same meaning</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="B" /> B. They form a shared scene of visible sorrow and crying</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="C" /> C. They are all measure words</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="D" /> D. They all use the same radical throughout</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q2','B',`Correct. The strongest link here is semantic: they form a scene of visible sorrow and crying. That is a safer and more useful memory path than forcing a weak radical rule.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q2')">Reset</button>
+              </div>
+              <div id="feedback-q2" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>3. Social response contrast: 同情 vs 嘲笑</h3>
+            <p>
+              Strong contrasts help students organize meaning clearly. This lesson gives
+              a very useful opposition between compassion and ridicule.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>同情</strong><span>tóngqíng</span><span>sympathize</span></div>
+              <div class="char-badge"><strong>安慰</strong><span>ānwèi</span><span>comfort</span></div>
+              <div class="char-badge"><strong>慰问</strong><span>wèiwèn</span><span>show sympathy</span></div>
+              <div class="char-badge"><strong>嘲笑</strong><span>cháoxiào</span><span>mock</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> when you meet a new social-emotion word, ask whether it belongs to the “care/support” side or the “ridicule/harm” side.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                What is the strongest learning relationship between 同情 and 嘲笑?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q3" value="A" /> A. They are both about kindness</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="B" /> B. They form a contrast pair in attitude toward another person</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="C" /> C. They are both weather words</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="D" /> D. They are both body parts</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q3','B',`Correct. 同情 and 嘲笑 form a strong contrast pair: one shows compassion, the other ridicule. Contrasts like this are excellent for long-term memory.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q3')">Reset</button>
+              </div>
+              <div id="feedback-q3" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>4. Rough living-conditions network</h3>
+            <p>
+              Another reliable pattern in this lesson is a scene-based network:
+              dirty space, insects, biting, holes, darkness, and damage.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>猪窝</strong><span>zhūwō</span><span>pigsty</span></div>
+              <div class="char-badge"><strong>臭虫</strong><span>chòuchóng</span><span>bedbug</span></div>
+              <div class="char-badge"><strong>窟窿</strong><span>kūlong</span><span>hole</span></div>
+              <div class="char-badge"><strong>湿</strong><span>shī</span><span>wet</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> when a lesson gives many unpleasant concrete nouns, build one environment in your mind. Scene memory is often stronger than isolated memorization.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                Why is 猪窝 useful to study together with 臭虫, 窟窿, and 湿?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q4" value="A" /> A. They form a rough-living-conditions scene</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="B" /> B. They are all abstract philosophical words</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="C" /> C. They all mean “to speak”</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="D" /> D. They are all people’s names</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q4','A',`Correct. These words form one rough-living-conditions scene: dirty shelter, insects, holes, moisture, and discomfort. Scene grouping is a strong memory strategy here.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q4')">Reset</button>
+              </div>
+              <div id="feedback-q4" class="mcq-feedback"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-tools" class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">AI Question Box</p>
+          <h2>Ask about words, patterns, usage, or examples</h2>
+        </div>
+
+        <div class="tools-layout">
+          <div class="card tool-card">
+            <h3>Ask AI about this lesson</h3>
+            <p>
+              You can ask about meaning, usage, similar words, memory tips,
+              contrast pairs, or sentence examples.
+            </p>
+
+            <label for="studentQuestionInput">Your question</label>
+            <textarea id="studentQuestionInput" placeholder="Examples:
+What is the difference between 眼泪 and 落泪?
+How should I understand 天理 and 不平?
+Please give me a sentence with 安慰.
+What is the difference between 同情 and 嘲笑?"></textarea>
+
+            <div class="tool-actions">
+              <button class="tool-btn" id="askAiBtn">Ask AI</button>
+              <button class="tool-btn secondary" id="fillExampleBtn">Use Example Question</button>
+            </div>
+
+            <ul class="helper-list">
+              <li>Ask one clear question at a time.</li>
+              <li>Use Chinese words when possible.</li>
+              <li>Try asking about contrast pairs or emotional scenes.</li>
+            </ul>
+          </div>
+
+          <div class="card result-card">
+            <h3>AI response</h3>
+            <div class="result-meta">
+              <span class="tag">Course: humanities1</span>
+              <span class="tag">Lesson: 2-3</span>
+              <span class="tag" id="currentTaskTag">Task: student question</span>
+            </div>
+
+            <div id="resultBox" class="result-box">
+Ask a question to get started.
+            </div>
+
+            <div class="tool-actions" style="margin-top: 1rem;">
+              <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vocabulary" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Vocabulary list</p>
+          <h2>Lesson 2.3 New Words</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <p>This is the full vocabulary list for the lesson.</p>
+
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>词语</th>
+                  <th>Pinyin</th>
+                  <th>POS</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">傻子</td><td>shǎzi</td><td>N</td><td>fool</td></tr>
+                <tr><td>2</td><td class="hanzi">奴才</td><td>núcai</td><td>N</td><td>flunkey, lackey</td></tr>
+                <tr><td>3</td><td class="hanzi">诉苦</td><td>sùkǔ</td><td>VO</td><td>to complain, to grumble</td></tr>
+                <tr><td>4</td><td class="hanzi">悲哀</td><td>bēi'āi</td><td>Adj</td><td>grieved, sad</td></tr>
+                <tr><td>5</td><td class="hanzi">眼泪</td><td>yǎnlèi</td><td>N</td><td>tears</td></tr>
+                <tr><td>6</td><td class="hanzi">连成</td><td>liánchéng</td><td>VC</td><td>to join together into</td></tr>
+                <tr><td>7</td><td class="hanzi">线</td><td>xiàn</td><td>N</td><td>line</td></tr>
+                <tr><td>8</td><td class="hanzi">眼角</td><td>yǎnjiǎo</td><td>N</td><td>the corner of the eye, canthus</td></tr>
+                <tr><td>9</td><td class="hanzi">简直</td><td>jiǎnzhí</td><td>Adv</td><td>simply, absolutely, literally</td></tr>
+                <tr><td>10</td><td class="hanzi">高粱皮</td><td>gāoliangpí</td><td>N</td><td>husk of Chinese sorghum</td></tr>
+                <tr><td>11</td><td class="hanzi">昼夜</td><td>zhòuyè</td><td>N</td><td>day and night</td></tr>
+                <tr><td>12</td><td class="hanzi">挑水</td><td>tiāo shuǐ</td><td>VP</td><td>to carry (or fetch) water on shoulder</td></tr>
+                <tr><td>13</td><td class="hanzi">磨面</td><td>mò miàn</td><td>VP</td><td>to mill flour</td></tr>
+                <tr><td>14</td><td class="hanzi">晴天</td><td>qíngtiān</td><td>N</td><td>sunny day</td></tr>
+                <tr><td>15</td><td class="hanzi">打伞</td><td>dǎ sǎn</td><td>VP</td><td>to hold up an umbrella</td></tr>
+                <tr><td>16</td><td class="hanzi">银耳</td><td>yín'ěr</td><td>N</td><td>tremella; a kind of white fungus</td></tr>
+                <tr><td>17</td><td class="hanzi">侍候</td><td>shìhou</td><td>V</td><td>to serve, to wait upon</td></tr>
+                <tr><td>18</td><td class="hanzi">赏钱</td><td>shǎngqián</td><td>N</td><td>tips</td></tr>
+                <tr><td>19</td><td class="hanzi">叹息</td><td>tànxī</td><td>V</td><td>to sigh</td></tr>
+                <tr><td>20</td><td class="hanzi">似乎</td><td>sìhū</td><td>Adv</td><td>seemingly, apparently</td></tr>
+                <tr><td>21</td><td class="hanzi">落泪</td><td>luò lèi</td><td>VP</td><td>to shed tears, to weep</td></tr>
+                <tr><td>22</td><td class="hanzi">但愿如此</td><td>dànyuàn rúcǐ</td><td>IE</td><td>Let's hope so</td></tr>
+                <tr><td>23</td><td class="hanzi">安慰</td><td>ānwèi</td><td>V/Adj</td><td>to comfort; comforting</td></tr>
+                <tr><td>24</td><td class="hanzi">可见</td><td>kějiàn</td><td>Conj</td><td>it is thus clear that; so</td></tr>
+                <tr><td>25</td><td class="hanzi">天理</td><td>tiānlǐ</td><td>N</td><td>justice</td></tr>
+                <tr><td>26</td><td class="hanzi">不平</td><td>bùpíng</td><td>Adj</td><td>unfair</td></tr>
+                <tr><td>27</td><td class="hanzi">猪窝</td><td>zhūwō</td><td>N</td><td>pigsty, pigpen</td></tr>
+                <tr><td>28</td><td class="hanzi">倍</td><td>bèi</td><td>M</td><td>times</td></tr>
+                <tr><td>29</td><td class="hanzi">混账</td><td>hùnzhàng</td><td>N</td><td>bastard; abusive insult</td></tr>
+                <tr><td>30</td><td class="hanzi">湿</td><td>shī</td><td>Adj</td><td>wet, moist</td></tr>
+                <tr><td>31</td><td class="hanzi">阴</td><td>yīn</td><td>Adj</td><td>dark</td></tr>
+                <tr><td>32</td><td class="hanzi">臭虫</td><td>chòuchóng</td><td>N</td><td>bedbug, chinch</td></tr>
+                <tr><td>33</td><td class="hanzi">咬</td><td>yǎo</td><td>V</td><td>to bite</td></tr>
+                <tr><td>34</td><td class="hanzi">窗</td><td>chuāng</td><td>N</td><td>window</td></tr>
+                <tr><td>35</td><td class="hanzi">砸</td><td>zá</td><td>V</td><td>to pound, to smash</td></tr>
+                <tr><td>36</td><td class="hanzi">墙</td><td>qiáng</td><td>N</td><td>wall</td></tr>
+                <tr><td>37</td><td class="hanzi">骂</td><td>mà</td><td>V</td><td>to scold, to curse</td></tr>
+                <tr><td>38</td><td class="hanzi">强盗</td><td>qiángdào</td><td>N</td><td>robber, bandit</td></tr>
+                <tr><td>39</td><td class="hanzi">窟窿</td><td>kūlong</td><td>N</td><td>hole, cavity</td></tr>
+                <tr><td>40</td><td class="hanzi">打滚儿</td><td>dǎgǔnr</td><td>VO</td><td>to roll about</td></tr>
+                <tr><td>41</td><td class="hanzi">群</td><td>qún</td><td>M</td><td>a group of</td></tr>
+                <tr><td>42</td><td class="hanzi">赶走</td><td>gǎnzǒu</td><td>VC</td><td>to drive away</td></tr>
+                <tr><td>43</td><td class="hanzi">首先</td><td>shǒuxiān</td><td>Adv</td><td>first</td></tr>
+                <tr><td>44</td><td class="hanzi">得胜</td><td>déshèng</td><td>VO</td><td>to win a victory, to triumph</td></tr>
+                <tr><td>45</td><td class="hanzi">夸奖</td><td>kuājiǎng</td><td>V</td><td>to praise</td></tr>
+                <tr><td>46</td><td class="hanzi">慰问</td><td>wèiwèn</td><td>V</td><td>to express sympathy, to send regards</td></tr>
+                <tr><td>47</td><td class="hanzi">功</td><td>gōng</td><td>N</td><td>meritorious service, achievement</td></tr>
+                <tr><td>48</td><td class="hanzi">先见之明</td><td>xiānjiànzhīmíng</td><td>IE</td><td>foresight</td></tr>
+                <tr><td>49</td><td class="hanzi">大有希望</td><td>dàyǒu-xīwàng</td><td>IE</td><td>to be full of promise</td></tr>
+                <tr><td>50</td><td class="hanzi">似的</td><td>shìde</td><td>Part</td><td>seem as if…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="hero-actions">
+          <a class="btn btn-secondary" href="word-explorer.html">Back to Word Explorer</a>
+          <a class="btn btn-primary" href="lesson-2-4-word.html">Next lesson</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Advanced Chinese for Humanities (I) AI</p>
+      <p>Lesson 2.3 Word Explorer</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const WORKER_URL = "https://quiet-field-a529.xc2375.workers.dev";
+
+    const resultBox = document.getElementById("resultBox");
+    const studentQuestionInput = document.getElementById("studentQuestionInput");
+    const askAiBtn = document.getElementById("askAiBtn");
+    const fillExampleBtn = document.getElementById("fillExampleBtn");
+    const clearResultBtn = document.getElementById("clearResultBtn");
+
+    function setLoading() {
+      resultBox.innerHTML = '<span class="loading">Thinking…</span>';
+    }
+
+    function setError(message) {
+      resultBox.innerHTML = `<span class="error-text">${message}</span>`;
+    }
+
+    function setResult(text) {
+      resultBox.textContent = text;
+    }
+
+    function checkPatternQuestion(questionName, correctAnswer, correctFeedback) {
+      const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+
+      if (!selected) {
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = "Please choose an answer first.";
+        return;
+      }
+
+      if (selected.value === correctAnswer) {
+        feedbackBox.className = "mcq-feedback show correct";
+        feedbackBox.textContent = correctFeedback;
+      } else {
+        let message = "";
+
+        if (questionName === "q1") {
+          message = "Not quite. Here the safest clue is that 扌 often suggests hand-directed physical action, especially in 挑水 and 打伞 / 打滚儿.";
+        } else if (questionName === "q2") {
+          message = "Not quite. The strongest link here is the shared scene of visible sorrow: eye, tears, crying, sighing.";
+        } else if (questionName === "q3") {
+          message = "Not quite. 同情 and 嘲笑 are most useful as a contrast pair in social attitude toward another person.";
+        } else if (questionName === "q4") {
+          message = "Not quite. 猪窝, 臭虫, 窟窿, and 湿 are best remembered as one rough-living-conditions scene.";
+        }
+
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = message;
+      }
+    }
+
+    function resetPatternQuestion(questionName) {
+      document.querySelectorAll(`input[name="${questionName}"]`).forEach(input => input.checked = false);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+      feedbackBox.className = "mcq-feedback";
+      feedbackBox.textContent = "";
+    }
+
+    async function askStudentWordHelp(questionText) {
+      try {
+        setLoading();
+
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            course: "humanities1",
+            lesson: "2-3",
+            task: "student_word_help",
+            question: questionText,
+            context: "Lesson 2.3 discusses suffering, sympathy, social judgment, unfairness, rough living conditions, and emotional response."
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed.");
+        }
+
+        const resultText = data.result || "No response returned.";
+        setResult(resultText);
+      } catch (error) {
+        setError(error.message || "Something went wrong.");
+      }
+    }
+
+    askAiBtn.addEventListener("click", async () => {
+      const question = studentQuestionInput.value.trim();
+      if (!question) {
+        setError("Please enter a question first.");
+        return;
+      }
+      await askStudentWordHelp(question);
+    });
+
+    fillExampleBtn.addEventListener("click", () => {
+      studentQuestionInput.value = "What is the difference between 眼泪 and 落泪?";
+    });
+
+    clearResultBtn.addEventListener("click", () => {
+      resultBox.textContent = "Ask a question to get started.";
+    });
+
+    const chipWraps = document.querySelectorAll(".concept-chip-wrap");
+
+    chipWraps.forEach((wrap) => {
+      const chip = wrap.querySelector(".concept-chip");
+      const tooltip = wrap.querySelector(".concept-tooltip");
+
+      chip.addEventListener("mouseenter", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.add("show");
+        }
+      });
+
+      chip.addEventListener("mouseleave", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.remove("show");
+        }
+      });
+
+      chip.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+          e.stopPropagation();
+          document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+            if (tip !== tooltip) tip.classList.remove("show");
+          });
+          tooltip.classList.toggle("show");
+        } else {
+          studentQuestionInput.value = `What does ${chip.textContent.trim()} mean in this lesson?`;
+          window.location.hash = "ai-tools";
+        }
+      });
+
+      tooltip.addEventListener("click", (e) => {
+        e
