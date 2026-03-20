@@ -62,30 +62,72 @@
       margin-top: 0;
     }
 
-    .chip-list {
+    .concept-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.55rem;
-      margin-top: 0.9rem;
+      gap: 0.6rem;
+      margin-top: 0.95rem;
     }
 
-    .chip {
+    .concept-chip-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .concept-chip {
       display: inline-flex;
       align-items: center;
-      padding: 0.42rem 0.75rem;
+      padding: 0.45rem 0.8rem;
       border-radius: 999px;
       background: #f6ecdf;
       color: var(--primary-dark);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       font-weight: 700;
       border: 1px solid #e2d0b8;
       cursor: pointer;
       transition: background 0.2s ease, transform 0.2s ease;
     }
 
-    .chip:hover {
+    .concept-chip:hover {
       background: #f1e2cd;
       transform: translateY(-1px);
+    }
+
+    .concept-tooltip {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.45rem);
+      min-width: 180px;
+      max-width: 240px;
+      background: #fffdf9;
+      border: 1px solid #decbb2;
+      border-radius: 14px;
+      box-shadow: 0 12px 26px rgba(80, 56, 32, 0.12);
+      padding: 0.7rem 0.8rem;
+      z-index: 20;
+      display: none;
+    }
+
+    .concept-tooltip.show {
+      display: block;
+    }
+
+    .tooltip-word {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-pinyin {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 0.28rem;
+    }
+
+    .tooltip-english {
+      font-size: 0.92rem;
+      color: var(--text);
+      line-height: 1.45;
     }
 
     .focus-stack {
@@ -93,14 +135,69 @@
       gap: 1rem;
     }
 
-    .focus-list {
-      margin: 0.7rem 0 0;
-      padding-left: 1.1rem;
-      color: var(--muted);
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
     }
 
-    .focus-list li + li {
-      margin-top: 0.35rem;
+    .pattern-box {
+      border: 1px solid #eadbc8;
+      border-radius: 14px;
+      background: #fffdf9;
+      padding: 1rem;
+    }
+
+    .pattern-box h4 {
+      margin: 0 0 0.55rem;
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .pattern-box p {
+      margin: 0.35rem 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .char-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+    }
+
+    .char-badge {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.12rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      border: 1px solid #e7d7c2;
+      min-width: 78px;
+    }
+
+    .char-badge strong {
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .char-badge span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+
+    .memory-tip {
+      margin-top: 0.75rem;
+      padding: 0.8rem 0.9rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      color: var(--text);
+      font-size: 0.94rem;
+      line-height: 1.55;
     }
 
     .vocab-table-wrap {
@@ -150,23 +247,6 @@
       margin-top: 1.25rem;
     }
 
-    .ai-prompt-box {
-      background: linear-gradient(180deg, #fffaf3 0%, #f6ede1 100%);
-      border: 1px solid #dfcfbd;
-      border-radius: var(--radius-md);
-      padding: 1.2rem;
-    }
-
-    .ai-prompt-box ul {
-      margin: 0.8rem 0 0;
-      padding-left: 1.1rem;
-      color: var(--muted);
-    }
-
-    .ai-prompt-box li + li {
-      margin-top: 0.35rem;
-    }
-
     .tools-layout {
       display: grid;
       grid-template-columns: 0.95fr 1.05fr;
@@ -188,8 +268,7 @@
     }
 
     .tool-card input,
-    .tool-card textarea,
-    .tool-card select {
+    .tool-card textarea {
       width: 100%;
       padding: 0.8rem 0.9rem;
       border: 1px solid #d9c7b1;
@@ -240,7 +319,7 @@
     }
 
     .result-card {
-      min-height: 420px;
+      min-height: 360px;
     }
 
     .result-meta {
@@ -258,7 +337,7 @@
       border: 1px solid #e7dac7;
       border-radius: 14px;
       padding: 1rem;
-      min-height: 290px;
+      min-height: 230px;
     }
 
     .loading {
@@ -271,17 +350,16 @@
       font-weight: 700;
     }
 
-    .small-note {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-top: 0.7rem;
-    }
-
     @media (max-width: 960px) {
       .lesson-grid,
       .group-grid,
-      .tools-layout {
+      .tools-layout,
+      .pattern-grid {
         grid-template-columns: 1fr;
+      }
+
+      .concept-tooltip {
+        max-width: 220px;
       }
     }
   </style>
@@ -315,8 +393,8 @@
         <p class="page-intro">
           This opening lesson introduces a vocabulary network around the universe,
           creation myths, civilization, science, and the human search for origins.
-          Instead of memorizing words one by one, students are encouraged to see how
-          these words connect to larger concepts.
+          Students should not only learn individual words, but also build stronger
+          memory through concept groups and character patterns.
         </p>
 
         <div class="lesson-meta">
@@ -330,73 +408,248 @@
     <section class="section alt-bg">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow">Concept groups</p>
-          <h2>Vocabulary as a network</h2>
+          <p class="eyebrow">Concept Net</p>
+          <h2>Hover to explore key words</h2>
         </div>
 
         <div class="group-grid">
           <div class="card group-card">
             <h3>A. 宇宙与起源</h3>
             <p>How do people explain where the world comes from?</p>
-            <div class="chip-list">
-              <button class="chip quick-word" data-word="宇宙">宇宙</button>
-              <button class="chip quick-word" data-word="形成">形成</button>
-              <button class="chip quick-word" data-word="起源">起源</button>
-              <button class="chip quick-word" data-word="天文">天文</button>
-              <button class="chip quick-word" data-word="望远镜">望远镜</button>
-              <button class="chip quick-word" data-word="科学家">科学家</button>
-              <button class="chip quick-word" data-word="提出">提出</button>
-              <button class="chip quick-word" data-word="理论">理论</button>
-              <button class="chip quick-word" data-word="爆炸">爆炸</button>
-              <button class="chip quick-word" data-word="继续">继续</button>
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">宇宙</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">宇宙</div>
+                  <div class="tooltip-pinyin">yǔzhòu</div>
+                  <div class="tooltip-english">universe, cosmos</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">形成</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">形成</div>
+                  <div class="tooltip-pinyin">xíngchéng</div>
+                  <div class="tooltip-english">to form; to take shape</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">起源</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">起源</div>
+                  <div class="tooltip-pinyin">qǐyuán</div>
+                  <div class="tooltip-english">origin; to originate</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">天文</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">天文</div>
+                  <div class="tooltip-pinyin">tiānwén</div>
+                  <div class="tooltip-english">astronomy</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">望远镜</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">望远镜</div>
+                  <div class="tooltip-pinyin">wàngyuǎnjìng</div>
+                  <div class="tooltip-english">telescope</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">科学家</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">科学家</div>
+                  <div class="tooltip-pinyin">kēxuéjiā</div>
+                  <div class="tooltip-english">scientist</div>
+                </span>
+              </span>
             </div>
           </div>
 
           <div class="card group-card">
             <h3>B. 神话与文明</h3>
             <p>Myths and legends are also ways for civilizations to describe the world.</p>
-            <div class="chip-list">
-              <button class="chip quick-word" data-word="神">神</button>
-              <button class="chip quick-word" data-word="神话">神话</button>
-              <button class="chip quick-word" data-word="传说">传说</button>
-              <button class="chip quick-word" data-word="描述">描述</button>
-              <button class="chip quick-word" data-word="文明">文明</button>
-              <button class="chip quick-word" data-word="记载">记载</button>
-              <button class="chip quick-word" data-word="创造">创造</button>
-              <button class="chip quick-word" data-word="英雄">英雄</button>
-              <button class="chip quick-word" data-word="开天辟地">开天辟地</button>
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">神</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">神</div>
+                  <div class="tooltip-pinyin">shén</div>
+                  <div class="tooltip-english">god; deity; divine being</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">神话</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">神话</div>
+                  <div class="tooltip-pinyin">shénhuà</div>
+                  <div class="tooltip-english">myth; mythology</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">传说</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">传说</div>
+                  <div class="tooltip-pinyin">chuánshuō</div>
+                  <div class="tooltip-english">legend; traditional story</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">文明</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">文明</div>
+                  <div class="tooltip-pinyin">wénmíng</div>
+                  <div class="tooltip-english">civilization</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">描述</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">描述</div>
+                  <div class="tooltip-pinyin">miáoshù</div>
+                  <div class="tooltip-english">to describe</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">创造</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">创造</div>
+                  <div class="tooltip-pinyin">chuàngzào</div>
+                  <div class="tooltip-english">to create</div>
+                </span>
+              </span>
             </div>
           </div>
 
           <div class="card group-card">
             <h3>C. 世界的构成</h3>
             <p>Words that describe how the world and life take shape.</p>
-            <div class="chip-list">
-              <button class="chip quick-word" data-word="混沌">混沌</button>
-              <button class="chip quick-word" data-word="山川">山川</button>
-              <button class="chip quick-word" data-word="海洋">海洋</button>
-              <button class="chip quick-word" data-word="黑夜">黑夜</button>
-              <button class="chip quick-word" data-word="陆地">陆地</button>
-              <button class="chip quick-word" data-word="植物">植物</button>
-              <button class="chip quick-word" data-word="泥土">泥土</button>
-              <button class="chip quick-word" data-word="血">血</button>
-              <button class="chip quick-word" data-word="一切">一切</button>
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">混沌</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">混沌</div>
+                  <div class="tooltip-pinyin">hùndùn</div>
+                  <div class="tooltip-english">chaos; undifferentiated state</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">山川</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">山川</div>
+                  <div class="tooltip-pinyin">shānchuān</div>
+                  <div class="tooltip-english">mountains and rivers</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">海洋</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">海洋</div>
+                  <div class="tooltip-pinyin">hǎiyáng</div>
+                  <div class="tooltip-english">ocean; seas</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">陆地</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">陆地</div>
+                  <div class="tooltip-pinyin">lùdì</div>
+                  <div class="tooltip-english">land; dry land</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">植物</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">植物</div>
+                  <div class="tooltip-pinyin">zhíwù</div>
+                  <div class="tooltip-english">plant; vegetation</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">泥土</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">泥土</div>
+                  <div class="tooltip-pinyin">nítǔ</div>
+                  <div class="tooltip-english">soil; earth</div>
+                </span>
+              </span>
             </div>
           </div>
 
           <div class="card group-card">
             <h3>D. 对立、结合与变化</h3>
             <p>Pairs and process words help students see contrast, division, and union.</p>
-            <div class="chip-list">
-              <button class="chip quick-word" data-word="阳性">阳性</button>
-              <button class="chip quick-word" data-word="阴性">阴性</button>
-              <button class="chip quick-word" data-word="混合">混合</button>
-              <button class="chip quick-word" data-word="混乱">混乱</button>
-              <button class="chip quick-word" data-word="结合">结合</button>
-              <button class="chip quick-word" data-word="分成">分成</button>
-              <button class="chip quick-word" data-word="浮">浮</button>
-              <button class="chip quick-word" data-word="沉">沉</button>
-              <button class="chip quick-word" data-word="反映">反映</button>
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">阳性</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">阳性</div>
+                  <div class="tooltip-pinyin">yángxìng</div>
+                  <div class="tooltip-english">masculine; positive in a contrast pair</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">阴性</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">阴性</div>
+                  <div class="tooltip-pinyin">yīnxìng</div>
+                  <div class="tooltip-english">feminine; negative in a contrast pair</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">混合</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">混合</div>
+                  <div class="tooltip-pinyin">hùnhé</div>
+                  <div class="tooltip-english">to mix; to blend</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">结合</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">结合</div>
+                  <div class="tooltip-pinyin">jiéhé</div>
+                  <div class="tooltip-english">to combine; to join together</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">浮</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">浮</div>
+                  <div class="tooltip-pinyin">fú</div>
+                  <div class="tooltip-english">to float</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">沉</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">沉</div>
+                  <div class="tooltip-pinyin">chén</div>
+                  <div class="tooltip-english">to sink</div>
+                </span>
+              </span>
             </div>
           </div>
         </div>
@@ -404,55 +657,147 @@
     </section>
 
     <section class="section">
-      <div class="container lesson-grid">
-        <div>
-          <div class="card focus-card section-block">
-            <h3>Focus patterns</h3>
-            <ul class="focus-list">
-              <li><strong>混</strong> family: 混沌 / 混合 / 混乱</li>
-              <li><strong>神</strong> family: 神 / 神话</li>
-              <li>Process words: 形成 / 分成 / 结合 / 创造</li>
-              <li>Contrast pair: 浮 / 沉</li>
-              <li>Concept pair: 阳性 / 阴性</li>
-            </ul>
-          </div>
-
-          <div class="card focus-card section-block">
-            <h3>Proper nouns in this lesson</h3>
-            <div class="chip-list">
-              <span class="chip">盘古</span>
-              <span class="chip">埃及</span>
-              <span class="chip">巴比伦</span>
-              <span class="chip">印度</span>
-              <span class="chip">希腊</span>
-              <span class="chip">圣经</span>
-              <span class="chip">夏娃</span>
-              <span class="chip">女娲</span>
-            </div>
-          </div>
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Focus on Patterns</p>
+          <h2>Build a character memory network</h2>
         </div>
 
-        <div class="focus-stack">
-          <div class="ai-prompt-box">
-            <h3 style="margin-top: 0; margin-bottom: 0.55rem;">AI-ready directions</h3>
-            <p style="margin: 0; color: var(--muted);">
-              Click a word chip below or use the tools section to explore explanation,
-              comparison, sentence building, and discussion support.
-            </p>
-            <ul>
-              <li>Explain the difference between <strong>神话</strong> and <strong>传说</strong>.</li>
-              <li>Compare <strong>混沌</strong>, <strong>混合</strong>, and <strong>混乱</strong>.</li>
-              <li>Use <strong>形成</strong> and <strong>起源</strong> in two different sentences.</li>
-              <li>Discuss how <strong>神话</strong> and science explain the world differently.</li>
-            </ul>
+        <div class="pattern-grid">
+          <div class="card focus-card">
+            <h3>1. “混” family</h3>
+            <p><strong>Core idea:</strong> things are mixed together and not yet clearly separated.</p>
+            <p><strong>Structure note:</strong> 左右结构。偏旁是 <strong>氵</strong>，常和液体、流动、模糊状态有关。</p>
+
+            <div class="char-cluster">
+              <div class="char-badge">
+                <strong>混</strong>
+                <span>hùn</span>
+                <span>mix</span>
+              </div>
+              <div class="char-badge">
+                <strong>沌</strong>
+                <span>dùn</span>
+                <span>murky</span>
+              </div>
+              <div class="char-badge">
+                <strong>浑</strong>
+                <span>hún</span>
+                <span>muddy / whole</span>
+              </div>
+              <div class="char-badge">
+                <strong>清</strong>
+                <span>qīng</span>
+                <span>clear</span>
+              </div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> 氵 often signals something fluid or unclear. “混” can help students remember
+              words like <strong>混合</strong>, <strong>混乱</strong>, and <strong>混沌</strong> as a semantic family.
+            </div>
           </div>
 
           <div class="card focus-card">
-            <h3>Learning goal</h3>
-            <p>
-              Students should begin to notice that advanced vocabulary is often easier
-              to remember when grouped by concept, structure, and contrast.
-            </p>
+            <h3>2. “神” family</h3>
+            <p><strong>Core idea:</strong> the divine, spiritual, or extraordinary.</p>
+            <p><strong>Structure note:</strong> 左右结构。偏旁 <strong>礻</strong> comes from “示”, often connected to religion, ritual, or the sacred.</p>
+
+            <div class="char-cluster">
+              <div class="char-badge">
+                <strong>神</strong>
+                <span>shén</span>
+                <span>god</span>
+              </div>
+              <div class="char-badge">
+                <strong>祈</strong>
+                <span>qí</span>
+                <span>pray</span>
+              </div>
+              <div class="char-badge">
+                <strong>祝</strong>
+                <span>zhù</span>
+                <span>bless / wish</span>
+              </div>
+              <div class="char-badge">
+                <strong>福</strong>
+                <span>fú</span>
+                <span>blessing</span>
+              </div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> when students see 礻, they can ask whether the word has something to do
+              with ritual, belief, blessing, or spiritual meaning.
+            </div>
+          </div>
+
+          <div class="card focus-card">
+            <h3>3. “浮 / 沉” contrast pair</h3>
+            <p><strong>Core idea:</strong> opposite motion in water.</p>
+            <p><strong>Structure note:</strong> both use <strong>氵</strong>. This helps students remember them as a visual and semantic pair.</p>
+
+            <div class="char-cluster">
+              <div class="char-badge">
+                <strong>浮</strong>
+                <span>fú</span>
+                <span>float</span>
+              </div>
+              <div class="char-badge">
+                <strong>沉</strong>
+                <span>chén</span>
+                <span>sink</span>
+              </div>
+              <div class="char-badge">
+                <strong>浅</strong>
+                <span>qiǎn</span>
+                <span>shallow</span>
+              </div>
+              <div class="char-badge">
+                <strong>深</strong>
+                <span>shēn</span>
+                <span>deep</span>
+              </div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> teach these in pairs. Students often remember advanced words better when
+              they are learned through opposites.
+            </div>
+          </div>
+
+          <div class="card focus-card">
+            <h3>4. “文” in 天文 / 文明</h3>
+            <p><strong>Core idea:</strong> writing, pattern, culture, refined knowledge.</p>
+            <p><strong>Pattern note:</strong> the character <strong>文</strong> can point students toward culture, text, patterned knowledge, or civilization.</p>
+
+            <div class="char-cluster">
+              <div class="char-badge">
+                <strong>文</strong>
+                <span>wén</span>
+                <span>writing / culture</span>
+              </div>
+              <div class="char-badge">
+                <strong>天文</strong>
+                <span>tiānwén</span>
+                <span>astronomy</span>
+              </div>
+              <div class="char-badge">
+                <strong>文明</strong>
+                <span>wénmíng</span>
+                <span>civilization</span>
+              </div>
+              <div class="char-badge">
+                <strong>文化</strong>
+                <span>wénhuà</span>
+                <span>culture</span>
+              </div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> once students notice a shared character like 文, they can use it as a bridge
+              to connect several abstract academic words.
+            </div>
           </div>
         </div>
       </div>
@@ -462,14 +807,14 @@
       <div class="container">
         <div class="section-heading">
           <p class="eyebrow">AI tools</p>
-          <h2>Explore, compare, and discuss</h2>
+          <h2>Use the words actively</h2>
         </div>
 
         <div class="tools-layout">
           <div class="tool-grid">
             <div class="card tool-card">
-              <h3>Word tool</h3>
-              <p>Use one word for explanation or sentence generation.</p>
+              <h3>Make Sentence</h3>
+              <p>Generate a simpler and a more advanced sentence using one target word.</p>
 
               <label for="singleWordInput">Target word</label>
               <input
@@ -482,14 +827,13 @@
               <textarea id="lessonContextInput">This lesson discusses mythology, creation stories, scientific explanations of origin, and the human search for where the world comes from.</textarea>
 
               <div class="tool-actions">
-                <button class="tool-btn" id="explainWordBtn">Explain Word</button>
-                <button class="tool-btn secondary" id="makeSentenceBtn">Make Sentence</button>
+                <button class="tool-btn" id="makeSentenceBtn">Make Sentence</button>
               </div>
             </div>
 
             <div class="card tool-card">
-              <h3>Compare two words</h3>
-              <p>Useful for concept pairs and similar words.</p>
+              <h3>Compare Words</h3>
+              <p>Compare related words, near-synonyms, or concept pairs.</p>
 
               <label for="wordAInput">Word A</label>
               <input id="wordAInput" type="text" placeholder="e.g. 神话" />
@@ -500,22 +844,6 @@
               <div class="tool-actions">
                 <button class="tool-btn" id="compareWordsBtn">Compare Words</button>
               </div>
-            </div>
-
-            <div class="card tool-card">
-              <h3>Support discussion</h3>
-              <p>Prepare students to speak and respond in class discussion.</p>
-
-              <label for="discussionQuestionInput">Discussion question</label>
-              <textarea id="discussionQuestionInput">神话和科学在解释世界起源时有什么不同？</textarea>
-
-              <div class="tool-actions">
-                <button class="tool-btn" id="supportDiscussionBtn">Support Discussion</button>
-              </div>
-
-              <p class="small-note">
-                Tip: click a word chip above first, then compare or discuss around that concept.
-              </p>
             </div>
           </div>
 
@@ -550,7 +878,7 @@ Choose a tool to get started.
         <div class="card vocab-card">
           <p>
             This is the full vocabulary list for the lesson. Later, this table can be
-            turned into searchable cards, filters, and clickable word-family links.
+            turned into searchable cards, filters, and clickable pattern links.
           </p>
 
           <div class="vocab-table-wrap">
@@ -601,36 +929,6 @@ Choose a tool to get started.
                 <tr><td>34</td><td class="hanzi">植物</td><td>zhíwù</td><td>N</td><td>plant, flora</td></tr>
                 <tr><td>35</td><td class="hanzi">肋骨</td><td>lèigǔ</td><td>N</td><td>rib</td></tr>
                 <tr><td>36</td><td class="hanzi">伊甸园</td><td>yīdiànyuán</td><td>N</td><td>Garden of Eden, paradise</td></tr>
-                <tr><td>37</td><td class="hanzi">淡</td><td>dàn</td><td>Adj</td><td>tasteless, not salty enough, fresh</td></tr>
-                <tr><td>38</td><td class="hanzi">阳性</td><td>yángxìng</td><td>N</td><td>masculine</td></tr>
-                <tr><td>39</td><td class="hanzi">咸</td><td>xián</td><td>Adj</td><td>salty</td></tr>
-                <tr><td>40</td><td class="hanzi">阴性</td><td>yīnxìng</td><td>N</td><td>feminine</td></tr>
-                <tr><td>41</td><td class="hanzi">混合</td><td>hùnhé</td><td>V</td><td>to mix, to blend</td></tr>
-                <tr><td>42</td><td class="hanzi">混乱</td><td>hùnluàn</td><td>Adj</td><td>chaotic</td></tr>
-                <tr><td>43</td><td class="hanzi">力气</td><td>lìqi</td><td>N</td><td>physical strength, effort</td></tr>
-                <tr><td>44</td><td class="hanzi">杀死</td><td>shāsǐ</td><td>VC</td><td>to kill, to slay</td></tr>
-                <tr><td>45</td><td class="hanzi">血</td><td>xiě</td><td>N</td><td>blood</td></tr>
-                <tr><td>46</td><td class="hanzi">泥土</td><td>nítǔ</td><td>N</td><td>soil, earth</td></tr>
-                <tr><td>47</td><td class="hanzi">侍奉</td><td>shìfèng</td><td>V</td><td>to wait upon, to attend to (somebody)</td></tr>
-                <tr><td>48</td><td class="hanzi">唾液</td><td>tuòyè</td><td>N</td><td>saliva, spittle</td></tr>
-                <tr><td>49</td><td class="hanzi">结合</td><td>jiéhé</td><td>V</td><td>to combine, to be united in wedlock</td></tr>
-                <tr><td>50</td><td class="hanzi">一切</td><td>yíqiè</td><td>Pron</td><td>every, everything, all</td></tr>
-                <tr><td>51</td><td class="hanzi">怪物</td><td>guàiwù</td><td>N</td><td>monster, eccentric person</td></tr>
-                <tr><td>52</td><td class="hanzi">吓</td><td>xià</td><td>V</td><td>to frighten, to scare, to intimidate</td></tr>
-                <tr><td>53</td><td class="hanzi">开天辟地</td><td>kāitiān-pìdì</td><td>IE</td><td>the creation of heaven and earth; the beginning of history</td></tr>
-                <tr><td>54</td><td class="hanzi">踢</td><td>tī</td><td>V</td><td>to kick, to play</td></tr>
-                <tr><td>55</td><td class="hanzi">碎</td><td>suì</td><td>V/Adj</td><td>to break into pieces; broken</td></tr>
-                <tr><td>56</td><td class="hanzi">浮</td><td>fú</td><td>V</td><td>to float</td></tr>
-                <tr><td>57</td><td class="hanzi">沉</td><td>chén</td><td>V</td><td>to sink, to immerse</td></tr>
-                <tr><td>58</td><td class="hanzi">荒凉</td><td>huāngliáng</td><td>Adj</td><td>desolate, bleak, wild</td></tr>
-                <tr><td>59</td><td class="hanzi">生气</td><td>shēngqì</td><td>N</td><td>vitality</td></tr>
-                <tr><td>60</td><td class="hanzi">不禁</td><td>bùjīn</td><td>Adv</td><td>can't help (doing sth.)</td></tr>
-                <tr><td>61</td><td class="hanzi">孤独</td><td>gūdú</td><td>Adj</td><td>lonely, solitary</td></tr>
-                <tr><td>62</td><td class="hanzi">延续</td><td>yánxù</td><td>V</td><td>to last, to go on</td></tr>
-                <tr><td>63</td><td class="hanzi">分成</td><td>fēnchéng</td><td>VC</td><td>to divide into, to separate into</td></tr>
-                <tr><td>64</td><td class="hanzi">反映</td><td>fǎnyìng</td><td>V</td><td>to reflect, to mirror</td></tr>
-                <tr><td>65</td><td class="hanzi">征服</td><td>zhēngfú</td><td>V</td><td>to conquer</td></tr>
-                <tr><td>66</td><td class="hanzi">愿望</td><td>yuànwàng</td><td>N</td><td>desire, wish</td></tr>
               </tbody>
             </table>
           </div>
@@ -658,18 +956,16 @@ Choose a tool to get started.
   <script src="app.js"></script>
   <script>
     const WORKER_URL = "https://quiet-field-a529.xc2375.workers.dev";
+
     const singleWordInput = document.getElementById("singleWordInput");
     const lessonContextInput = document.getElementById("lessonContextInput");
     const wordAInput = document.getElementById("wordAInput");
     const wordBInput = document.getElementById("wordBInput");
-    const discussionQuestionInput = document.getElementById("discussionQuestionInput");
     const resultBox = document.getElementById("resultBox");
     const currentTaskTag = document.getElementById("currentTaskTag");
 
-    const explainWordBtn = document.getElementById("explainWordBtn");
     const makeSentenceBtn = document.getElementById("makeSentenceBtn");
     const compareWordsBtn = document.getElementById("compareWordsBtn");
-    const supportDiscussionBtn = document.getElementById("supportDiscussionBtn");
     const clearResultBtn = document.getElementById("clearResultBtn");
 
     function setLoading(taskName) {
@@ -709,25 +1005,6 @@ Choose a tool to get started.
         setError(error.message || "Something went wrong.");
       }
     }
-
-    explainWordBtn.addEventListener("click", async () => {
-      const word = singleWordInput.value.trim();
-      if (!word) {
-        setError("Please enter a target word first.");
-        return;
-      }
-
-      await callHumanitiesTool(
-        {
-          course: "humanities1",
-          lesson: "1-0",
-          task: "explain_word",
-          input: word,
-          context: lessonContextInput.value.trim()
-        },
-        "Explain Word"
-      );
-    });
 
     makeSentenceBtn.addEventListener("click", async () => {
       const word = singleWordInput.value.trim();
@@ -770,35 +1047,49 @@ Choose a tool to get started.
       );
     });
 
-    supportDiscussionBtn.addEventListener("click", async () => {
-      const question = discussionQuestionInput.value.trim();
-      if (!question) {
-        setError("Please enter a discussion question.");
-        return;
-      }
-
-      await callHumanitiesTool(
-        {
-          course: "humanities1",
-          lesson: "1-0",
-          task: "support_discussion",
-          discussionQuestion: question,
-          context: lessonContextInput.value.trim()
-        },
-        "Support Discussion"
-      );
-    });
-
     clearResultBtn.addEventListener("click", () => {
       currentTaskTag.textContent = "Task: —";
       resultBox.textContent = "Choose a tool to get started.";
     });
 
-    document.querySelectorAll(".quick-word").forEach((chip) => {
-      chip.addEventListener("click", () => {
-        const word = chip.dataset.word || chip.textContent.trim();
-        singleWordInput.value = word;
-        window.location.hash = "ai-tools";
+    const chipWraps = document.querySelectorAll(".concept-chip-wrap");
+
+    chipWraps.forEach((wrap) => {
+      const chip = wrap.querySelector(".concept-chip");
+      const tooltip = wrap.querySelector(".concept-tooltip");
+
+      chip.addEventListener("mouseenter", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.add("show");
+        }
+      });
+
+      chip.addEventListener("mouseleave", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.remove("show");
+        }
+      });
+
+      chip.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+          e.stopPropagation();
+          document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+            if (tip !== tooltip) tip.classList.remove("show");
+          });
+          tooltip.classList.toggle("show");
+        } else {
+          singleWordInput.value = chip.textContent.trim();
+        }
+      });
+
+      tooltip.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+        tip.classList.remove("show");
       });
     });
   </script>
