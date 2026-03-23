@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Smart Reading 2.0 – 历史上几个有名的悖论</title>
+<style>
+:root{--ac:#2e7d32;--ad:#1b5e20;--vc:#1a6b2a;--ag:linear-gradient(135deg,#1b5e20 0%,#388e3c 100%)}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Noto Serif SC",Georgia,serif;background:#fdf8f0;color:#2c1a0e;line-height:2;font-size:18px}
+.page-header{background:var(--ag);color:#fff;padding:24px 32px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.back-link{color:rgba(255,255,255,.85);text-decoration:none;font-size:14px;font-family:sans-serif}
+.back-link:hover{color:#fff;text-decoration:underline}
+.badge{background:rgba(255,255,255,.25);border-radius:6px;padding:4px 12px;font-size:13px;letter-spacing:1px;font-family:sans-serif}
+.page-header h1{font-size:22px;flex:1}
+.audio-section{background:#fff7ee;border-bottom:2px solid #e8d5b0;padding:14px 32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.audio-label{font-size:14px;color:#8b5e3c;font-family:sans-serif;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.audio-placeholder{flex:1;background:#f0e8d8;border:2px dashed #c8a97a;border-radius:8px;padding:8px 16px;font-size:13px;color:#9c7a56;font-family:sans-serif;text-align:center}
+.reading-wrap{max-width:820px;margin:0 auto;padding:36px 32px 20px}
+.reading-title{text-align:center;font-size:26px;font-weight:700;letter-spacing:2px;margin-bottom:28px;color:var(--ad)}
+.reading-body p{text-indent:2em;margin-bottom:20px}
+.reading-body .sh{text-indent:0;font-weight:700;color:var(--ad);margin-top:10px;margin-bottom:6px;font-size:17px}
+.vocab{color:var(--vc);font-weight:bold;cursor:pointer;position:relative;border-bottom:1px dotted var(--vc);display:inline}
+.vocab-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#2c1a0e;color:#fdf8f0;border-radius:8px;padding:8px 13px;white-space:nowrap;z-index:100;font-size:14px;font-family:sans-serif;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,.35);pointer-events:none}
+.vocab-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#2c1a0e}
+.vocab-tip .tp{color:#f0c080;font-style:italic;display:block;font-size:13px}
+.vocab-tip .te{display:block;font-size:13px;margin-top:2px}
+@media (hover:hover) and (pointer:fine){.vocab:hover .vocab-tip{display:block}}
+.vocab.ta .vocab-tip{display:block}
+.vocab.fd .vocab-tip{bottom:auto;top:calc(100% + 8px)}
+.vocab.fd .vocab-tip::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:#2c1a0e}
+.section-divider{border:none;border-top:2px solid #e0c896;max-width:820px;margin:0 auto 28px}
+.questions-section{max-width:820px;margin:0 auto;padding:0 32px 48px}
+.qh{font-size:18px;font-weight:700;color:var(--ad);margin-bottom:24px;font-family:sans-serif;display:flex;align-items:center;gap:10px}
+.qc{background:#fff;border:1px solid #e0c896;border-radius:12px;padding:22px 24px;margin-bottom:22px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.qt{font-size:16px;font-weight:600;margin-bottom:14px;color:#2c1a0e;line-height:1.7;font-family:sans-serif}
+.qn{display:inline-block;background:var(--ac);color:#fff;border-radius:50%;width:26px;height:26px;line-height:26px;text-align:center;font-size:14px;margin-right:8px}
+.ol{list-style:none}
+.ol li{margin-bottom:8px}
+.ob{width:100%;text-align:left;background:#fdf8f0;border:2px solid #e0c896;border-radius:8px;padding:10px 16px;font-size:15px;cursor:pointer;transition:background .15s,border-color .15s;color:#2c1a0e;font-family:sans-serif;line-height:1.6}
+.ob:hover:not(:disabled){background:#f5e6c8;border-color:#c0a060}
+.ob.correct{background:#d4edda;border-color:#28a745;color:#155724}
+.ob.wrong{background:#f8d7da;border-color:#dc3545;color:#721c24}
+.ob.rc{background:#d4edda;border-color:#28a745;color:#155724;opacity:.75}
+.ob:disabled{cursor:default}
+.fb{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:14px;font-family:sans-serif;display:none;line-height:1.6}
+.fb.show{display:block}
+.fb.ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.fb.no{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+.rb{margin-top:32px;display:none;background:#fff;border:1px solid #e0c896;border-radius:12px;padding:20px 24px;text-align:center;font-family:sans-serif}
+.rb.show{display:block}
+.rs{font-size:32px;font-weight:700;color:var(--ac)}
+.rl{font-size:15px;color:#5a3e28;margin-top:4px}
+.rbt{margin-top:14px;background:var(--ac);color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:15px;cursor:pointer;font-family:sans-serif}
+@media (max-width:600px){body{font-size:16px}.reading-wrap,.questions-section{padding-left:16px;padding-right:16px}.page-header{padding:16px}.reading-title{font-size:22px}.ob{font-size:14px;padding:9px 12px}}
+
+</style>
+</head>
+<body>
+<header class="page-header">
+<a class="back-link" href="smart-reading.html">← Smart Reading</a>
+<div class="badge">扩展阅读 2.0</div>
+<h1>历史上几个有名的悖论</h1>
+</header>
+<div class="audio-section">
+<div class="audio-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>朗读音频</div>
+<div class="audio-placeholder">🎙️ 音频待上传 | 文件名：<code>reading_2_0.mp3</code> → 放入 <code>audio/</code> 后取消注释</div>
+<!-- <audio controls src="audio/reading_2_0.mp3" style="flex:1;min-width:200px"></audio> -->
+</div>
+<div class="reading-wrap">
+<h2 class="reading-title">历史上几个有名的悖论</h2>
+<div class="reading-body">
+    <p><vocab-w data-p="Sūgélādǐ" data-e="Socrates">苏格拉底</vocab-w>是古<vocab-w data-p="Xīlà" data-e="Greece">希腊</vocab-w>有名的哲学家，他有一句名言："我只知道一件事，那就是我什么都不知道。"这是一个<vocab-w data-p="bèilùn" data-e="paradox">悖论</vocab-w>，如果苏格拉底真的"什么都不知道"，那他说自己"只知道一件事"就不可能<vocab-w data-p="chénglì" data-e="to be tenable; to hold">成立</vocab-w>。</p>
+    <p>中外历史上有过不少著名的悖论，它们<vocab-w data-p="yǐnqǐ" data-e="to cause; give rise to">引起</vocab-w>了古今许多思想家和爱好者的兴趣，并最终<vocab-w data-p="tuīdòng" data-e="to promote; drive forward">推动</vocab-w>了<vocab-w data-p="luójí" data-e="logic">逻辑</vocab-w>和数学的发展。下面是西方历史上几个比较有名的悖论。</p>
+    <p class="sh">一、理发师悖论</p>
+    <p>一个小城里有一位<vocab-w data-p="lǐfàshī" data-e="barber">理发师</vocab-w>，他在理发店门口贴了一个<vocab-w data-p="guǎnggào" data-e="advertisement">广告</vocab-w>，广告上说："我会给所有不给自己<vocab-w data-p="guā húzi" data-e="to shave">刮胡子</vocab-w>的人刮胡子。"每天来他店里刮胡子的人很多。可是有一天，理发师发现自己的胡子长了，他就坐在<vocab-w data-p="jìngzi" data-e="mirror">镜子</vocab-w>前，准备给自己刮胡子。你说他能给自己刮胡子吗？如果他不给自己刮胡子，他就属于"不给自己刮胡子的人"，他就要给自己刮胡子。而如果他给自己刮胡子呢？他又属于"给自己刮胡子的人"，他就不该给自己刮胡子。不管他给不给自己刮胡子，都会出现矛盾。"理发师悖论"是英国哲学家<vocab-w data-p="Luósù" data-e="Bertrand Russell">罗素</vocab-w>提出来的，所以又被称为"罗素悖论"。</p>
+    <p class="sh">二、说谎者悖论</p>
+    <p>生活在公元前6世纪的<vocab-w data-p="Yībìmèngnídé" data-e="Epimenides">伊壁孟尼德</vocab-w>是克里特人，他曾经说过这样一句话："所有克里特人说的话都是<vocab-w data-p="huǎnghuà" data-e="lie; falsehood">谎话</vocab-w>。"如果他说的这句话是真的，那么作为克里特人的伊壁孟尼德说了一句真话，这跟"所有克里特人说的话都是谎话"是矛盾的；如果这句话不是真的，那么克里特人伊壁孟尼德说了一句谎话，那所有克里特人说的话都是真话，那又是矛盾的。所以说，不管哪种情况，他都很难<vocab-w data-p="zìyuán-qíshuō" data-e="to justify oneself">自圆其说</vocab-w>。</p>
+    <p>后来，<vocab-w data-p="Ōubùlǐdé" data-e="Eubulides">欧布里德</vocab-w>将伊壁孟尼德的话改为："我正在说谎。"这句话是真的还是假的？如果是真话，那么说话者正在说谎；既然是说谎，那么说的一定是假话，这就跟上面的<vocab-w data-p="jiǎshè" data-e="hypothesis">假设</vocab-w>"是真话"矛盾。反过来，如果这句话是假的，那么说话者说的就是真话，这与"正在说谎"又出现了矛盾。说谎者悖论直到今天还在<vocab-w data-p="kùnrǎo" data-e="to puzzle; perplex">困扰</vocab-w>着数学家和逻辑学家，它是与自然语言的<vocab-w data-p="biǎodá" data-e="expression">表达</vocab-w>方式直接<vocab-w data-p="xiāngguān" data-e="related; connected">相关</vocab-w>的悖论，因此被称为"语义学悖论"。</p>
+    <p class="sh">三、堂吉诃德悖论</p>
+    <p>小说《<vocab-w data-p="Tángjíhēdé" data-e="Don Quixote">堂吉诃德</vocab-w>》里描写过一个<vocab-w data-p="dǎo" data-e="island">岛</vocab-w>国，它有一条奇怪的法律：每一个来岛上旅游的游客都要回答一个问题："你来这里做什么？"如果游客回答对了，就<vocab-w data-p="yǔnxǔ" data-e="to allow">允许</vocab-w>他在岛上玩儿；如果回答错了，就要把他<vocab-w data-p="jiǎosǐ" data-e="to kill by hanging">绞死</vocab-w>。</p>
+    <p>没想到有一天，岛上来了一位勇敢的游客，当国王问他"你来这里做什么"时，这个人的回答是："我来这里是要被绞死的。"</p>
+    <p>国王不知道该怎么办了——是让他在岛上玩儿，还是把他绞死呢？如果让他在岛上玩儿，那就与他说的"要被绞死"矛盾；如果把他绞死，他的回答就是对的，既然回答对了就不该绞死。国王想了好久，最后说："不管我做什么决定，都肯定要<vocab-w data-p="pòhuài" data-e="to break; violate">破坏</vocab-w>这条法律。我们还是给这个人自由吧。"</p>
+    <p>随着现代数学、逻辑学、物理学和天文学的快速发展，又有不少新的悖论出现。随着研究、<vocab-w data-p="tànsuǒ" data-e="to explore">探索</vocab-w>的不断深入，新的<vocab-w data-p="chéngguǒ" data-e="achievement">成果</vocab-w>将极大地改变我们的<vocab-w data-p="sīwéi" data-e="thinking">思维</vocab-w>观念。</p>
+</div>
+</div>
+<hr class="section-divider"/>
+<div class="questions-section">
+<div class="qh"><span>📖</span> 阅读理解</div>
+<div class="qc"><div class="qt"><span class="qn">1</span>理发师悖论中，理发师面临的矛盾是什么？</div><ul class="ol"><li><button class="ob" data-q="1" data-i="0">A. 他不知道如何给自己刮胡子</button></li><li><button class="ob" data-q="1" data-i="1">B. 他的广告写错了，引发误会</button></li><li><button class="ob" data-q="1" data-i="2">C. 不管他给不给自己刮胡子，都与自己的广告产生矛盾</button></li><li><button class="ob" data-q="1" data-i="3">D. 顾客太多没时间给自己刮</button></li></ul><div class="fb" id="fb1"></div></div>
+<div class="qc"><div class="qt"><span class="qn">2</span>伊壁孟尼德说所有克里特人说的话都是谎话，为什么是悖论？</div><ul class="ol"><li><button class="ob" data-q="2" data-i="0">A. 克里特人从来不说谎，这句话肯定假</button></li><li><button class="ob" data-q="2" data-i="1">B. 他自己是克里特人，这句话无论真假都会与自身产生矛盾</button></li><li><button class="ob" data-q="2" data-i="2">C. 没有人能证明克里特人是否说谎</button></li><li><button class="ob" data-q="2" data-i="3">D. 这句话没有任何意义</button></li></ul><div class="fb" id="fb2"></div></div>
+<div class="qc"><div class="qt"><span class="qn">3</span>堂吉诃德悖论中，游客的回答是什么？</div><ul class="ol"><li><button class="ob" data-q="3" data-i="0">A. 我来这里是为了旅游</button></li><li><button class="ob" data-q="3" data-i="1">B. 我来这里是要被绞死的</button></li><li><button class="ob" data-q="3" data-i="2">C. 我来这里是要见国王的</button></li><li><button class="ob" data-q="3" data-i="3">D. 我不知道我为什么来这里</button></li></ul><div class="fb" id="fb3"></div></div>
+<div class="qc"><div class="qt"><span class="qn">4</span>文章认为著名悖论对人类有什么贡献？</div><ul class="ol"><li><button class="ob" data-q="4" data-i="0">A. 证明了逻辑和数学永远无法解决自我矛盾</button></li><li><button class="ob" data-q="4" data-i="1">B. 引起思想家兴趣，推动了逻辑和数学的发展</button></li><li><button class="ob" data-q="4" data-i="2">C. 让人们放弃了对真理的追求</button></li><li><button class="ob" data-q="4" data-i="3">D. 只对古代哲学家有用</button></li></ul><div class="fb" id="fb4"></div></div>
+<div class="rb" id="rb"><div class="rs" id="rs"></div><div class="rl" id="rl"></div><button class="rbt" onclick="resetQuiz()">重新作答</button></div>
+</div>
+<script>
+var ANSWERS={"1": 2, "2": 1, "3": 1, "4": 1};
+var FEEDBACK={"1": {"c": "✅ 正确！理发师说给所有不给自己刮的人刮：给自己刮则属于「给自己刮的人」不该刮；不给则属于「不给自己刮的人」要刮。无论如何都矛盾。", "w": "❌ 再想想。想想：如果理发师给自己刮，或者不给自己刮，各会产生什么逻辑矛盾？"}, "2": {"c": "✅ 正确！伊壁孟尼德本人是克里特人——如果这句话真，他说的也是谎话，矛盾；如果假，克里特人都说真话，也矛盾。", "w": "❌ 再想想。关键在于说话的人是什么身份——伊壁孟尼德本人是克里特人，这会导致什么逻辑矛盾？"}, "3": {"c": "✅ 正确！游客回答「我来这里是要被绞死的」。若让他玩则与这句话矛盾；若绞死则他回答对了就不该绞死。", "w": "❌ 再想想。游客的回答让国王进退两难——他到底说了什么？"}, "4": {"c": "✅ 正确！文章开头说这些悖论「引起了古今许多思想家和爱好者的兴趣，并最终推动了逻辑和数学的发展」。", "w": "❌ 再想想。文章开头明确说明了悖论对人类发展的贡献是什么。"}};
+
+(function(){
+  document.querySelectorAll('vocab-w').forEach(function(el){
+    var s=document.createElement('span');s.className='vocab';
+    s.innerHTML=el.textContent+'<span class="vocab-tip"><span class="tp">'+el.dataset.p+'</span><span class="te">'+el.dataset.e+'</span></span>';
+    el.replaceWith(s);
+  });
+})();
+var _av=null;
+document.addEventListener('touchstart',function(e){
+  var v=e.target.closest('.vocab');
+  if(v){e.preventDefault();var r=v.getBoundingClientRect();v.classList.toggle('fd',r.top<80);
+    if(_av&&_av!==v)_av.classList.remove('ta');v.classList.toggle('ta');_av=v.classList.contains('ta')?v:null;}
+  else if(_av){_av.classList.remove('ta');_av=null;}
+},{passive:false});
+var _an={},_tc=0,_TQ=Object.keys(ANSWERS).length;
+document.querySelectorAll('.ob').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var q=+this.dataset.q,i=+this.dataset.i;
+    if(_an[q])return;_an[q]=true;_tc++;
+    var c=ANSWERS[q],fb=document.getElementById('fb'+q),all=document.querySelectorAll('.ob[data-q="'+q+'"]');
+    all.forEach(function(b){b.disabled=true;});
+    if(i===c){this.classList.add('correct');fb.textContent=FEEDBACK[q].c;fb.className='fb show ok';}
+    else{this.classList.add('wrong');all[c].classList.add('rc');fb.textContent=FEEDBACK[q].w;fb.className='fb show no';}
+    if(_tc===_TQ)_show();
+  });
+});
+function _show(){
+  var s=Object.keys(_an).filter(function(q){return[...document.querySelectorAll('.ob[data-q="'+q+'"]')].some(function(b){return b.classList.contains('correct');});}).length;
+  var bar=document.getElementById('rb');
+  document.getElementById('rs').textContent=s+' / '+_TQ;
+  document.getElementById('rl').textContent=s===_TQ?'完美！全部答对！':s>=_TQ-1?'很好！可以再回顾一下答错的题。':s>=_TQ-2?'还不错！建议再读一遍文章。':'继续努力！多读几遍，你会做得更好！';
+  bar.classList.add('show');bar.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function resetQuiz(){
+  _an={};_tc=0;
+  document.querySelectorAll('.ob').forEach(function(b){b.disabled=false;b.className='ob';});
+  document.querySelectorAll('.fb').forEach(function(f){f.className='fb';f.textContent='';});
+  document.getElementById('rb').classList.remove('show');
+}
+
+</script>
+</body>
+</html>

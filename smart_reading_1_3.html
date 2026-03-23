@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Smart Reading 1.3 – 司马迁的后代</title>
+<style>
+:root{--ac:#c0392b;--ad:#5a1010;--vc:#b5180e;--ag:linear-gradient(135deg,#8b1a1a 0%,#c0392b 100%)}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Noto Serif SC",Georgia,serif;background:#fdf8f0;color:#2c1a0e;line-height:2;font-size:18px}
+.page-header{background:var(--ag);color:#fff;padding:24px 32px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.back-link{color:rgba(255,255,255,.85);text-decoration:none;font-size:14px;font-family:sans-serif}
+.back-link:hover{color:#fff;text-decoration:underline}
+.badge{background:rgba(255,255,255,.25);border-radius:6px;padding:4px 12px;font-size:13px;letter-spacing:1px;font-family:sans-serif}
+.page-header h1{font-size:22px;flex:1}
+.audio-section{background:#fff7ee;border-bottom:2px solid #e8d5b0;padding:14px 32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.audio-label{font-size:14px;color:#8b5e3c;font-family:sans-serif;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.audio-placeholder{flex:1;background:#f0e8d8;border:2px dashed #c8a97a;border-radius:8px;padding:8px 16px;font-size:13px;color:#9c7a56;font-family:sans-serif;text-align:center}
+.reading-wrap{max-width:820px;margin:0 auto;padding:36px 32px 20px}
+.reading-title{text-align:center;font-size:26px;font-weight:700;letter-spacing:2px;margin-bottom:28px;color:var(--ad)}
+.reading-body p{text-indent:2em;margin-bottom:20px}
+.reading-body .sh{text-indent:0;font-weight:700;color:var(--ad);margin-top:10px;margin-bottom:6px;font-size:17px}
+.vocab{color:var(--vc);font-weight:bold;cursor:pointer;position:relative;border-bottom:1px dotted var(--vc);display:inline}
+.vocab-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#2c1a0e;color:#fdf8f0;border-radius:8px;padding:8px 13px;white-space:nowrap;z-index:100;font-size:14px;font-family:sans-serif;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,.35);pointer-events:none}
+.vocab-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#2c1a0e}
+.vocab-tip .tp{color:#f0c080;font-style:italic;display:block;font-size:13px}
+.vocab-tip .te{display:block;font-size:13px;margin-top:2px}
+@media (hover:hover) and (pointer:fine){.vocab:hover .vocab-tip{display:block}}
+.vocab.ta .vocab-tip{display:block}
+.vocab.fd .vocab-tip{bottom:auto;top:calc(100% + 8px)}
+.vocab.fd .vocab-tip::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:#2c1a0e}
+.section-divider{border:none;border-top:2px solid #e0c896;max-width:820px;margin:0 auto 28px}
+.questions-section{max-width:820px;margin:0 auto;padding:0 32px 48px}
+.qh{font-size:18px;font-weight:700;color:var(--ad);margin-bottom:24px;font-family:sans-serif;display:flex;align-items:center;gap:10px}
+.qc{background:#fff;border:1px solid #e0c896;border-radius:12px;padding:22px 24px;margin-bottom:22px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.qt{font-size:16px;font-weight:600;margin-bottom:14px;color:#2c1a0e;line-height:1.7;font-family:sans-serif}
+.qn{display:inline-block;background:var(--ac);color:#fff;border-radius:50%;width:26px;height:26px;line-height:26px;text-align:center;font-size:14px;margin-right:8px}
+.ol{list-style:none}
+.ol li{margin-bottom:8px}
+.ob{width:100%;text-align:left;background:#fdf8f0;border:2px solid #e0c896;border-radius:8px;padding:10px 16px;font-size:15px;cursor:pointer;transition:background .15s,border-color .15s;color:#2c1a0e;font-family:sans-serif;line-height:1.6}
+.ob:hover:not(:disabled){background:#f5e6c8;border-color:#c0a060}
+.ob.correct{background:#d4edda;border-color:#28a745;color:#155724}
+.ob.wrong{background:#f8d7da;border-color:#dc3545;color:#721c24}
+.ob.rc{background:#d4edda;border-color:#28a745;color:#155724;opacity:.75}
+.ob:disabled{cursor:default}
+.fb{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:14px;font-family:sans-serif;display:none;line-height:1.6}
+.fb.show{display:block}
+.fb.ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.fb.no{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+.rb{margin-top:32px;display:none;background:#fff;border:1px solid #e0c896;border-radius:12px;padding:20px 24px;text-align:center;font-family:sans-serif}
+.rb.show{display:block}
+.rs{font-size:32px;font-weight:700;color:var(--ac)}
+.rl{font-size:15px;color:#5a3e28;margin-top:4px}
+.rbt{margin-top:14px;background:var(--ac);color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:15px;cursor:pointer;font-family:sans-serif}
+@media (max-width:600px){body{font-size:16px}.reading-wrap,.questions-section{padding-left:16px;padding-right:16px}.page-header{padding:16px}.reading-title{font-size:22px}.ob{font-size:14px;padding:9px 12px}}
+
+</style>
+</head>
+<body>
+<header class="page-header">
+<a class="back-link" href="smart-reading.html">← Smart Reading</a>
+<div class="badge">扩展阅读 1.3</div>
+<h1>司马迁的后代</h1>
+</header>
+<div class="audio-section">
+<div class="audio-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>朗读音频</div>
+<div class="audio-placeholder">🎙️ 音频待上传 | 文件名：<code>reading_1_3.mp3</code> → 放入 <code>audio/</code> 后取消注释</div>
+<!-- <audio controls src="audio/reading_1_3.mp3" style="flex:1;min-width:200px"></audio> -->
+</div>
+<div class="reading-wrap">
+<h2 class="reading-title">司马迁的后代</h2>
+<div class="reading-body">
+    <p>司马迁<vocab-w data-p="fùxìng" data-e="two-character surname">复姓</vocab-w>司马，是中国西汉时期伟大的历史学家和思想家。司马迁的父亲司马谈曾经做过汉朝的史官。司马谈熟悉历史，对春秋战国时期的思想很有兴趣，他花了很多时间<vocab-w data-p="sōují" data-e="to gather; collect">搜集</vocab-w>历史故事和民间传说，并打算将来把它们写成一部书。</p>
+    <p>司马迁十岁时，父亲就开始<vocab-w data-p="yǒuyìshi" data-e="intentionally; designedly">有意识</vocab-w>地<vocab-w data-p="péiyǎng" data-e="to cultivate; nurture">培养</vocab-w>他，教他学习古文，熟悉历史；司马迁二十岁的时候，父亲出钱让他去<vocab-w data-p="zhōuyóu" data-e="to travel round">周游</vocab-w>天下，一路上搜集各种历史<vocab-w data-p="zīliào" data-e="reference materials">资料</vocab-w>，为将来写史书做准备。司马谈<vocab-w data-p="línzhōng" data-e="on the point of death">临终</vocab-w>前<vocab-w data-p="wò" data-e="to hold; grasp">握</vocab-w>着司马迁的手，<vocab-w data-p="dīngzhǔ" data-e="to urge; exhort">叮嘱</vocab-w>他一定要写出一部像孔子的《春秋》那样有影响的史书。父亲去世三年后，司马迁也做了汉朝的史官。但因为李陵事件，司马迁受了宫刑。他几次想自杀，但为了完成父亲的<vocab-w data-p="yíyuàn" data-e="unfulfilled wish of the deceased">遗愿</vocab-w>，为后人留下一部史书，他决定忍受侮辱，活下去。经过十多年的努力，他终于完成了伟大的史学著作《史记》。</p>
+    <p>对于司马迁到底有没有妻子和后代，长期以来一直有不同的看法。后来的史学家们经过长时间的<vocab-w data-p="kǎozhèng" data-e="to verify through research">考证</vocab-w>，最终有了比较<vocab-w data-p="tǒngyī" data-e="unified; consistent">统一</vocab-w>的看法：司马迁有妻子，也有后代。那他的后代现在生活在哪里呢？</p>
+    <p>今天的陕西省韩城市有一个村子叫<vocab-w data-p="Xú" data-e="a surname">徐</vocab-w>村，徐村里<vocab-w data-p="jūzhù" data-e="to live; reside">居住</vocab-w>的大都是姓同或者姓<vocab-w data-p="Féng" data-e="a surname">冯</vocab-w>的人。每年<vocab-w data-p="Qīngmíng Jié" data-e="Tomb Sweeping Day">清明节</vocab-w>的时候，这些姓同和姓冯的人都会来到司马迁的墓地，祭祀他们的祖先司马迁。这些人真的是司马迁的后代吗？如果是，为什么他们不姓司马呢？</p>
+    <p>原来，根据史学家们的考证，司马迁写完《史记》以后，汉武帝看到了这部<vocab-w data-p="shǒugǎo" data-e="original manuscript">手稿</vocab-w>。因为《史记》很重视<vocab-w data-p="kèguān" data-e="objective">客观</vocab-w>描写历史<vocab-w data-p="shìshí" data-e="fact">事实</vocab-w>，书里除了<vocab-w data-p="chēngzàn" data-e="to praise">称赞</vocab-w>汉武帝的功绩外，也<vocab-w data-p="pīpíng" data-e="to criticize">批评</vocab-w>了他的一些政策和思想，汉武帝看后非常生气，就把《史记》的手稿烧了。司马迁的妻子听说了这件事以后，为了<vocab-w data-p="bǎozhù" data-e="to preserve; keep">保住</vocab-w>《史记》，就让他们的两个儿子司马临、司马观带着《史记》的<vocab-w data-p="fùgǎo" data-e="duplicate manuscript">副稿</vocab-w>离开京城。儿子们离开前，司马迁的妻子叮嘱他们一路上小心，并拉着儿子们的手说：从今以后，你们都不能姓司马了。临儿，你在'司'字左边加上一<vocab-w data-p="shù" data-e="vertical stroke">竖</vocab-w>，改姓'同'；观儿，你在'马'字左边加上两点，改姓'冯'。你们要互相帮助，<vocab-w data-p="yǐnjū" data-e="to live in seclusion">隐居</vocab-w>山中，让我们司马家族能一直延续下去。</p>
+    <p>司马迁的亲戚、孩子们离开了京城，最终逃回了<vocab-w data-p="gùxiāng" data-e="hometown">故乡</vocab-w>韩城山中，并把这个村子叫作"续村"，意思是"家族的延续"；后来因为担心被人<vocab-w data-p="shípò" data-e="to see through">识破</vocab-w>，就改用同音字"徐"，写成了"徐村"。从此，司马迁的后代就一直姓"冯"和"同"了。</p>
+</div>
+</div>
+<hr class="section-divider"/>
+<div class="questions-section">
+<div class="qh"><span>📖</span> 阅读理解</div>
+<div class="qc"><div class="qt"><span class="qn">1</span>司马迁的父亲对他最主要的影响是什么？</div><ul class="ol"><li><button class="ob" data-q="1" data-i="0">A. 让他从小学习武艺</button></li><li><button class="ob" data-q="1" data-i="1">B. 有意识地培养他学历史、周游天下，并临终叮嘱他写一部伟大史书</button></li><li><button class="ob" data-q="1" data-i="2">C. 给他留下大量财富</button></li><li><button class="ob" data-q="1" data-i="3">D. 让他走仕途做汉朝官员</button></li></ul><div class="fb" id="fb1"></div></div>
+<div class="qc"><div class="qt"><span class="qn">2</span>汉武帝为什么把《史记》手稿烧了？</div><ul class="ol"><li><button class="ob" data-q="2" data-i="0">A. 因为《史记》写得不够好</button></li><li><button class="ob" data-q="2" data-i="1">B. 因为书里批评了他的政策和思想，让他非常生气</button></li><li><button class="ob" data-q="2" data-i="2">C. 因为他想让司马迁写更好的史书</button></li><li><button class="ob" data-q="2" data-i="3">D. 因为手稿太旧无法保存</button></li></ul><div class="fb" id="fb2"></div></div>
+<div class="qc"><div class="qt"><span class="qn">3</span>司马迁的妻子让两个儿子改姓，主要目的是什么？</div><ul class="ol"><li><button class="ob" data-q="3" data-i="0">A. 让儿子在社会上有更好的前途</button></li><li><button class="ob" data-q="3" data-i="1">B. 带着《史记》副稿安全离开京城，保住这部书</button></li><li><button class="ob" data-q="3" data-i="2">C. 因为司马这个姓太容易被认出</button></li><li><button class="ob" data-q="3" data-i="3">D. 因为汉武帝下令禁止姓司马</button></li></ul><div class="fb" id="fb3"></div></div>
+<div class="qc"><div class="qt"><span class="qn">4</span>徐村这个名字是怎么来的？</div><ul class="ol"><li><button class="ob" data-q="4" data-i="0">A. 因为村里最早住的都是姓徐的人</button></li><li><button class="ob" data-q="4" data-i="1">B. 原名续村（家族延续），后怕被识破改为同音字徐</button></li><li><button class="ob" data-q="4" data-i="2">C. 因为村子建在一条叫徐的河旁边</button></li><li><button class="ob" data-q="4" data-i="3">D. 汉武帝给这个村子命名的</button></li></ul><div class="fb" id="fb4"></div></div>
+<div class="rb" id="rb"><div class="rs" id="rs"></div><div class="rl" id="rl"></div><button class="rbt" onclick="resetQuiz()">重新作答</button></div>
+</div>
+<script>
+var ANSWERS={"1": 1, "2": 1, "3": 1, "4": 1};
+var FEEDBACK={"1": {"c": "✅ 正确！父亲从小培养他学古文、周游天下积累资料，临终更叮嘱他一定要写出一部伟大史书。", "w": "❌ 再想想。文章描述了司马谈对儿子的多种培养方式，最终的叮嘱是什么？"}, "2": {"c": "✅ 正确！文章说《史记》批评了汉武帝的一些政策和思想，汉武帝看后非常生气，就把手稿烧了。", "w": "❌ 再想想。文章说汉武帝「非常生气」——是书里的什么内容让他如此愤怒？"}, "3": {"c": "✅ 正确！改姓是为了让儿子能安全带走《史记》副稿离开京城，保住这部伟大的史书。", "w": "❌ 再想想。当时汉武帝已经烧了手稿，儿子们带走的是什么？为什么改姓才能安全离开？"}, "4": {"c": "✅ 正确！文章说最初叫续村，意思是「家族的延续」，后来怕被识破，改用同音字「徐」。", "w": "❌ 再想想。文章解释了村名的来历——原来的名字和现在的名字各有什么含义？"}};
+
+(function(){
+  document.querySelectorAll('vocab-w').forEach(function(el){
+    var s=document.createElement('span');s.className='vocab';
+    s.innerHTML=el.textContent+'<span class="vocab-tip"><span class="tp">'+el.dataset.p+'</span><span class="te">'+el.dataset.e+'</span></span>';
+    el.replaceWith(s);
+  });
+})();
+var _av=null;
+document.addEventListener('touchstart',function(e){
+  var v=e.target.closest('.vocab');
+  if(v){e.preventDefault();var r=v.getBoundingClientRect();v.classList.toggle('fd',r.top<80);
+    if(_av&&_av!==v)_av.classList.remove('ta');v.classList.toggle('ta');_av=v.classList.contains('ta')?v:null;}
+  else if(_av){_av.classList.remove('ta');_av=null;}
+},{passive:false});
+var _an={},_tc=0,_TQ=Object.keys(ANSWERS).length;
+document.querySelectorAll('.ob').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var q=+this.dataset.q,i=+this.dataset.i;
+    if(_an[q])return;_an[q]=true;_tc++;
+    var c=ANSWERS[q],fb=document.getElementById('fb'+q),all=document.querySelectorAll('.ob[data-q="'+q+'"]');
+    all.forEach(function(b){b.disabled=true;});
+    if(i===c){this.classList.add('correct');fb.textContent=FEEDBACK[q].c;fb.className='fb show ok';}
+    else{this.classList.add('wrong');all[c].classList.add('rc');fb.textContent=FEEDBACK[q].w;fb.className='fb show no';}
+    if(_tc===_TQ)_show();
+  });
+});
+function _show(){
+  var s=Object.keys(_an).filter(function(q){return[...document.querySelectorAll('.ob[data-q="'+q+'"]')].some(function(b){return b.classList.contains('correct');});}).length;
+  var bar=document.getElementById('rb');
+  document.getElementById('rs').textContent=s+' / '+_TQ;
+  document.getElementById('rl').textContent=s===_TQ?'完美！全部答对！':s>=_TQ-1?'很好！可以再回顾一下答错的题。':s>=_TQ-2?'还不错！建议再读一遍文章。':'继续努力！多读几遍，你会做得更好！';
+  bar.classList.add('show');bar.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function resetQuiz(){
+  _an={};_tc=0;
+  document.querySelectorAll('.ob').forEach(function(b){b.disabled=false;b.className='ob';});
+  document.querySelectorAll('.fb').forEach(function(f){f.className='fb';f.textContent='';});
+  document.getElementById('rb').classList.remove('show');
+}
+
+</script>
+</body>
+</html>

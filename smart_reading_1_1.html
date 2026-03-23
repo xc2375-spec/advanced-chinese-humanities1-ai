@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Smart Reading 1.1 – 是什么让我们找不到北</title>
+<style>
+:root{--ac:#c0392b;--ad:#5a1010;--vc:#b5180e;--ag:linear-gradient(135deg,#8b1a1a 0%,#c0392b 100%)}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Noto Serif SC",Georgia,serif;background:#fdf8f0;color:#2c1a0e;line-height:2;font-size:18px}
+.page-header{background:var(--ag);color:#fff;padding:24px 32px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.back-link{color:rgba(255,255,255,.85);text-decoration:none;font-size:14px;font-family:sans-serif}
+.back-link:hover{color:#fff;text-decoration:underline}
+.badge{background:rgba(255,255,255,.25);border-radius:6px;padding:4px 12px;font-size:13px;letter-spacing:1px;font-family:sans-serif}
+.page-header h1{font-size:22px;flex:1}
+.audio-section{background:#fff7ee;border-bottom:2px solid #e8d5b0;padding:14px 32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.audio-label{font-size:14px;color:#8b5e3c;font-family:sans-serif;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.audio-placeholder{flex:1;background:#f0e8d8;border:2px dashed #c8a97a;border-radius:8px;padding:8px 16px;font-size:13px;color:#9c7a56;font-family:sans-serif;text-align:center}
+.reading-wrap{max-width:820px;margin:0 auto;padding:36px 32px 20px}
+.reading-title{text-align:center;font-size:26px;font-weight:700;letter-spacing:2px;margin-bottom:28px;color:var(--ad)}
+.reading-body p{text-indent:2em;margin-bottom:20px}
+.reading-body .sh{text-indent:0;font-weight:700;color:var(--ad);margin-top:10px;margin-bottom:6px;font-size:17px}
+.vocab{color:var(--vc);font-weight:bold;cursor:pointer;position:relative;border-bottom:1px dotted var(--vc);display:inline}
+.vocab-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#2c1a0e;color:#fdf8f0;border-radius:8px;padding:8px 13px;white-space:nowrap;z-index:100;font-size:14px;font-family:sans-serif;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,.35);pointer-events:none}
+.vocab-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#2c1a0e}
+.vocab-tip .tp{color:#f0c080;font-style:italic;display:block;font-size:13px}
+.vocab-tip .te{display:block;font-size:13px;margin-top:2px}
+@media (hover:hover) and (pointer:fine){.vocab:hover .vocab-tip{display:block}}
+.vocab.ta .vocab-tip{display:block}
+.vocab.fd .vocab-tip{bottom:auto;top:calc(100% + 8px)}
+.vocab.fd .vocab-tip::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:#2c1a0e}
+.section-divider{border:none;border-top:2px solid #e0c896;max-width:820px;margin:0 auto 28px}
+.questions-section{max-width:820px;margin:0 auto;padding:0 32px 48px}
+.qh{font-size:18px;font-weight:700;color:var(--ad);margin-bottom:24px;font-family:sans-serif;display:flex;align-items:center;gap:10px}
+.qc{background:#fff;border:1px solid #e0c896;border-radius:12px;padding:22px 24px;margin-bottom:22px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.qt{font-size:16px;font-weight:600;margin-bottom:14px;color:#2c1a0e;line-height:1.7;font-family:sans-serif}
+.qn{display:inline-block;background:var(--ac);color:#fff;border-radius:50%;width:26px;height:26px;line-height:26px;text-align:center;font-size:14px;margin-right:8px}
+.ol{list-style:none}
+.ol li{margin-bottom:8px}
+.ob{width:100%;text-align:left;background:#fdf8f0;border:2px solid #e0c896;border-radius:8px;padding:10px 16px;font-size:15px;cursor:pointer;transition:background .15s,border-color .15s;color:#2c1a0e;font-family:sans-serif;line-height:1.6}
+.ob:hover:not(:disabled){background:#f5e6c8;border-color:#c0a060}
+.ob.correct{background:#d4edda;border-color:#28a745;color:#155724}
+.ob.wrong{background:#f8d7da;border-color:#dc3545;color:#721c24}
+.ob.rc{background:#d4edda;border-color:#28a745;color:#155724;opacity:.75}
+.ob:disabled{cursor:default}
+.fb{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:14px;font-family:sans-serif;display:none;line-height:1.6}
+.fb.show{display:block}
+.fb.ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.fb.no{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+.rb{margin-top:32px;display:none;background:#fff;border:1px solid #e0c896;border-radius:12px;padding:20px 24px;text-align:center;font-family:sans-serif}
+.rb.show{display:block}
+.rs{font-size:32px;font-weight:700;color:var(--ac)}
+.rl{font-size:15px;color:#5a3e28;margin-top:4px}
+.rbt{margin-top:14px;background:var(--ac);color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:15px;cursor:pointer;font-family:sans-serif}
+@media (max-width:600px){body{font-size:16px}.reading-wrap,.questions-section{padding-left:16px;padding-right:16px}.page-header{padding:16px}.reading-title{font-size:22px}.ob{font-size:14px;padding:9px 12px}}
+
+</style>
+</head>
+<body>
+<header class="page-header">
+<a class="back-link" href="smart-reading.html">← Smart Reading</a>
+<div class="badge">扩展阅读 1.1</div>
+<h1>是什么让我们找不到北</h1>
+</header>
+<div class="audio-section">
+<div class="audio-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>朗读音频</div>
+<div class="audio-placeholder">🎙️ 音频待上传 | 文件名：<code>reading_1_1.mp3</code> → 放入 <code>audio/</code> 后取消注释</div>
+<!-- <audio controls src="audio/reading_1_1.mp3" style="flex:1;min-width:200px"></audio> -->
+</div>
+<div class="reading-wrap">
+<h2 class="reading-title">是什么让我们找不到北</h2>
+<div class="reading-body">
+    <p>我<vocab-w data-p="céngjīng" data-e="once; at one time">曾经</vocab-w>在一个房间里问一个五岁的<vocab-w data-p="Pǒngpǔluó'ào" data-e="Pormpuraaw – an Aboriginal community in Australia">虎普罗澳</vocab-w>（澳大利亚北部的一个原始部族）小女孩哪边是北，小女孩马上就<vocab-w data-p="zhǐ" data-e="to point">指</vocab-w>了出来，非常<vocab-w data-p="zhǔnquè" data-e="accurate; precise">准确</vocab-w>。</p>
+    <p>不久以后，在<vocab-w data-p="Sītǎnfú" data-e="Stanford">斯坦福</vocab-w>大学的一个<vocab-w data-p="yǎnjiǎngtīng" data-e="auditorium; lecture hall">演讲厅</vocab-w>里，我向<vocab-w data-p="tīngzhòng" data-e="audience">听众</vocab-w>们问了同样的问题，他们中有不少人曾经得过各种科学<vocab-w data-p="jiǎng" data-e="award; prize">奖</vocab-w>，其中一些人在过去四十年中经常来这个演讲厅听<vocab-w data-p="jiǎngzuò" data-e="lecture; talk">讲座</vocab-w>。我要他们<vocab-w data-p="bìshang" data-e="to close (eyes)">闭上</vocab-w>双眼，然后指向北方。很多人<vocab-w data-p="fàngqì" data-e="to give up">放弃</vocab-w>了，因为他们完全不知道<vocab-w data-p="dá'àn" data-e="answer">答案</vocab-w>。有些人在想了一阵后给出了答案，但他们的答案各个方向都有。我在哈佛大学、普林斯顿大学，还有莫斯科、伦敦和北京做过同样的<vocab-w data-p="shíyàn" data-e="experiment">实验</vocab-w>，得到的都是同样的结果。</p>
+    <p>为什么一个五岁的孩子可以很容易地<vocab-w data-p="wánchéng" data-e="to complete">完成</vocab-w>这些科学家们都搞不清的<vocab-w data-p="rènwu" data-e="task">任务</vocab-w>？到底怎么来解释这种现象？答案有可能是语言——是语言造成了人们<vocab-w data-p="rènzhī" data-e="cognition; cognitive">认知</vocab-w>能力上的不同。</p>
+    <p>对空间有不同<vocab-w data-p="guānniàn" data-e="perspective; concept">观念</vocab-w>的人，对时间的观念也会不同。我曾经做过一个实验，给说不同语言的人看一些<vocab-w data-p="biǎodá" data-e="to express">表达</vocab-w>时间<vocab-w data-p="jìnchéng" data-e="progression; process">进程</vocab-w>的图片：一个<vocab-w data-p="zhújiàn" data-e="gradually">逐渐</vocab-w>变老的人，一条逐渐长大的<vocab-w data-p="èyú" data-e="crocodile">鳄鱼</vocab-w>和一个逐渐被吃掉的<vocab-w data-p="xiāngjiāo" data-e="banana">香蕉</vocab-w>。</p>
+    <p>我们对每个参加实验的人做了两次<vocab-w data-p="cèshì" data-e="to test">测试</vocab-w>，两次测试时他们面对的方向都不同。我们发现，说英语的人会按照从左到右的时间<vocab-w data-p="shùnxù" data-e="sequence; order">顺序</vocab-w>来<vocab-w data-p="páiliè" data-e="to arrange">排列</vocab-w>卡片，说<vocab-w data-p="Xībóláiyǔ" data-e="Hebrew">希伯来语</vocab-w>的人会从右向左放卡片，这说明语言的<vocab-w data-p="shūxiě" data-e="writing">书写</vocab-w>顺序影响人们怎么认识时间——希伯来语是从右向左写的。</p>
+    <p>至于说<vocab-w data-p="Kùtǔyǔ" data-e="Kuuk Thaayorre – a language spoken in Pormpuraaw">库塔语</vocab-w>的人（澳大利亚北部的一个原始部族）呢？他们没有从左到右排列卡片，也没有从右到左排列。他们是从东向西排列的！也就是说，他们<vocab-w data-p="miànduì" data-e="to face">面对</vocab-w>南方时，卡片是从左到右排列的；面对北方时，卡片则从右到左排列。那么面对东方呢？卡片当然是向着他们自己的身体排列的。</p>
+    <p>请注意，我们并没有告诉这些说库塔语的人他们面对的是哪个方向，但是他们<vocab-w data-p="xiǎnrán" data-e="obviously">显然</vocab-w>自己心里知道，而且还能用它来表达他们的时间。</p>
+    <p>除了空间观念的影响外，对时间表达的不同还受许多其他方面的影响。例如，说英语的人认为<vocab-w data-p="wèilái" data-e="future">未来</vocab-w>是在前面的（ahead），而过去是在后面的（behind）。可是在安第斯山地区的一种语言艾马拉语中，过去是在前面的，而未来是在后面的。</p>
+    <p>更多的实验也发现，说英语的人在<vocab-w data-p="sīkǎo" data-e="to think about">思考</vocab-w>未来时会<vocab-w data-p="xiàyìshi" data-e="subconsciously">下意识</vocab-w>地让身体向前<vocab-w data-p="qīng" data-e="to lean">倾</vocab-w>，在思考过去时会下意识地让身体向后倾；而说艾马拉语的人说过去时会做向前的<vocab-w data-p="shǒushì" data-e="gesture">手势</vocab-w>，说未来时会向后做手势。</p>
+    <p>由此，我们可以说，语言不仅影响着我们对方向的感觉，同时也影响着我们对时间的理解。</p>
+</div>
+</div>
+<hr class="section-divider"/>
+<div class="questions-section">
+<div class="qh"><span>📖</span> 阅读理解</div>
+<div class="qc"><div class="qt"><span class="qn">1</span>虎普罗澳五岁小女孩能立刻指出北方，最可能的原因是什么？</div><ul class="ol"><li><button class="ob" data-q="1" data-i="0">A. 她接受过专门的方向训练</button></li><li><button class="ob" data-q="1" data-i="1">B. 她的语言要求使用者时刻了解地理方位，影响了她的空间认知</button></li><li><button class="ob" data-q="1" data-i="2">C. 她住在北方，对北方非常熟悉</button></li><li><button class="ob" data-q="1" data-i="3">D. 她天生方向感好</button></li></ul><div class="fb" id="fb1"></div></div>
+<div class="qc"><div class="qt"><span class="qn">2</span>说英语和说希伯来语的人排列时间卡片有何不同？</div><ul class="ol"><li><button class="ob" data-q="2" data-i="0">A. 说英语从右到左，说希伯来语从左到右</button></li><li><button class="ob" data-q="2" data-i="1">B. 说英语从左到右，说希伯来语从右到左</button></li><li><button class="ob" data-q="2" data-i="2">C. 两者都从左到右</button></li><li><button class="ob" data-q="2" data-i="3">D. 两者排列方向随机</button></li></ul><div class="fb" id="fb2"></div></div>
+<div class="qc"><div class="qt"><span class="qn">3</span>说库塔语的人排列卡片的方式有什么独特之处？</div><ul class="ol"><li><button class="ob" data-q="3" data-i="0">A. 总是从左到右</button></li><li><button class="ob" data-q="3" data-i="1">B. 总是从右到左</button></li><li><button class="ob" data-q="3" data-i="2">C. 根据地理方向（东→西）排列，不受身体朝向影响</button></li><li><button class="ob" data-q="3" data-i="3">D. 从上到下排列</button></li></ul><div class="fb" id="fb3"></div></div>
+<div class="qc"><div class="qt"><span class="qn">4</span>这篇文章的核心观点是什么？</div><ul class="ol"><li><button class="ob" data-q="4" data-i="0">A. 科学家的方向感不如儿童</button></li><li><button class="ob" data-q="4" data-i="1">B. 所有语言对思维影响完全相同</button></li><li><button class="ob" data-q="4" data-i="2">C. 语言不仅影响方向感，也影响我们对时间的理解</button></li><li><button class="ob" data-q="4" data-i="3">D. 澳大利亚原住民比现代人聪明</button></li></ul><div class="fb" id="fb4"></div></div>
+<div class="rb" id="rb"><div class="rs" id="rs"></div><div class="rl" id="rl"></div><button class="rbt" onclick="resetQuiz()">重新作答</button></div>
+</div>
+<script>
+var ANSWERS={"1": 1, "2": 1, "3": 2, "4": 2};
+var FEEDBACK={"1": {"c": "✅ 正确！库塔语要求使用者时刻用地理方位（东南西北）表达方向，深刻影响了小女孩的空间认知能力。", "w": "❌ 再想想。文章认为答案「有可能是语言」——库塔语如何影响了孩子的空间感？"}, "2": {"c": "✅ 正确！说英语的人从左到右排（英语书写方向），说希伯来语的人从右到左排（希伯来语书写方向）。", "w": "❌ 再想想。文章说书写顺序影响时间理解——希伯来语是从哪个方向写的？"}, "3": {"c": "✅ 正确！库塔语使用者按地理方向（东→西）排列卡片，无论面朝哪里，地理排列方向始终不变。", "w": "❌ 再想想。库塔语使用者的排列方式和东南西北有关，而不是和身体朝向有关。"}, "4": {"c": "✅ 正确！文章最后总结：语言不仅影响方向感觉，也影响我们对时间的理解。", "w": "❌ 再想想。文章结尾段明确说明了语言对人类认知的双重影响。"}};
+
+(function(){
+  document.querySelectorAll('vocab-w').forEach(function(el){
+    var s=document.createElement('span');s.className='vocab';
+    s.innerHTML=el.textContent+'<span class="vocab-tip"><span class="tp">'+el.dataset.p+'</span><span class="te">'+el.dataset.e+'</span></span>';
+    el.replaceWith(s);
+  });
+})();
+var _av=null;
+document.addEventListener('touchstart',function(e){
+  var v=e.target.closest('.vocab');
+  if(v){e.preventDefault();var r=v.getBoundingClientRect();v.classList.toggle('fd',r.top<80);
+    if(_av&&_av!==v)_av.classList.remove('ta');v.classList.toggle('ta');_av=v.classList.contains('ta')?v:null;}
+  else if(_av){_av.classList.remove('ta');_av=null;}
+},{passive:false});
+var _an={},_tc=0,_TQ=Object.keys(ANSWERS).length;
+document.querySelectorAll('.ob').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var q=+this.dataset.q,i=+this.dataset.i;
+    if(_an[q])return;_an[q]=true;_tc++;
+    var c=ANSWERS[q],fb=document.getElementById('fb'+q),all=document.querySelectorAll('.ob[data-q="'+q+'"]');
+    all.forEach(function(b){b.disabled=true;});
+    if(i===c){this.classList.add('correct');fb.textContent=FEEDBACK[q].c;fb.className='fb show ok';}
+    else{this.classList.add('wrong');all[c].classList.add('rc');fb.textContent=FEEDBACK[q].w;fb.className='fb show no';}
+    if(_tc===_TQ)_show();
+  });
+});
+function _show(){
+  var s=Object.keys(_an).filter(function(q){return[...document.querySelectorAll('.ob[data-q="'+q+'"]')].some(function(b){return b.classList.contains('correct');});}).length;
+  var bar=document.getElementById('rb');
+  document.getElementById('rs').textContent=s+' / '+_TQ;
+  document.getElementById('rl').textContent=s===_TQ?'完美！全部答对！':s>=_TQ-1?'很好！可以再回顾一下答错的题。':s>=_TQ-2?'还不错！建议再读一遍文章。':'继续努力！多读几遍，你会做得更好！';
+  bar.classList.add('show');bar.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function resetQuiz(){
+  _an={};_tc=0;
+  document.querySelectorAll('.ob').forEach(function(b){b.disabled=false;b.className='ob';});
+  document.querySelectorAll('.fb').forEach(function(f){f.className='fb';f.textContent='';});
+  document.getElementById('rb').classList.remove('show');
+}
+
+</script>
+</body>
+</html>

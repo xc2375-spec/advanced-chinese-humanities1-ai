@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Smart Reading 2.2 – 窗</title>
+<style>
+:root{--ac:#2e7d32;--ad:#1b5e20;--vc:#1a6b2a;--ag:linear-gradient(135deg,#1b5e20 0%,#388e3c 100%)}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Noto Serif SC",Georgia,serif;background:#fdf8f0;color:#2c1a0e;line-height:2;font-size:18px}
+.page-header{background:var(--ag);color:#fff;padding:24px 32px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.back-link{color:rgba(255,255,255,.85);text-decoration:none;font-size:14px;font-family:sans-serif}
+.back-link:hover{color:#fff;text-decoration:underline}
+.badge{background:rgba(255,255,255,.25);border-radius:6px;padding:4px 12px;font-size:13px;letter-spacing:1px;font-family:sans-serif}
+.page-header h1{font-size:22px;flex:1}
+.audio-section{background:#fff7ee;border-bottom:2px solid #e8d5b0;padding:14px 32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.audio-label{font-size:14px;color:#8b5e3c;font-family:sans-serif;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.audio-placeholder{flex:1;background:#f0e8d8;border:2px dashed #c8a97a;border-radius:8px;padding:8px 16px;font-size:13px;color:#9c7a56;font-family:sans-serif;text-align:center}
+.reading-wrap{max-width:820px;margin:0 auto;padding:36px 32px 20px}
+.reading-title{text-align:center;font-size:26px;font-weight:700;letter-spacing:2px;margin-bottom:28px;color:var(--ad)}
+.reading-body p{text-indent:2em;margin-bottom:20px}
+.reading-body .sh{text-indent:0;font-weight:700;color:var(--ad);margin-top:10px;margin-bottom:6px;font-size:17px}
+.vocab{color:var(--vc);font-weight:bold;cursor:pointer;position:relative;border-bottom:1px dotted var(--vc);display:inline}
+.vocab-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#2c1a0e;color:#fdf8f0;border-radius:8px;padding:8px 13px;white-space:nowrap;z-index:100;font-size:14px;font-family:sans-serif;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,.35);pointer-events:none}
+.vocab-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#2c1a0e}
+.vocab-tip .tp{color:#f0c080;font-style:italic;display:block;font-size:13px}
+.vocab-tip .te{display:block;font-size:13px;margin-top:2px}
+@media (hover:hover) and (pointer:fine){.vocab:hover .vocab-tip{display:block}}
+.vocab.ta .vocab-tip{display:block}
+.vocab.fd .vocab-tip{bottom:auto;top:calc(100% + 8px)}
+.vocab.fd .vocab-tip::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:#2c1a0e}
+.section-divider{border:none;border-top:2px solid #e0c896;max-width:820px;margin:0 auto 28px}
+.questions-section{max-width:820px;margin:0 auto;padding:0 32px 48px}
+.qh{font-size:18px;font-weight:700;color:var(--ad);margin-bottom:24px;font-family:sans-serif;display:flex;align-items:center;gap:10px}
+.qc{background:#fff;border:1px solid #e0c896;border-radius:12px;padding:22px 24px;margin-bottom:22px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.qt{font-size:16px;font-weight:600;margin-bottom:14px;color:#2c1a0e;line-height:1.7;font-family:sans-serif}
+.qn{display:inline-block;background:var(--ac);color:#fff;border-radius:50%;width:26px;height:26px;line-height:26px;text-align:center;font-size:14px;margin-right:8px}
+.ol{list-style:none}
+.ol li{margin-bottom:8px}
+.ob{width:100%;text-align:left;background:#fdf8f0;border:2px solid #e0c896;border-radius:8px;padding:10px 16px;font-size:15px;cursor:pointer;transition:background .15s,border-color .15s;color:#2c1a0e;font-family:sans-serif;line-height:1.6}
+.ob:hover:not(:disabled){background:#f5e6c8;border-color:#c0a060}
+.ob.correct{background:#d4edda;border-color:#28a745;color:#155724}
+.ob.wrong{background:#f8d7da;border-color:#dc3545;color:#721c24}
+.ob.rc{background:#d4edda;border-color:#28a745;color:#155724;opacity:.75}
+.ob:disabled{cursor:default}
+.fb{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:14px;font-family:sans-serif;display:none;line-height:1.6}
+.fb.show{display:block}
+.fb.ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.fb.no{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+.rb{margin-top:32px;display:none;background:#fff;border:1px solid #e0c896;border-radius:12px;padding:20px 24px;text-align:center;font-family:sans-serif}
+.rb.show{display:block}
+.rs{font-size:32px;font-weight:700;color:var(--ac)}
+.rl{font-size:15px;color:#5a3e28;margin-top:4px}
+.rbt{margin-top:14px;background:var(--ac);color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:15px;cursor:pointer;font-family:sans-serif}
+@media (max-width:600px){body{font-size:16px}.reading-wrap,.questions-section{padding-left:16px;padding-right:16px}.page-header{padding:16px}.reading-title{font-size:22px}.ob{font-size:14px;padding:9px 12px}}
+
+</style>
+</head>
+<body>
+<header class="page-header">
+<a class="back-link" href="smart-reading.html">← Smart Reading</a>
+<div class="badge">扩展阅读 2.2</div>
+<h1>窗</h1>
+</header>
+<div class="audio-section">
+<div class="audio-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>朗读音频</div>
+<div class="audio-placeholder">🎙️ 音频待上传 | 文件名：<code>reading_2_2.mp3</code> → 放入 <code>audio/</code> 后取消注释</div>
+<!-- <audio controls src="audio/reading_2_2.mp3" style="flex:1;min-width:200px"></audio> -->
+</div>
+<div class="reading-wrap">
+<h2 class="reading-title">窗</h2>
+<div class="reading-body">
+    <p>这是一间十分<vocab-w data-p="zhǎixiǎo" data-e="narrow and small">窄小</vocab-w>的病房，只放得下两张病床。病房有一<vocab-w data-p="shàn" data-e="measure word for doors/windows">扇</vocab-w>面对走廊的门，还有一个小<vocab-w data-p="chuāng" data-e="window">窗</vocab-w>户，<vocab-w data-p="tòuguò" data-e="through">透过</vocab-w>窗户可以看到外面。</p>
+    <p>病房里住着的这两个病人，病情都很严重。他们都需要<vocab-w data-p="jìngyǎng" data-e="to rest and recuperate">静养</vocab-w>，因此不能读书看报，也不能听收音机、看电视，每天只能静静地躺着，这让他们感到很痛苦。其中一个病人经医生<vocab-w data-p="yǔnxǔ" data-e="to permit">允许</vocab-w>，每天上午和下午可以被<vocab-w data-p="fú" data-e="to help sb. up">扶</vocab-w>起来坐一个小时。这个病人的病床靠近窗口，而另一个病人因为不能动，只能日夜躺在病床上。</p>
+    <p>因为大部分时间病房里只有他们两个人，所以两人经常聊天，一聊起来就是一两个小时。他们聊家庭、工作、朋友、在哪些地方<vocab-w data-p="dùjià" data-e="to spend vacation">度假</vocab-w>，等等。每天上午和下午，当靠近窗户的病人被扶起来坐时，他就会为同伴<vocab-w data-p="miáoshù" data-e="to describe">描述</vocab-w>窗外的一切。<vocab-w data-p="jiànjiàn" data-e="gradually">渐渐</vocab-w>地，每天的这两个小时就成了他和同伴生活的全部内容了。</p>
+    <p>这个窗户应该是<vocab-w data-p="fǔkàn" data-e="to overlook">俯瞰</vocab-w>着一个公园，公园里有一个湖，每天都有一群群<vocab-w data-p="yěyā" data-e="wild duck">野鸭</vocab-w>、<vocab-w data-p="tiān'é" data-e="swan">天鹅</vocab-w>在湖面上游来游去。公园里的孩子们有的在<vocab-w data-p="rēng" data-e="to throw">扔</vocab-w>面包<vocab-w data-p="wèi" data-e="to feed">喂</vocab-w>野鸭和天鹅，有的在玩<vocab-w data-p="yóutǐng" data-e="yacht">游艇</vocab-w><vocab-w data-p="móxíng" data-e="model">模型</vocab-w>。年轻的<vocab-w data-p="qínglǚ" data-e="lovers">情侣</vocab-w>们手<vocab-w data-p="wǎn" data-e="arm in arm">挽</vocab-w>着手在树下散步。公园里鲜花<vocab-w data-p="shèngkāi" data-e="in full bloom">盛开</vocab-w>，大多是<vocab-w data-p="méiguī" data-e="rose">玫瑰</vocab-w>，但也有一些五颜六色的<vocab-w data-p="mǔdān" data-e="peony">牡丹</vocab-w>和<vocab-w data-p="jīnzhǎnhuā" data-e="marigold">金盏花</vocab-w>。在公园的一边，有一个网球场，有时那儿的比赛非常<vocab-w data-p="jīngcǎi" data-e="wonderful">精彩</vocab-w>。<vocab-w data-p="ǒu'ěr" data-e="occasionally">偶尔</vocab-w>公园里也会有<vocab-w data-p="bǎnqiú" data-e="cricket">板球</vocab-w>赛，虽然参赛者的球艺不怎么好，但有比赛看总比没有<vocab-w data-p="qiáng" data-e="better">强</vocab-w>。公园的<vocab-w data-p="jìntóu" data-e="end">尽头</vocab-w>是一排商店，从这些商店的后边往远处看，<vocab-w data-p="yǐnyuē" data-e="dimly; faintly">隐约</vocab-w>可以看到闹市区。</p>
+    <p>躺着的病人<vocab-w data-p="jīnjīn yǒu wèi" data-e="with keen pleasure">津津有味</vocab-w>地听着这一切，这时的每一分钟对他来说都是<vocab-w data-p="xiǎngshòu" data-e="enjoyment">享受</vocab-w>。靠窗的病人还在描述：一个男孩差一点儿掉到湖里，身穿白色长裙的那个姑娘是多么美丽动人……他听着这<vocab-w data-p="xǔxǔ rú shēng" data-e="vivid and lifelike">栩栩如生</vocab-w>的描述，好像<vocab-w data-p="qīnyǎn" data-e="with one's own eyes">亲眼</vocab-w>看到了窗外正在发生的一切。</p>
+    <p>一天下午，当靠窗的病人描述一名板球队员把球打得四处乱飞时，这个不靠窗的病人突然想：为什么只能他<vocab-w data-p="yǒuxìng" data-e="be lucky enough to">有幸</vocab-w><vocab-w data-p="guānshǎng" data-e="to admire the sight of">观赏</vocab-w>窗外的一切？我就不应该有这种机会吗？但他马上为自己的这种想法感到<vocab-w data-p="cánkuì" data-e="ashamed">惭愧</vocab-w>，努力不再去想它。可是，他越努力控制，这种想法就越<vocab-w data-p="qiángliè" data-e="intense">强烈</vocab-w>，几天后，他的这个想法已经变成：靠近窗口的人为什么不是我？</p>
+    <p>他整天被这一想法<vocab-w data-p="kùnrǎo" data-e="troubled; perplexed">困扰</vocab-w>着，晚上也睡不着。结果，病情一天天加重了，医生们都找不出原因。</p>
+    <p>一天晚上，他<vocab-w data-p="zhàolì" data-e="as usual">照例</vocab-w>睁着双眼<vocab-w data-p="dīng" data-e="to stare at">盯</vocab-w>着<vocab-w data-p="tiānhuābǎn" data-e="ceiling">天花板</vocab-w>。这时，靠窗的病人突然开始大声<vocab-w data-p="késou" data-e="to cough">咳嗽</vocab-w>，呼吸也<vocab-w data-p="jícù" data-e="rapid and short">急促</vocab-w>起来，他两手到处<vocab-w data-p="mōsuǒ" data-e="to grope">摸索</vocab-w>，好像在寻找电铃的<vocab-w data-p="ànniǔ" data-e="button">按钮</vocab-w>，只要电铃一响，<vocab-w data-p="zhíbān" data-e="on duty">值班</vocab-w>的护士就会立刻出现。</p>
+    <p>但是，这个不靠窗的病人却一动也不动地看着，心里一直在想：他<vocab-w data-p="píng" data-e="based on; by virtue of">凭</vocab-w>什么<vocab-w data-p="zhànjù" data-e="to occupy">占据</vocab-w>窗口那张病床呢？</p>
+    <p>痛苦的咳嗽声<vocab-w data-p="dǎpò" data-e="to break; shatter">打破</vocab-w>了黑夜的<vocab-w data-p="chénjì" data-e="silence">沉寂</vocab-w>。一声又一声……卡住了……停止了……直到最后，呼吸声也停止了。不靠窗的病人仍然盯着天花板。</p>
+    <p>第二天早晨，护士进来时，发现靠窗的那个病人早就没有了呼吸。他们静静地将<vocab-w data-p="shītǐ" data-e="corpse">尸体</vocab-w>抬了出去，没有<vocab-w data-p="dàjīng-xiǎoguài" data-e="to make a fuss">大惊小怪</vocab-w>，一切都是那么地平常。</p>
+    <p>过了几天，剩下的这个病人问护士能不能让他换到靠窗的那张床上。护士们把他抬过去<vocab-w data-p="āndùn" data-e="to settle; make comfortable">安顿</vocab-w>舒服以后，就离开了病房。护士一离开，这个病人就<vocab-w data-p="zhēngzhá" data-e="to struggle">挣扎</vocab-w>着用一只胳膊<vocab-w data-p="zhī" data-e="to prop up">支</vocab-w>起身子，<vocab-w data-p="qìchuǎn xūxū" data-e="gasping for breath">气喘吁吁</vocab-w>地<vocab-w data-p="tàntóu" data-e="to peek out">探头</vocab-w>向窗外望去。他看到的是<vocab-w data-p="guāngtūtū" data-e="bare; barren">光秃秃</vocab-w>的一面<vocab-w data-p="qiáng" data-e="wall">墙</vocab-w>。</p>
+</div>
+</div>
+<hr class="section-divider"/>
+<div class="questions-section">
+<div class="qh"><span>📖</span> 阅读理解</div>
+<div class="qc"><div class="qt"><span class="qn">1</span>靠窗的病人每天被扶起来时，他为同伴做了什么？</div><ul class="ol"><li><button class="ob" data-q="1" data-i="0">A. 给同伴读书读报</button></li><li><button class="ob" data-q="1" data-i="1">B. 详细描述窗外公园里的美景和活动</button></li><li><button class="ob" data-q="1" data-i="2">C. 讲自己以前的生活故事</button></li><li><button class="ob" data-q="1" data-i="3">D. 唱歌给同伴听</button></li></ul><div class="fb" id="fb1"></div></div>
+<div class="qc"><div class="qt"><span class="qn">2</span>不靠窗的病人后来发生了什么心理变化？</div><ul class="ol"><li><button class="ob" data-q="2" data-i="0">A. 越来越感激同伴的描述</button></li><li><button class="ob" data-q="2" data-i="1">B. 觉得描述越来越无聊</button></li><li><button class="ob" data-q="2" data-i="2">C. 开始嫉妒同伴，强烈希望自己换到靠窗的床</button></li><li><button class="ob" data-q="2" data-i="3">D. 担心同伴的病情</button></li></ul><div class="fb" id="fb2"></div></div>
+<div class="qc"><div class="qt"><span class="qn">3</span>靠窗的病人夜里急促咳嗽时，不靠窗的病人做了什么？</div><ul class="ol"><li><button class="ob" data-q="3" data-i="0">A. 马上按铃叫护士</button></li><li><button class="ob" data-q="3" data-i="1">B. 起身安慰同伴</button></li><li><button class="ob" data-q="3" data-i="2">C. 一动不动，心里想着凭什么对方占那张床</button></li><li><button class="ob" data-q="3" data-i="3">D. 大声叫喊让走廊里的人来帮忙</button></li></ul><div class="fb" id="fb3"></div></div>
+<div class="qc"><div class="qt"><span class="qn">4</span>不靠窗的病人换到窗口床位后，探头看到了什么？</div><ul class="ol"><li><button class="ob" data-q="4" data-i="0">A. 同伴描述的美丽公园</button></li><li><button class="ob" data-q="4" data-i="1">B. 普通的停车场</button></li><li><button class="ob" data-q="4" data-i="2">C. 光秃秃的一面墙，什么都没有</button></li><li><button class="ob" data-q="4" data-i="3">D. 一排商店和闹市区</button></li></ul><div class="fb" id="fb4"></div></div>
+<div class="rb" id="rb"><div class="rs" id="rs"></div><div class="rl" id="rl"></div><button class="rbt" onclick="resetQuiz()">重新作答</button></div>
+</div>
+<script>
+var ANSWERS={"1": 1, "2": 2, "3": 2, "4": 2};
+var FEEDBACK={"1": {"c": "✅ 正确！靠窗的病人每天被扶起来坐时，就为同伴描述窗外公园里的一切——野鸭天鹅、情侣散步、鲜花盛开……", "w": "❌ 再想想。靠窗的病人用什么方式让同伴感受到外面的世界？"}, "2": {"c": "✅ 正确！他开始想「为什么只能他有幸观赏窗外的一切」，这种想法越来越强烈，整天被困扰，睡不着觉。", "w": "❌ 再想想。文章描述了不靠窗病人内心的变化——他开始有什么念头，这是什么心理？"}, "3": {"c": "✅ 正确！文章说「这个不靠窗的病人却一动也不动地看着，心里一直在想：他凭什么占据窗口那张病床呢？」", "w": "❌ 再想想。当同伴急促咳嗽、摸索按钮时，不靠窗的病人心里在想什么，又做了什么？"}, "4": {"c": "✅ 正确！这是故事最震撼的结尾——窗外只是光秃秃的一面墙。那些美丽的公园景色都是靠窗病人虚构的，为了给同伴带来希望。", "w": "❌ 再想想。故事的结局出乎意料——窗外那些美景是真实存在的吗？"}};
+
+(function(){
+  document.querySelectorAll('vocab-w').forEach(function(el){
+    var s=document.createElement('span');s.className='vocab';
+    s.innerHTML=el.textContent+'<span class="vocab-tip"><span class="tp">'+el.dataset.p+'</span><span class="te">'+el.dataset.e+'</span></span>';
+    el.replaceWith(s);
+  });
+})();
+var _av=null;
+document.addEventListener('touchstart',function(e){
+  var v=e.target.closest('.vocab');
+  if(v){e.preventDefault();var r=v.getBoundingClientRect();v.classList.toggle('fd',r.top<80);
+    if(_av&&_av!==v)_av.classList.remove('ta');v.classList.toggle('ta');_av=v.classList.contains('ta')?v:null;}
+  else if(_av){_av.classList.remove('ta');_av=null;}
+},{passive:false});
+var _an={},_tc=0,_TQ=Object.keys(ANSWERS).length;
+document.querySelectorAll('.ob').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var q=+this.dataset.q,i=+this.dataset.i;
+    if(_an[q])return;_an[q]=true;_tc++;
+    var c=ANSWERS[q],fb=document.getElementById('fb'+q),all=document.querySelectorAll('.ob[data-q="'+q+'"]');
+    all.forEach(function(b){b.disabled=true;});
+    if(i===c){this.classList.add('correct');fb.textContent=FEEDBACK[q].c;fb.className='fb show ok';}
+    else{this.classList.add('wrong');all[c].classList.add('rc');fb.textContent=FEEDBACK[q].w;fb.className='fb show no';}
+    if(_tc===_TQ)_show();
+  });
+});
+function _show(){
+  var s=Object.keys(_an).filter(function(q){return[...document.querySelectorAll('.ob[data-q="'+q+'"]')].some(function(b){return b.classList.contains('correct');});}).length;
+  var bar=document.getElementById('rb');
+  document.getElementById('rs').textContent=s+' / '+_TQ;
+  document.getElementById('rl').textContent=s===_TQ?'完美！全部答对！':s>=_TQ-1?'很好！可以再回顾一下答错的题。':s>=_TQ-2?'还不错！建议再读一遍文章。':'继续努力！多读几遍，你会做得更好！';
+  bar.classList.add('show');bar.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function resetQuiz(){
+  _an={};_tc=0;
+  document.querySelectorAll('.ob').forEach(function(b){b.disabled=false;b.className='ob';});
+  document.querySelectorAll('.fb').forEach(function(f){f.className='fb';f.textContent='';});
+  document.getElementById('rb').classList.remove('show');
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart Reading | 智慧阅读</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6f8;color:#2c2c2c;min-height:100vh}
+header{background:#fff;border-bottom:1px solid #e0e0e0;padding:16px 24px;display:flex;align-items:center;gap:12px}
+header a{text-decoration:none;color:#555;font-size:14px;display:flex;align-items:center;gap:6px}
+header a:hover{color:#c0392b}
+header h1{font-size:20px;font-weight:700;color:#2c2c2c;flex:1;text-align:center}
+.container{max-width:860px;margin:0 auto;padding:32px 20px}
+.intro{text-align:center;margin-bottom:36px}
+.intro h2{font-size:28px;font-weight:700;margin-bottom:8px}
+.intro p{color:#666;font-size:15px}
+.unit-section{margin-bottom:40px}
+.unit-label{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;padding:6px 14px;border-radius:4px;display:inline-block}
+.unit1 .unit-label{background:#fdecea;color:#c0392b}
+.unit2 .unit-label{background:#e8f5e9;color:#2e7d32}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.07);padding:22px 20px;text-decoration:none;color:#2c2c2c;transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:12px 0 0 12px}
+.unit1 .card::before{background:#c0392b}
+.unit2 .card::before{background:#2e7d32}
+.card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.card-num{font-size:12px;font-weight:700;letter-spacing:.06em;opacity:.55}
+.unit1 .card-num{color:#c0392b}
+.unit2 .card-num{color:#2e7d32}
+.card-title{font-size:17px;font-weight:700;line-height:1.35}
+.card-sub{font-size:13px;color:#888;margin-top:2px}
+.card-arrow{margin-top:auto;padding-top:10px;font-size:18px;opacity:.35}
+@media(max-width:480px){.cards{grid-template-columns:1fr}.intro h2{font-size:22px}}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html">← 返回首页</a>
+  <h1>智慧阅读 Smart Reading</h1>
+</header>
+<div class="container">
+  <div class="intro">
+    <h2>选择阅读篇目</h2>
+    <p>点击任意篇目开始阅读。支持词汇悬停提示与阅读理解测验。</p>
+  </div>
+
+  <!-- Unit 1 -->
+  <div class="unit-section unit1">
+    <span class="unit-label">Unit 1 · 第一单元</span>
+    <div class="cards">
+      <a class="card" href="smart_reading_1_0.html">
+        <span class="card-num">1.0</span>
+        <span class="card-title">人生的意义</span>
+        <span class="card-sub">The Meaning of Life</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_1_1.html">
+        <span class="card-num">1.1</span>
+        <span class="card-title">生死抉择</span>
+        <span class="card-sub">Choosing Between Life and Death</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_1_2.html">
+        <span class="card-num">1.2</span>
+        <span class="card-title">勇者的选择</span>
+        <span class="card-sub">A Brave Choice</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_1_3.html">
+        <span class="card-num">1.3</span>
+        <span class="card-title">活着的方式</span>
+        <span class="card-sub">Ways of Living</span>
+        <span class="card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Unit 2 -->
+  <div class="unit-section unit2">
+    <span class="unit-label">Unit 2 · 第二单元</span>
+    <div class="cards">
+      <a class="card" href="smart_reading_2_0.html">
+        <span class="card-num">2.0</span>
+        <span class="card-title">家与归属</span>
+        <span class="card-sub">Home and Belonging</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_2_1.html">
+        <span class="card-num">2.1</span>
+        <span class="card-title">故土与记忆</span>
+        <span class="card-sub">Homeland and Memory</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_2_2.html">
+        <span class="card-num">2.2</span>
+        <span class="card-title">流浪与寻根</span>
+        <span class="card-sub">Wandering and Roots</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_2_3.html">
+        <span class="card-num">2.3</span>
+        <span class="card-title">身份与认同</span>
+        <span class="card-sub">Identity and Belonging</span>
+        <span class="card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
