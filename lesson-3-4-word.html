@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 3.4 Word Explorer | Advanced Chinese for Humanities AI</title>
+  <meta
+    name="description"
+    content="Lesson 3.4 Word Explorer for Advanced Chinese for Humanities: 成语故事二则 vocabulary system, radicals, character patterns, and guided AI support."
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .lesson-hero {
+      padding-top: 2.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .lesson-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1rem 0 0;
+    }
+
+    .breadcrumb {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .group-grid,
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .group-card h3,
+    .pattern-card h3,
+    .tool-card h3,
+    .result-card h3,
+    .vocab-card h3,
+    .name-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      font-size: 1.08rem;
+      color: var(--primary-dark);
+    }
+
+    .group-card p,
+    .pattern-card p,
+    .tool-card p,
+    .result-card p,
+    .vocab-card p,
+    .name-card p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .concept-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+    }
+
+    .concept-chip-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .concept-chip,
+    .name-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: #f6ecdf;
+      color: var(--primary-dark);
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: 1px solid #e2d0b8;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .concept-chip:hover,
+    .name-chip:hover {
+      background: #f1e2cd;
+      transform: translateY(-1px);
+    }
+
+    .concept-tooltip {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.45rem);
+      min-width: 210px;
+      max-width: 260px;
+      background: #fffdf9;
+      border: 1px solid #decbb2;
+      border-radius: 14px;
+      box-shadow: 0 12px 26px rgba(80, 56, 32, 0.12);
+      padding: 0.75rem 0.85rem;
+      z-index: 30;
+      display: none;
+    }
+
+    .concept-tooltip.show {
+      display: block;
+    }
+
+    .tooltip-word {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-pinyin {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-english {
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-bottom: 0.22rem;
+      line-height: 1.4;
+    }
+
+    .tooltip-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .char-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .char-badge {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      border: 1px solid #e7d7c2;
+      min-width: 84px;
+    }
+
+    .char-badge strong {
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .char-badge span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.24;
+    }
+
+    .memory-tip {
+      margin-top: 0.8rem;
+      padding: 0.85rem 0.95rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      color: var(--text);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .mcq-box {
+      margin-top: 1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid #eadfce;
+    }
+
+    .mcq-question {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.7rem;
+      line-height: 1.5;
+    }
+
+    .mcq-options {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .mcq-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 10px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+    }
+
+    .mcq-actions {
+      margin-top: 0.85rem;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: none;
+      min-height: 38px;
+      padding: 0 0.95rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .small-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .small-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .small-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .mcq-feedback {
+      margin-top: 0.9rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      line-height: 1.6;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    .mcq-feedback.show {
+      display: block;
+    }
+
+    .mcq-feedback.correct {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .mcq-feedback.incorrect {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
+    .tools-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 1.25rem;
+      margin-top: 1.2rem;
+    }
+
+    .tool-card label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--primary-dark);
+      font-size: 0.95rem;
+    }
+
+    .tool-card textarea,
+    .tool-card input {
+      width: 100%;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid #d9c7b1;
+      border-radius: 12px;
+      background: #fffdf9;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .tool-card textarea {
+      min-height: 170px;
+      resize: vertical;
+    }
+
+    .tool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .tool-btn {
+      border: none;
+      min-height: 44px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .tool-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .tool-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .tool-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .result-card {
+      min-height: 400px;
+    }
+
+    .result-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .result-box {
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fffdf9;
+      border: 1px solid #e7dac7;
+      border-radius: 14px;
+      padding: 1rem;
+      min-height: 270px;
+    }
+
+    .loading {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .error-text {
+      color: #a33a2b;
+      font-weight: 700;
+    }
+
+    .helper-list {
+      margin: 0.85rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+    }
+
+    .helper-list li + li {
+      margin-top: 0.35rem;
+    }
+
+    .vocab-table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    table.vocab-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .vocab-table th,
+    .vocab-table td {
+      padding: 0.78rem 0.85rem;
+      border-bottom: 1px solid #eadfce;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.95rem;
+    }
+
+    .vocab-table th {
+      background: #f7efe3;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .vocab-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .vocab-table tr:hover {
+      background: #fcf8f2;
+    }
+
+    .hanzi {
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    @media (max-width: 960px) {
+      .group-grid,
+      .pattern-grid,
+      .tools-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .concept-tooltip {
+        max-width: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities</h1>
+          <p class="site-subtitle">人文天下：高级汉语教程·上 / 下</p>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="word-explorer.html">Word Explorer</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#ai-tools">AI Box</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <div class="container">
+        <div class="breadcrumb">Home → Word Explorer → Unit 3 → Lesson 3.4</div>
+        <p class="eyebrow">Lesson 3.4</p>
+        <h2 class="page-title">成语故事二则</h2>
+        <p class="page-intro">
+          This lesson brings together two vivid idiom stories: <strong>天衣无缝</strong> and
+          <strong>胸有成竹</strong>. Students can learn the words through radicals, image chains,
+          and story-based memory: body movement, door-frame characters, 酉-related words, and idiom logic.
+        </p>
+
+        <div class="lesson-meta">
+          <span class="tag">Unit 3: 艺术人生</span>
+          <span class="tag">Theme: Idioms, Imagination, Artistic Creation</span>
+          <span class="tag">Module: Word Explorer</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Concept Net</p>
+          <h2>Hover or tap to preview key words</h2>
+        </div>
+
+        <div class="group-grid">
+          <div class="card group-card">
+            <h3>A. 天衣无缝：天上、人间、完美无缺</h3>
+            <p>These words help students enter the first idiom story through celestial imagery and the idea of flawlessness.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">缝</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">缝</div>
+                  <div class="tooltip-pinyin">fèng</div>
+                  <div class="tooltip-english">seam, crack</div>
+                  <div class="tooltip-note">the key image in 天衣无缝: no seam means no visible flaw</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">织女</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">织女</div>
+                  <div class="tooltip-pinyin">zhīnǚ</div>
+                  <div class="tooltip-english">weaving girl, girl weaver</div>
+                  <div class="tooltip-note">brings myth, textile imagery, and craftsmanship into the story</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">仙人</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">仙人</div>
+                  <div class="tooltip-pinyin">xiānrén</div>
+                  <div class="tooltip-english">celestial being</div>
+                  <div class="tooltip-note">marks the story as legendary rather than ordinary daily life</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">人间</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">人间</div>
+                  <div class="tooltip-pinyin">rénjiān</div>
+                  <div class="tooltip-english">the human world, the earth</div>
+                  <div class="tooltip-note">often contrasts with heaven or transcendence</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">破绽</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">破绽</div>
+                  <div class="tooltip-pinyin">pòzhàn</div>
+                  <div class="tooltip-english">flaw, opening, weak point</div>
+                  <div class="tooltip-note">very useful modern extension from literal “crack” to hidden weakness</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">周密</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">周密</div>
+                  <div class="tooltip-pinyin">zhōumì</div>
+                  <div class="tooltip-english">thorough, careful</div>
+                  <div class="tooltip-note">pairs naturally with 天衣无缝 because careful planning leaves no gap</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>B. 胸有成竹：画竹之前，心中已有形</h3>
+            <p>These words help students understand artistic preparation, vividness, and control.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">胸有成竹</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">胸有成竹</div>
+                  <div class="tooltip-pinyin">xiōng yǒu chéng zhú</div>
+                  <div class="tooltip-english">to have a well-thought-out plan beforehand</div>
+                  <div class="tooltip-note">literally: the bamboo is already formed in one’s chest before painting</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">形态</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">形态</div>
+                  <div class="tooltip-pinyin">xíngtài</div>
+                  <div class="tooltip-english">form, shape, pattern</div>
+                  <div class="tooltip-note">useful for artistic observation and visual description</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">栩栩如生</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">栩栩如生</div>
+                  <div class="tooltip-pinyin">xǔxǔ rú shēng</div>
+                  <div class="tooltip-english">lifelike, true to life</div>
+                  <div class="tooltip-note">a very common idiom for vivid artistic representation</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">全神贯注</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">全神贯注</div>
+                  <div class="tooltip-pinyin">quánshén-guànzhù</div>
+                  <div class="tooltip-english">to be absorbed in, to concentrate fully</div>
+                  <div class="tooltip-note">an excellent support phrase for the creation process in this story</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">逼真</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">逼真</div>
+                  <div class="tooltip-pinyin">bīzhēn</div>
+                  <div class="tooltip-english">lifelike, true to life</div>
+                  <div class="tooltip-note">pairs well with 栩栩如生 but feels slightly more direct and descriptive</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">把握</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">把握</div>
+                  <div class="tooltip-pinyin">bǎwò</div>
+                  <div class="tooltip-english">certainty; to seize, to grasp</div>
+                  <div class="tooltip-note">important for explaining confidence and control before action</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>C. 天气、动作与身体感受</h3>
+            <p>These words help students move through weather, body movement, and physical response in the second story.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">酷暑</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">酷暑</div>
+                  <div class="tooltip-pinyin">kùshǔ</div>
+                  <div class="tooltip-english">extremely hot weather, sultry summer</div>
+                  <div class="tooltip-note">a strong climate word that also helps with 酉字旁 patterning</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">乘凉</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">乘凉</div>
+                  <div class="tooltip-pinyin">chéngliáng</div>
+                  <div class="tooltip-english">to cool off in the shade</div>
+                  <div class="tooltip-note">very visual and culturally vivid summer word</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">电闪雷鸣</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">电闪雷鸣</div>
+                  <div class="tooltip-pinyin">diàn shǎn léi míng</div>
+                  <div class="tooltip-english">thunder and lightning</div>
+                  <div class="tooltip-note">rhythmic four-character phrase with strong sound-image pairing</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">倾盆大雨</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">倾盆大雨</div>
+                  <div class="tooltip-pinyin">qīng pén dà yǔ</div>
+                  <div class="tooltip-english">heavy downpour, rain cats and dogs</div>
+                  <div class="tooltip-note">another strong idiomatic weather image</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">湿透</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">湿透</div>
+                  <div class="tooltip-pinyin">shītòu</div>
+                  <div class="tooltip-english">to drench, to soak through</div>
+                  <div class="tooltip-note">good for showing resultative meaning: completely wet</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">气喘吁吁</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">气喘吁吁</div>
+                  <div class="tooltip-pinyin">qìchuǎn xūxū</div>
+                  <div class="tooltip-english">to be out of breath, breathless</div>
+                  <div class="tooltip-note">great for body-state imagery and rhythm memory</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>D. 配合、礼貌与人物气质</h3>
+            <p>These words help students describe attitude, tone, and coordination.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">有礼貌</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">有礼貌</div>
+                  <div class="tooltip-pinyin">yǒu lǐmào</div>
+                  <div class="tooltip-english">courteous, polite</div>
+                  <div class="tooltip-note">useful everyday evaluation word</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">舒畅</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">舒畅</div>
+                  <div class="tooltip-pinyin">shūchàng</div>
+                  <div class="tooltip-english">happy and relaxed</div>
+                  <div class="tooltip-note">a bodily-emotional comfort word</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">合作</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">合作</div>
+                  <div class="tooltip-pinyin">hézuò</div>
+                  <div class="tooltip-english">to cooperate, to collaborate</div>
+                  <div class="tooltip-note">useful modern extension from story logic to teamwork</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">配合</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">配合</div>
+                  <div class="tooltip-pinyin">pèihé</div>
+                  <div class="tooltip-english">to coordinate; coordination</div>
+                  <div class="tooltip-note">very useful in class, performance, sports, and conversation</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">幽默</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">幽默</div>
+                  <div class="tooltip-pinyin">yōumò</div>
+                  <div class="tooltip-english">humorous</div>
+                  <div class="tooltip-note">describes tone and personal style rather than just content</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">灵气</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">灵气</div>
+                  <div class="tooltip-pinyin">língqì</div>
+                  <div class="tooltip-english">vitality, moving spirit</div>
+                  <div class="tooltip-note">a beautiful aesthetic word for living energy in art or character</div>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card name-card" style="margin-top: 1rem;">
+          <h3>Key names in this lesson</h3>
+          <div class="concept-list">
+            <span class="name-chip">郭翰</span>
+            <span class="name-chip">郎朗</span>
+            <span class="name-chip">马友友</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="patterns" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Focus on Patterns</p>
+          <h2>Learn through radicals, frames, and idiom memory</h2>
+        </div>
+
+        <div class="pattern-grid">
+          <div class="card pattern-card">
+            <h3>1. 身字旁：身体移动、躲闪、姿态变化</h3>
+            <p>
+              In this lesson, the best entry point for <strong>身字旁</strong> is
+              <strong>躲</strong> in <strong>躲雨</strong>. This radical often helps students think about
+              body movement, posture, or how the body shifts in space.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>躲</strong><span>duǒ</span><span>to hide / dodge</span></div>
+              <div class="char-badge"><strong>躲雨</strong><span>duǒyǔ</span><span>take shelter from rain</span></div>
+              <div class="char-badge"><strong>躺</strong><span>tǎng</span><span>to lie down</span></div>
+              <div class="char-badge"><strong>躯</strong><span>qū</span><span>body / torso</span></div>
+              <div class="char-badge"><strong>身</strong><span>shēn</span><span>body</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> teach 身字旁 through action and body image:
+              the body bends, shifts, dodges, or takes shelter. In this lesson,
+              <strong>躲雨</strong> is the best anchor because students can immediately picture the action.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                In Lesson 3.4, what is the most useful learning clue carried by 身字旁?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q1" value="A" /> A. body movement, posture, or physical shifting</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="B" /> B. only palace titles</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="C" /> C. only emotional meaning</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="D" /> D. thread and tangling</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q1','A',`Correct. In Lesson 3.4, 身字旁 is most useful as a clue for body movement, posture, or physical shifting. 躲雨 is the clearest lesson anchor.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q1')">Reset</button>
+              </div>
+              <div id="feedback-q1" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>2. 门字框：门里门外、听见、看见、闪现</h3>
+            <p>
+              The frame <strong>门</strong> often helps students imagine a doorway, an enclosed opening,
+              or the idea of something appearing through a frame. In this lesson,
+              <strong>闻名</strong> and <strong>闪</strong> in <strong>电闪雷鸣</strong> are very teachable anchors.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>闻</strong><span>wén</span><span>to hear</span></div>
+              <div class="char-badge"><strong>闻名</strong><span>wénmíng</span><span>well-known</span></div>
+              <div class="char-badge"><strong>闪</strong><span>shǎn</span><span>flash</span></div>
+              <div class="char-badge"><strong>电闪雷鸣</strong><span>diànshǎn léimíng</span><span>thunder and lightning</span></div>
+              <div class="char-badge"><strong>间</strong><span>jiān</span><span>between / room</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> teach 门字框 with visual framing:
+              something is heard through the doorway, flashes at the doorway, or exists in a space defined by a frame.
+              That makes <strong>闻名</strong> and <strong>闪</strong> much easier to remember together.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                In Lesson 3.4, why are 闻名 and 电闪雷鸣 useful to learn together?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q2" value="A" /> A. Because both are only about illness</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="B" /> B. Because they help students notice 门字框 in different meanings and images</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="C" /> C. Because they both mean the same thing</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="D" /> D. Because both are names of people</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q2','B',`Correct. 闻名 and 电闪雷鸣 are useful together because they help students notice 门字框 in different but memorable ways: hearing, fame, and flashing visual action.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q2')">Reset</button>
+              </div>
+              <div id="feedback-q2" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>3. 酉字旁：从“酷”“配”进去，不只和酒有关</h3>
+            <p>
+              The radical <strong>酉</strong> historically connects with wine and fermentation,
+              but in modern Chinese it often appears in words that no longer transparently mean “alcohol.”
+              In this lesson, the best anchors are <strong>酷暑</strong> and <strong>配合</strong>.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>酷</strong><span>kù</span><span>extreme / cool</span></div>
+              <div class="char-badge"><strong>酷暑</strong><span>kùshǔ</span><span>sultry summer</span></div>
+              <div class="char-badge"><strong>配</strong><span>pèi</span><span>match / coordinate</span></div>
+              <div class="char-badge"><strong>配合</strong><span>pèihé</span><span>coordinate</span></div>
+              <div class="char-badge"><strong>酒</strong><span>jiǔ</span><span>wine</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> tell students not to over-literalize 酉字旁.
+              Sometimes it helps by shape-family recognition more than by exact modern meaning.
+              In this lesson, <strong>酷</strong> and <strong>配</strong> are the most practical anchors.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                What is the best way to teach 酉字旁 in Lesson 3.4?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q3" value="A" /> A. It must always mean “wine” directly</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="B" /> B. It helps students notice a recurring shape family, even when modern meaning is extended</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="C" /> C. It is only used in place names</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="D" /> D. It always marks body movement</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q3','B',`Correct. In Lesson 3.4, 酉字旁 is best taught as a recurring shape family. Historically it connects with wine, but in modern vocabulary its semantic link is often extended.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q3')">Reset</button>
+              </div>
+              <div id="feedback-q3" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>4. 成语怎么记：故事 + 画面 + 核心义</h3>
+            <p>
+              This lesson is ideal for teaching idiom memory because the idioms are highly visual.
+              Students remember them best when they connect the story, the mental image, and the modern figurative meaning.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>天衣无缝</strong><span>no seam in heavenly clothes</span><span>perfect, flawless</span></div>
+              <div class="char-badge"><strong>胸有成竹</strong><span>bamboo already in chest</span><span>have a clear plan</span></div>
+              <div class="char-badge"><strong>栩栩如生</strong><span>vivid as alive</span><span>lifelike</span></div>
+              <div class="char-badge"><strong>电闪雷鸣</strong><span>lightning + thunder</span><span>storm image</span></div>
+              <div class="char-badge"><strong>倾盆大雨</strong><span>water pouring from a basin</span><span>torrential rain</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> use a three-step method:
+              <strong>1) see the picture, 2) remember the story, 3) map it to the modern meaning.</strong>
+              For example, 天衣无缝 is not only about heavenly clothes—it becomes “perfect and flawless.”
+              胸有成竹 is not only about bamboo—it becomes “having a plan before acting.”
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                What is the best strategy for remembering idioms in Lesson 3.4?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q4" value="A" /> A. Memorize only the English meaning and ignore the image</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="B" /> B. Use the story, the visual image, and the modern figurative meaning together</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="C" /> C. Treat every idiom as random</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="D" /> D. Only copy it ten times without context</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q4','B',`Correct. The best way to remember idioms in Lesson 3.4 is to combine the story, the visual image, and the modern figurative meaning. That turns the idiom into something vivid instead of abstract.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q4')">Reset</button>
+              </div>
+              <div id="feedback-q4" class="mcq-feedback"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-tools" class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">AI Question Box</p>
+          <h2>Ask about meaning, usage, radicals, or idiom memory</h2>
+        </div>
+
+        <div class="tools-layout">
+          <div class="card tool-card">
+            <h3>Ask AI about this lesson</h3>
+            <p>
+              You can ask about vocabulary, idioms, story logic, radicals,
+              or the difference between related expression patterns.
+            </p>
+
+            <label for="studentQuestionInput">Your question</label>
+            <textarea id="studentQuestionInput" placeholder="Examples:
+How does 身字旁 help me remember 躲雨?
+Why are 闻名 and 闪 useful for noticing 门字框?
+How should I teach 酉字旁 in 酷暑 and 配合?
+What is the best way to remember 天衣无缝 and 胸有成竹?"></textarea>
+
+            <div class="tool-actions">
+              <button class="tool-btn" id="askAiBtn">Ask AI</button>
+              <button class="tool-btn secondary" id="fillExampleBtn">Use Example Question</button>
+            </div>
+
+            <ul class="helper-list">
+              <li>Ask one clear question at a time.</li>
+              <li>Use Chinese words when possible.</li>
+              <li>Try asking about radicals, imagery, or idiom memory.</li>
+            </ul>
+          </div>
+
+          <div class="card result-card">
+            <h3>AI response</h3>
+            <div class="result-meta">
+              <span class="tag">Course: humanities2</span>
+              <span class="tag">Lesson: 3-4</span>
+              <span class="tag" id="currentTaskTag">Task: student question</span>
+            </div>
+
+            <div id="resultBox" class="result-box">
+Ask a question to get started.
+            </div>
+
+            <div class="tool-actions" style="margin-top: 1rem;">
+              <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vocabulary" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Vocabulary list</p>
+          <h2>Lesson 3.4 New Words</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <p>This is the full vocabulary list for the lesson.</p>
+
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>词语</th>
+                  <th>Pinyin</th>
+                  <th>POS</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">缝</td><td>fèng</td><td>N</td><td>seam, crack</td></tr>
+                <tr><td>2</td><td class="hanzi">天赋</td><td>tiānfù</td><td>N</td><td>talent</td></tr>
+                <tr><td>3</td><td class="hanzi">幽默</td><td>yōumò</td><td>Adj</td><td>humorous</td></tr>
+                <tr><td>4</td><td class="hanzi">乘凉</td><td>chéngliáng</td><td>V</td><td>to cool off in the shade, to relax in a cool place</td></tr>
+                <tr><td>5</td><td class="hanzi">飘</td><td>piāo</td><td>V</td><td>to float</td></tr>
+                <tr><td>6</td><td class="hanzi">院子</td><td>yuànzi</td><td>N</td><td>courtyard, yard</td></tr>
+                <tr><td>7</td><td class="hanzi">舒畅</td><td>shūchàng</td><td>Adj</td><td>happy and relaxed</td></tr>
+                <tr><td>8</td><td class="hanzi">微笑</td><td>wēixiào</td><td>V/N</td><td>to smile; smile</td></tr>
+                <tr><td>9</td><td class="hanzi">有礼貌</td><td>yǒu lǐmào</td><td>Adj</td><td>courteous, polite</td></tr>
+                <tr><td>10</td><td class="hanzi">织女</td><td>zhīnǚ</td><td>N</td><td>weaving-girl, girl weaver</td></tr>
+                <tr><td>11</td><td class="hanzi">仙人</td><td>xiānrén</td><td>N</td><td>celestial being</td></tr>
+                <tr><td>12</td><td class="hanzi">酷暑</td><td>kùshǔ</td><td>N</td><td>extremely hot weather, sultry summer</td></tr>
+                <tr><td>13</td><td class="hanzi">严寒</td><td>yánhán</td><td>N</td><td>bitter cold, severe winter</td></tr>
+                <tr><td>14</td><td class="hanzi">谢</td><td>xiè</td><td>V</td><td>to wither and fall</td></tr>
+                <tr><td>15</td><td class="hanzi">赋税</td><td>fùshuì</td><td>N</td><td>taxes</td></tr>
+                <tr><td>16</td><td class="hanzi">总之</td><td>zǒngzhī</td><td>Conj</td><td>in short, in brief</td></tr>
+                <tr><td>17</td><td class="hanzi">人间</td><td>rénjiān</td><td>N</td><td>the human world, the earth</td></tr>
+                <tr><td>18</td><td class="hanzi">亏</td><td>kuī</td><td>V/*Adv</td><td>to have a deficit; fortunately, thanks to (in mocking sense)</td></tr>
+                <tr><td>19</td><td class="hanzi">前辈</td><td>qiánbèi</td><td>N</td><td>older generation, predecessor</td></tr>
+                <tr><td>20</td><td class="hanzi">兰花</td><td>lánhuā</td><td>N</td><td>orchid</td></tr>
+                <tr><td>21</td><td class="hanzi">难免</td><td>nánmiǎn</td><td>Adj</td><td>difficult to escape from, unavoidable</td></tr>
+                <tr><td>22</td><td class="hanzi">寂寞</td><td>jìmò</td><td>Adj</td><td>lonely</td></tr>
+                <tr><td>23</td><td class="hanzi">偶尔</td><td>ǒu’ěr</td><td>Adv</td><td>occasionally</td></tr>
+                <tr><td>24</td><td class="hanzi">长生不老</td><td>chángshēng bù lǎo</td><td>IE</td><td>to live forever and never grow old</td></tr>
+                <tr><td>25</td><td class="hanzi">灵气</td><td>língqì</td><td>N</td><td>vitality, moving spirit</td></tr>
+                <tr><td>26</td><td class="hanzi">谎话</td><td>huǎnghuà</td><td>N</td><td>lie, deceitful words, fabrication</td></tr>
+                <tr><td>27</td><td class="hanzi">周密</td><td>zhōumì</td><td>Adj</td><td>thorough, careful</td></tr>
+                <tr><td>28</td><td class="hanzi">毛病</td><td>máobing</td><td>N</td><td>defect, shortcoming</td></tr>
+                <tr><td>29</td><td class="hanzi">破绽</td><td>pòzhàn</td><td>N</td><td>flaw (in speech, action, argument)</td></tr>
+                <tr><td>30</td><td class="hanzi">合作</td><td>hézuò</td><td>V</td><td>to cooperate, to collaborate</td></tr>
+                <tr><td>31</td><td class="hanzi">配合</td><td>pèihé</td><td>V/*N</td><td>to coordinate; cooperation, partnership</td></tr>
+                <tr><td>32</td><td class="hanzi">胸有成竹</td><td>xiōng yǒu chéng zhú</td><td>IE</td><td>to have a card up one’s sleeve, to have a well-thought-out plan beforehand</td></tr>
+                <tr><td>33</td><td class="hanzi">注入</td><td>zhùrù</td><td>VC</td><td>to inject, to pump, to breathe into</td></tr>
+                <tr><td>34</td><td class="hanzi">形态</td><td>xíngtài</td><td>N</td><td>form, shape, pattern</td></tr>
+                <tr><td>35</td><td class="hanzi">栩栩如生</td><td>xǔxǔ rú shēng</td><td>IE</td><td>lifelike, be true to life</td></tr>
+                <tr><td>36</td><td class="hanzi">闻名</td><td>wénmíng</td><td>V</td><td>to be well-known</td></tr>
+                <tr><td>37</td><td class="hanzi">偶然</td><td>ǒurán</td><td>Adj/Adv</td><td>accidental; accidentally</td></tr>
+                <tr><td>38</td><td class="hanzi">常年</td><td>chángnián</td><td>Adv</td><td>throughout the entire year</td></tr>
+                <tr><td>39</td><td class="hanzi">钻</td><td>zuān</td><td>V</td><td>to thread one’s way through</td></tr>
+                <tr><td>40</td><td class="hanzi">烤</td><td>kǎo</td><td>V</td><td>to bake, to toast</td></tr>
+                <tr><td>41</td><td class="hanzi">烫</td><td>tàng</td><td>Adj/V</td><td>boiling hot; to scald and cause a burn</td></tr>
+                <tr><td>42</td><td class="hanzi">照样</td><td>zhàoyàng</td><td>Adv</td><td>still, in the same style</td></tr>
+                <tr><td>43</td><td class="hanzi">全神贯注</td><td>quánshén-guànzhù</td><td>IE</td><td>to be absorbed in, to concentrate fully</td></tr>
+                <tr><td>44</td><td class="hanzi">量</td><td>liáng</td><td>V</td><td>to measure</td></tr>
+                <tr><td>45</td><td class="hanzi">叶子</td><td>yèzi</td><td>N</td><td>leaf, foliage</td></tr>
+                <tr><td>46</td><td class="hanzi">密</td><td>mì</td><td>Adj</td><td>dense, numerous</td></tr>
+                <tr><td>47</td><td class="hanzi">汗水</td><td>hànshuǐ</td><td>N</td><td>sweat</td></tr>
+                <tr><td>48</td><td class="hanzi">湿透</td><td>shītòu</td><td>VC</td><td>to drench, to soak, to wet through</td></tr>
+                <tr><td>49</td><td class="hanzi">擦</td><td>cā</td><td>V</td><td>to wipe</td></tr>
+                <tr><td>50</td><td class="hanzi">电闪雷鸣</td><td>diàn shǎn léi míng</td><td>IE</td><td>thunder and lightning</td></tr>
+                <tr><td>51</td><td class="hanzi">眼看</td><td>yǎnkàn</td><td>Adv/V</td><td>soon, in a moment; to look on</td></tr>
+                <tr><td>52</td><td class="hanzi">躲雨</td><td>duǒyǔ</td><td>VP</td><td>to take shelter from the rain</td></tr>
+                <tr><td>53</td><td class="hanzi">扣</td><td>kòu</td><td>V</td><td>to put upside down</td></tr>
+                <tr><td>54</td><td class="hanzi">倾盆大雨</td><td>qīngpén dà yǔ</td><td>IE</td><td>heavy downpour, to rain cats and dogs</td></tr>
+                <tr><td>55</td><td class="hanzi">顾不上</td><td>gù bu shàng</td><td>VP</td><td>to have no time to attend to</td></tr>
+                <tr><td>56</td><td class="hanzi">滑</td><td>huá</td><td>Adj</td><td>slippery</td></tr>
+                <tr><td>57</td><td class="hanzi">气喘吁吁</td><td>qìchuǎn xūxū</td><td>IE</td><td>to be out of breath, breathless</td></tr>
+                <tr><td>58</td><td class="hanzi">吹打</td><td>chuīdǎ</td><td>V</td><td>to hit (by wind and rain)</td></tr>
+                <tr><td>59</td><td class="hanzi">弯腰</td><td>wānyāo</td><td>VO</td><td>to stoop, to bend down</td></tr>
+                <tr><td>60</td><td class="hanzi">形状</td><td>xíngzhuàng</td><td>N</td><td>shape, form</td></tr>
+                <tr><td>61</td><td class="hanzi">两样</td><td>liǎngyàng</td><td>Adj</td><td>different</td></tr>
+                <tr><td>62</td><td class="hanzi">明净</td><td>míngjìng</td><td>Adj</td><td>clear and bright</td></tr>
+                <tr><td>63</td><td class="hanzi">沉着</td><td>chénzhuó</td><td>Adj</td><td>calm and collected</td></tr>
+                <tr><td>64</td><td class="hanzi">逼真</td><td>bīzhēn</td><td>Adj</td><td>lifelike, true to life</td></tr>
+                <tr><td>65</td><td class="hanzi">充分</td><td>chōngfèn</td><td>Adj</td><td>ample, abundant</td></tr>
+                <tr><td>66</td><td class="hanzi">把握</td><td>bǎwò</td><td>N/V</td><td>certainty; to seize, to grasp</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Proper nouns</p>
+          <h2>Key names in Lesson 3.4</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>专名</th>
+                  <th>Pinyin</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">郭翰</td><td>Guō Hàn</td><td>name of a person</td></tr>
+                <tr><td>2</td><td class="hanzi">郎朗</td><td>Láng Lǎng</td><td>Lang Lang (1982–), a famous pianist</td></tr>
+                <tr><td>3</td><td class="hanzi">马友友</td><td>Mǎ Yǒuyǒu</td><td>Yo-Yo Ma (1955–), a famous cellist</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-tools" class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">AI Question Box</p>
+          <h2>Ask about meaning, usage, radicals, or idiom memory</h2>
+        </div>
+
+        <div class="tools-layout">
+          <div class="card tool-card">
+            <h3>Ask AI about this lesson</h3>
+            <p>
+              You can ask about vocabulary, idiom stories, radicals,
+              memory methods, or the difference between similar expressions.
+            </p>
+
+            <label for="studentQuestionInput">Your question</label>
+            <textarea id="studentQuestionInput" placeholder="Examples:
+How does 身字旁 help me remember 躲雨?
+Why are 闻名 and 电闪雷鸣 useful for 门字框?
+How should I teach 酉字旁 in 酷暑 and 配合?
+What is the best way to remember 天衣无缝 and 胸有成竹?"></textarea>
+
+            <div class="tool-actions">
+              <button class="tool-btn" id="askAiBtn">Ask AI</button>
+              <button class="tool-btn secondary" id="fillExampleBtn">Use Example Question</button>
+            </div>
+
+            <ul class="helper-list">
+              <li>Ask one clear question at a time.</li>
+              <li>Use Chinese words when possible.</li>
+              <li>Try asking about radicals, image chains, or idiom memory.</li>
+            </ul>
+          </div>
+
+          <div class="card result-card">
+            <h3>AI response</h3>
+            <div class="result-meta">
+              <span class="tag">Course: humanities2</span>
+              <span class="tag">Lesson: 3-4</span>
+              <span class="tag" id="currentTaskTag">Task: student question</span>
+            </div>
+
+            <div id="resultBox" class="result-box">
+Ask a question to get started.
+            </div>
+
+            <div class="tool-actions" style="margin-top: 1rem;">
+              <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="hero-actions">
+          <a class="btn btn-secondary" href="word-explorer.html#unit3">Back to Word Explorer</a>
+          <a class="btn btn-primary" href="lesson-4-0-word.html">Next unit</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Advanced Chinese for Humanities AI</p>
+      <p>Lesson 3.4 Word Explorer</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const WORKER_URL = "https://quiet-field-a529.xc2375.workers.dev";
+
+    const resultBox = document.getElementById("resultBox");
+    const studentQuestionInput = document.getElementById("studentQuestionInput");
+    const askAiBtn = document.getElementById("askAiBtn");
+    const fillExampleBtn = document.getElementById("fillExampleBtn");
+    const clearResultBtn = document.getElementById("clearResultBtn");
+
+    function setLoading() {
+      resultBox.innerHTML = '<span class="loading">Thinking…</span>';
+    }
+
+    function setError(message) {
+      resultBox.innerHTML = `<span class="error-text">${message}</span>`;
+    }
+
+    function setResult(text) {
+      resultBox.textContent = text;
+    }
+
+    function checkPatternQuestion(questionName, correctAnswer, correctFeedback) {
+      const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+
+      if (!selected) {
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = "Please choose an answer first.";
+        return;
+      }
+
+      if (selected.value === correctAnswer) {
+        feedbackBox.className = "mcq-feedback show correct";
+        feedbackBox.textContent = correctFeedback;
+      } else {
+        let message = "";
+
+        if (questionName === "q1") {
+          message = "Not quite. In this lesson, 身字旁 is best taught as a clue for body movement, posture, or physical shifting. 躲雨 is the clearest anchor.";
+        } else if (questionName === "q2") {
+          message = "Not quite. 门字框 is most useful here as a visual frame clue. 闻名 and 闪 help students notice hearing, fame, and flashing movement through that frame.";
+        } else if (questionName === "q3") {
+          message = "Not quite. 酉字旁 is best taught here as a recurring shape family. Its historical meaning links to wine, but the modern semantic connection is often extended.";
+        } else if (questionName === "q4") {
+          message = "Not quite. The best idiom-memory method here is to combine the story, the visual image, and the modern figurative meaning.";
+        }
+
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = message;
+      }
+    }
+
+    function resetPatternQuestion(questionName) {
+      document.querySelectorAll(`input[name="${questionName}"]`).forEach(input => input.checked = false);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+      feedbackBox.className = "mcq-feedback";
+      feedbackBox.textContent = "";
+    }
+
+    async function askStudentWordHelp(questionText) {
+      try {
+        setLoading();
+
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            course: "humanities2",
+            lesson: "3-4",
+            task: "student_word_help",
+            question: questionText,
+            context: "Lesson 3.4 discusses two idiom stories, 天衣无缝 and 胸有成竹, with pattern learning around 身字旁, 门字框, 酉字旁, and story-based idiom memory."
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed.");
+        }
+
+        const resultText = data.result || "No response returned.";
+        setResult(resultText);
+      } catch (error) {
+        setError(error.message || "Something went wrong.");
+      }
+    }
+
+    askAiBtn.addEventListener("click", async () => {
+      const question = studentQuestionInput.value.trim();
+      if (!question) {
+        setError("Please enter a question first.");
+        return;
+      }
+      await askStudentWordHelp(question);
+    });
+
+    fillExampleBtn.addEventListener("click", () => {
+      studentQuestionInput.value = "What is the best way to remember 天衣无缝 and 胸有成竹 in Lesson 3.4?";
+    });
+
+    clearResultBtn.addEventListener("click", () => {
+      resultBox.textContent = "Ask a question to get started.";
+    });
+
+    const chipWraps = document.querySelectorAll(".concept-chip-wrap");
+
+    chipWraps.forEach((wrap) => {
+      const chip = wrap.querySelector(".concept-chip");
+      const tooltip = wrap.querySelector(".concept-tooltip");
+
+      chip.addEventListener("mouseenter", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.add("show");
+        }
+      });
+
+      chip.addEventListener("mouseleave", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.remove("show");
+        }
+      });
+
+      chip.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+          e.stopPropagation();
+          document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+            if (tip !== tooltip) tip.classList.remove("show");
+          });
+          tooltip.classList.toggle("show");
+        } else {
+          studentQuestionInput.value = `What does ${chip.textContent.trim()} mean in Lesson 3.4?`;
+          window.location.hash = "ai-tools";
+        }
+      });
+
+      tooltip.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+        tip.classList.remove("show");
+      });
+    });
+  </script>
+</body>
+</html>
