@@ -468,7 +468,24 @@
         </div>
       </div>
     </section>
+<section id="write-hanzi" class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">Write the Hanzi</p>
+      <h2>Read the pinyin and English, then write the Chinese characters</h2>
+    </div>
 
+    <div class="card vocab-card">
+      <p>
+        Type the hanzi based on the pinyin and English meaning.
+        Click <strong>Hint</strong> to open a pop-up with stroke-order animation.
+      </p>
+
+      <div id="hanziPracticeGrid" class="hanzi-practice-grid"></div>
+    </div>
+  </div>
+</section>
+    
     <section class="section alt-bg">
       <div class="container">
         <div class="section-heading">
@@ -1169,7 +1186,25 @@ Ask a question to get started.
       </div>
     </section>
   </main>
+<div id="strokeHintModal" class="stroke-modal" aria-hidden="true">
+  <div class="stroke-modal-panel">
+    <div class="stroke-modal-top">
+      <div>
+        <h3 id="strokeModalTitle" class="stroke-modal-title">Stroke Hint</h3>
+        <p id="strokeModalSubtitle" class="stroke-modal-subtitle"></p>
+      </div>
+      <button id="closeStrokeModal" class="stroke-close-btn" type="button">×</button>
+    </div>
 
+    <div class="stroke-modal-actions">
+      <button id="replayStrokeBtn" class="small-btn" type="button">Replay</button>
+      <button id="closeStrokeModalBtn2" class="small-btn secondary" type="button">Close</button>
+    </div>
+
+    <div id="strokeAnimGrid" class="stroke-anim-grid"></div>
+  </div>
+</div>
+  
   <footer class="site-footer">
     <div class="container footer-inner">
       <p>Advanced Chinese for Humanities AI</p>
@@ -1178,6 +1213,7 @@ Ask a question to get started.
   </footer>
 
   <script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.0/dist/hanzi-writer.min.js"></script>
   <script>
     const WORKER_URL = "https://quiet-field-a529.xc2375.workers.dev";
 
@@ -1326,6 +1362,241 @@ Ask a question to get started.
         tip.classList.remove("show");
       });
     });
+    /* ===== Hanzi Writing Practice for Lesson 3.4 ===== */
+const hanziPracticeData = [
+  { answer: "织女", pinyin: "zhīnǚ", english: "weaving girl" },
+  { answer: "人间", pinyin: "rénjiān", english: "the human world" },
+  { answer: "周密", pinyin: "zhōumì", english: "thorough, careful" },
+  { answer: "配合", pinyin: "pèihé", english: "to coordinate" },
+  { answer: "闻名", pinyin: "wénmíng", english: "to be well-known" },
+  { answer: "躲雨", pinyin: "duǒyǔ", english: "to take shelter from the rain" },
+  { answer: "胸有成竹", pinyin: "xiōng yǒu chéng zhú", english: "to have a well-thought-out plan beforehand" },
+  { answer: "栩栩如生", pinyin: "xǔxǔ rú shēng", english: "lifelike, true to life" },
+  { answer: "倾盆大雨", pinyin: "qīng pén dà yǔ", english: "heavy downpour" },
+  { answer: "气喘吁吁", pinyin: "qìchuǎn xūxū", english: "out of breath" }
+];
+
+const hanziPracticeGrid = document.getElementById("hanziPracticeGrid");
+const strokeHintModal = document.getElementById("strokeHintModal");
+const strokeAnimGrid = document.getElementById("strokeAnimGrid");
+const strokeModalTitle = document.getElementById("strokeModalTitle");
+const strokeModalSubtitle = document.getElementById("strokeModalSubtitle");
+const closeStrokeModal = document.getElementById("closeStrokeModal");
+const closeStrokeModalBtn2 = document.getElementById("closeStrokeModalBtn2");
+const replayStrokeBtn = document.getElementById("replayStrokeBtn");
+
+let currentStrokeWord = null;
+let currentStrokeWriters = [];
+
+function normalizeHanziAnswer(text) {
+  return text.replace(/\s+/g, "").trim();
+}
+
+function renderHanziPractice() {
+  if (!hanziPracticeGrid) return;
+
+  hanziPracticeGrid.innerHTML = hanziPracticeData.map((item, index) => `
+    <div class="hanzi-practice-card" data-index="${index}">
+      <div class="practice-top">
+        <div class="practice-num">${index + 1}</div>
+        <div>
+          <div class="practice-pinyin">${item.pinyin}</div>
+          <div class="practice-english">${item.english}</div>
+        </div>
+      </div>
+
+      <input
+        class="practice-input"
+        type="text"
+        placeholder="Type the hanzi here / 在这里写汉字"
+        data-answer="${item.answer}"
+      />
+
+      <div class="practice-actions">
+        <button class="small-btn check-practice-btn" type="button">Check</button>
+        <button class="small-btn secondary hint-practice-btn" type="button">Hint</button>
+      </div>
+
+      <div class="practice-feedback"></div>
+    </div>
+  `).join("");
+}
+
+function setPracticeFeedback(card, ok, message) {
+  const feedback = card.querySelector(".practice-feedback");
+  feedback.className = ok
+    ? "practice-feedback show correct"
+    : "practice-feedback show incorrect";
+  feedback.textContent = message;
+}
+
+function clearPracticeFeedback(card) {
+  const feedback = card.querySelector(".practice-feedback");
+  feedback.className = "practice-feedback";
+  feedback.textContent = "";
+}
+
+function loadHanziData(char) {
+  return fetch(`https://cdn.jsdelivr.net/npm/hanzi-writer-data/${encodeURIComponent(char)}.json`)
+    .then((res) => {
+      if (!res.ok) throw new Error("Character data not found");
+      return res.json();
+    });
+}
+
+function createStrokeWriter(targetId, char, delay = 0) {
+  const target = document.getElementById(targetId);
+  if (!target) return;
+
+  target.innerHTML = "";
+
+  if (!window.HanziWriter) {
+    target.textContent = char;
+    return;
+  }
+
+  const writer = HanziWriter.create(target, char, {
+    width: 128,
+    height: 128,
+    padding: 8,
+    showOutline: true,
+    showCharacter: false,
+    strokeAnimationSpeed: 1.05,
+    delayBetweenStrokes: 160,
+    outlineColor: "#d8c3ab",
+    strokeColor: "#1f2937",
+    radicalColor: "#c2410c",
+    charDataLoader: loadHanziData
+  });
+
+  currentStrokeWriters.push(writer);
+
+  setTimeout(() => {
+    writer.animateCharacter();
+  }, delay);
+}
+
+function buildStrokeWriters(word) {
+  currentStrokeWriters = [];
+  strokeAnimGrid.innerHTML = [...word].map((char, index) => `
+    <div class="stroke-char-card">
+      <div class="stroke-char-label">${char}</div>
+      <div class="stroke-writer-box" id="stroke-writer-${index}"></div>
+    </div>
+  `).join("");
+
+  [...word].forEach((char, index) => {
+    createStrokeWriter(`stroke-writer-${index}`, char, index * 350);
+  });
+}
+
+function openStrokeModal(item) {
+  currentStrokeWord = item;
+  strokeModalTitle.textContent = `Hint: ${item.answer}`;
+  strokeModalSubtitle.textContent = `${item.pinyin} • ${item.english}`;
+  strokeHintModal.classList.add("show");
+  strokeHintModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+  buildStrokeWriters(item.answer);
+}
+
+function closeStrokeHintModal() {
+  strokeHintModal.classList.remove("show");
+  strokeHintModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+  strokeAnimGrid.innerHTML = "";
+  currentStrokeWord = null;
+  currentStrokeWriters = [];
+}
+
+function replayStrokeAnimations() {
+  if (!currentStrokeWriters.length) return;
+  currentStrokeWriters.forEach((writer, index) => {
+    setTimeout(() => {
+      writer.animateCharacter();
+    }, index * 350);
+  });
+}
+
+if (hanziPracticeGrid) {
+  hanziPracticeGrid.addEventListener("click", (e) => {
+    const card = e.target.closest(".hanzi-practice-card");
+    if (!card) return;
+
+    const index = Number(card.dataset.index);
+    const item = hanziPracticeData[index];
+    const input = card.querySelector(".practice-input");
+    const userAnswer = normalizeHanziAnswer(input.value);
+    const correctAnswer = normalizeHanziAnswer(item.answer);
+
+    if (e.target.classList.contains("check-practice-btn")) {
+      if (!userAnswer) {
+        setPracticeFeedback(card, false, "Please type the hanzi first.");
+        return;
+      }
+
+      if (userAnswer === correctAnswer) {
+        setPracticeFeedback(card, true, "Correct! 写得对。");
+      } else {
+        setPracticeFeedback(
+          card,
+          false,
+          `Not quite.\nYour answer: ${input.value || "—"}\nCorrect answer: ${item.answer}`
+        );
+      }
+    }
+
+    if (e.target.classList.contains("hint-practice-btn")) {
+      openStrokeModal(item);
+    }
+  });
+
+  hanziPracticeGrid.addEventListener("input", (e) => {
+    const card = e.target.closest(".hanzi-practice-card");
+    if (!card) return;
+    if (e.target.classList.contains("practice-input")) {
+      clearPracticeFeedback(card);
+    }
+  });
+
+  hanziPracticeGrid.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && e.target.classList.contains("practice-input")) {
+      e.preventDefault();
+      const card = e.target.closest(".hanzi-practice-card");
+      if (!card) return;
+      const btn = card.querySelector(".check-practice-btn");
+      if (btn) btn.click();
+    }
+  });
+}
+
+if (closeStrokeModal) {
+  closeStrokeModal.addEventListener("click", closeStrokeHintModal);
+}
+
+if (closeStrokeModalBtn2) {
+  closeStrokeModalBtn2.addEventListener("click", closeStrokeHintModal);
+}
+
+if (replayStrokeBtn) {
+  replayStrokeBtn.addEventListener("click", replayStrokeAnimations);
+}
+
+if (strokeHintModal) {
+  strokeHintModal.addEventListener("click", (e) => {
+    if (e.target === strokeHintModal) {
+      closeStrokeHintModal();
+    }
+  });
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && strokeHintModal && strokeHintModal.classList.contains("show")) {
+    closeStrokeHintModal();
+  }
+});
+
+renderHanziPractice();
   </script>
 </body>
 </html>
