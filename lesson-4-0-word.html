@@ -6,7 +6,7 @@
   <title>Lesson 4.0 Word Explorer | Advanced Chinese for Humanities AI</title>
   <meta
     name="description"
-    content="Lesson 4.0 Word Explorer for Advanced Chinese for Humanities: 中国女性的社会地位 vocabulary system, radicals, character patterns, and guided AI support."
+    content="Lesson 4.0 Word Explorer for Advanced Chinese for Humanities: 中国女性的社会地位 vocabulary system, radicals, character patterns, guided AI support, and hanzi writing practice."
   />
   <link rel="stylesheet" href="style.css" />
   <style>
@@ -414,10 +414,206 @@
       font-weight: 700;
     }
 
+    /* ===== Hanzi Writing Practice ===== */
+    .hanzi-practice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .hanzi-practice-card {
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      border-radius: 16px;
+      padding: 1rem;
+    }
+
+    .practice-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .practice-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: #f4e7d6;
+      color: var(--primary-dark);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .practice-pinyin {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.15rem;
+    }
+
+    .practice-english {
+      font-size: 0.93rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .practice-input {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid #d9c7b1;
+      border-radius: 12px;
+      background: #fff;
+      padding: 0.7rem 0.85rem;
+      font: inherit;
+      font-size: 1.05rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    .practice-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .practice-feedback {
+      display: none;
+      margin-top: 0.8rem;
+      padding: 0.8rem 0.9rem;
+      border-radius: 12px;
+      line-height: 1.6;
+      border: 1px solid #eadfce;
+      background: #fffdf9;
+      white-space: pre-wrap;
+    }
+
+    .practice-feedback.show {
+      display: block;
+    }
+
+    .practice-feedback.correct {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .practice-feedback.incorrect {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
+    /* ===== Stroke Hint Modal ===== */
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    .stroke-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(45, 36, 28, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 9999;
+    }
+
+    .stroke-modal.show {
+      display: flex;
+    }
+
+    .stroke-modal-panel {
+      width: min(820px, 96vw);
+      max-height: 88vh;
+      overflow: auto;
+      background: #fffdf9;
+      border: 1px solid #e2d3c2;
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(42, 30, 20, 0.18);
+      padding: 1.1rem 1.1rem 1.2rem;
+    }
+
+    .stroke-modal-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stroke-modal-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 0;
+    }
+
+    .stroke-modal-subtitle {
+      color: var(--muted);
+      margin: 0.2rem 0 0;
+      line-height: 1.5;
+    }
+
+    .stroke-close-btn {
+      border: none;
+      background: #f4e7d6;
+      color: var(--primary-dark);
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .stroke-modal-actions {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin: 0.8rem 0 1rem;
+    }
+
+    .stroke-anim-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .stroke-char-card {
+      background: #fcf8f2;
+      border: 1px solid #eadfce;
+      border-radius: 16px;
+      padding: 0.85rem;
+      min-width: 150px;
+    }
+
+    .stroke-char-label {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .stroke-writer-box {
+      width: 128px;
+      height: 128px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #e3d5c5;
+      border-radius: 14px;
+    }
+
     @media (max-width: 960px) {
       .group-grid,
       .pattern-grid,
-      .tools-layout {
+      .tools-layout,
+      .hanzi-practice-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -482,65 +678,12 @@
             <p>These words help students talk about women’s roles in family and society, both historical and modern.</p>
 
             <div class="concept-list">
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">女性</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">女性</div>
-                  <div class="tooltip-pinyin">nǚxìng</div>
-                  <div class="tooltip-english">woman; female</div>
-                  <div class="tooltip-note">a general modern word often used in public discussion and research</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">妇女</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">妇女</div>
-                  <div class="tooltip-pinyin">fùnǚ</div>
-                  <div class="tooltip-english">women</div>
-                  <div class="tooltip-note">common in formal or public-policy language</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">媳妇</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">媳妇</div>
-                  <div class="tooltip-pinyin">xífù</div>
-                  <div class="tooltip-english">daughter-in-law; wife</div>
-                  <div class="tooltip-note">a family-role word with strong social meaning</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">婆家</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">婆家</div>
-                  <div class="tooltip-pinyin">pójia</div>
-                  <div class="tooltip-english">husband’s family</div>
-                  <div class="tooltip-note">helps students understand marriage from the woman’s perspective</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">公婆</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">公婆</div>
-                  <div class="tooltip-pinyin">gōngpó</div>
-                  <div class="tooltip-english">husband’s parents</div>
-                  <div class="tooltip-note">a kinship word strongly tied to traditional family hierarchy</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">后母</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">后母</div>
-                  <div class="tooltip-pinyin">hòumǔ</div>
-                  <div class="tooltip-english">stepmother</div>
-                  <div class="tooltip-note">a family-relationship word useful for broadening kinship vocabulary</div>
-                </span>
-              </span>
+              <span class="concept-chip-wrap"><button class="concept-chip">女性</button><span class="concept-tooltip"><div class="tooltip-word">女性</div><div class="tooltip-pinyin">nǚxìng</div><div class="tooltip-english">woman; female</div><div class="tooltip-note">a general modern word often used in public discussion and research</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">妇女</button><span class="concept-tooltip"><div class="tooltip-word">妇女</div><div class="tooltip-pinyin">fùnǚ</div><div class="tooltip-english">women</div><div class="tooltip-note">common in formal or public-policy language</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">媳妇</button><span class="concept-tooltip"><div class="tooltip-word">媳妇</div><div class="tooltip-pinyin">xífù</div><div class="tooltip-english">daughter-in-law; wife</div><div class="tooltip-note">a family-role word with strong social meaning</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">婆家</button><span class="concept-tooltip"><div class="tooltip-word">婆家</div><div class="tooltip-pinyin">pójia</div><div class="tooltip-english">husband’s family</div><div class="tooltip-note">helps students understand marriage from the woman’s perspective</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">公婆</button><span class="concept-tooltip"><div class="tooltip-word">公婆</div><div class="tooltip-pinyin">gōngpó</div><div class="tooltip-english">husband’s parents</div><div class="tooltip-note">a kinship word strongly tied to traditional family hierarchy</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">后母</button><span class="concept-tooltip"><div class="tooltip-word">后母</div><div class="tooltip-pinyin">hòumǔ</div><div class="tooltip-english">stepmother</div><div class="tooltip-note">a family-relationship word useful for broadening kinship vocabulary</div></span></span>
             </div>
           </div>
 
@@ -549,65 +692,12 @@
             <p>These words help students discuss social control, traditional expectations, and gender inequality.</p>
 
             <div class="concept-list">
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">歧视</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">歧视</div>
-                  <div class="tooltip-pinyin">qíshì</div>
-                  <div class="tooltip-english">to discriminate against; discrimination</div>
-                  <div class="tooltip-note">a core concept word for social inequality</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">缠足</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">缠足</div>
-                  <div class="tooltip-pinyin">chánzú</div>
-                  <div class="tooltip-english">to bind feet</div>
-                  <div class="tooltip-note">a historically specific practice that symbolizes bodily control over women</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">禁锢</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">禁锢</div>
-                  <div class="tooltip-pinyin">jìngù</div>
-                  <div class="tooltip-english">to confine, imprison, fetter</div>
-                  <div class="tooltip-note">used both literally and metaphorically for restricting freedom</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">夫权</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">夫权</div>
-                  <div class="tooltip-pinyin">fūquán</div>
-                  <div class="tooltip-english">authority of the husband</div>
-                  <div class="tooltip-note">an important word for discussing patriarchal structure</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">三从四德</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">三从四德</div>
-                  <div class="tooltip-pinyin">sāncóng-sìdé</div>
-                  <div class="tooltip-english">the three obediences and four virtues</div>
-                  <div class="tooltip-note">a classic phrase representing Confucian expectations imposed on women</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">心态</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">心态</div>
-                  <div class="tooltip-pinyin">xīntài</div>
-                  <div class="tooltip-english">mind-set, mentality</div>
-                  <div class="tooltip-note">useful for linking social structure and internalized attitudes</div>
-                </span>
-              </span>
+              <span class="concept-chip-wrap"><button class="concept-chip">歧视</button><span class="concept-tooltip"><div class="tooltip-word">歧视</div><div class="tooltip-pinyin">qíshì</div><div class="tooltip-english">to discriminate against; discrimination</div><div class="tooltip-note">a core concept word for social inequality</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">缠足</button><span class="concept-tooltip"><div class="tooltip-word">缠足</div><div class="tooltip-pinyin">chánzú</div><div class="tooltip-english">to bind feet</div><div class="tooltip-note">a historically specific practice that symbolizes bodily control over women</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">禁锢</button><span class="concept-tooltip"><div class="tooltip-word">禁锢</div><div class="tooltip-pinyin">jìngù</div><div class="tooltip-english">to confine, imprison, fetter</div><div class="tooltip-note">used both literally and metaphorically for restricting freedom</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">夫权</button><span class="concept-tooltip"><div class="tooltip-word">夫权</div><div class="tooltip-pinyin">fūquán</div><div class="tooltip-english">authority of the husband</div><div class="tooltip-note">an important word for discussing patriarchal structure</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">三从四德</button><span class="concept-tooltip"><div class="tooltip-word">三从四德</div><div class="tooltip-pinyin">sāncóng-sìdé</div><div class="tooltip-english">the three obediences and four virtues</div><div class="tooltip-note">a classic phrase representing Confucian expectations imposed on women</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">心态</button><span class="concept-tooltip"><div class="tooltip-word">心态</div><div class="tooltip-pinyin">xīntài</div><div class="tooltip-english">mind-set, mentality</div><div class="tooltip-note">useful for linking social structure and internalized attitudes</div></span></span>
             </div>
           </div>
 
@@ -616,65 +706,12 @@
             <p>These words help students discuss rights, equality, work, and current social change.</p>
 
             <div class="concept-list">
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">权益</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">权益</div>
-                  <div class="tooltip-pinyin">quányì</div>
-                  <div class="tooltip-english">rights and benefits</div>
-                  <div class="tooltip-note">a very useful formal word in public discourse</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">权利</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">权利</div>
-                  <div class="tooltip-pinyin">quánlì</div>
-                  <div class="tooltip-english">right, privilege</div>
-                  <div class="tooltip-note">important for legal, political, and social equality discussions</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">平等</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">平等</div>
-                  <div class="tooltip-pinyin">píngděng</div>
-                  <div class="tooltip-english">equal</div>
-                  <div class="tooltip-note">one of the core value words of the lesson</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">职场</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">职场</div>
-                  <div class="tooltip-pinyin">zhíchǎng</div>
-                  <div class="tooltip-english">workplace</div>
-                  <div class="tooltip-note">links women’s status to modern labor and employment issues</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">挑战</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">挑战</div>
-                  <div class="tooltip-pinyin">tiǎozhàn</div>
-                  <div class="tooltip-english">challenge; to challenge</div>
-                  <div class="tooltip-note">useful for describing both pressure and agency</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">翻天覆地</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">翻天覆地</div>
-                  <div class="tooltip-pinyin">fāntiān-fùdì</div>
-                  <div class="tooltip-english">earth-shaking changes</div>
-                  <div class="tooltip-note">a dramatic phrase for major social transformation</div>
-                </span>
-              </span>
+              <span class="concept-chip-wrap"><button class="concept-chip">权益</button><span class="concept-tooltip"><div class="tooltip-word">权益</div><div class="tooltip-pinyin">quányì</div><div class="tooltip-english">rights and benefits</div><div class="tooltip-note">a very useful formal word in public discourse</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">权利</button><span class="concept-tooltip"><div class="tooltip-word">权利</div><div class="tooltip-pinyin">quánlì</div><div class="tooltip-english">right, privilege</div><div class="tooltip-note">important for legal, political, and social equality discussions</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">平等</button><span class="concept-tooltip"><div class="tooltip-word">平等</div><div class="tooltip-pinyin">píngděng</div><div class="tooltip-english">equal</div><div class="tooltip-note">one of the core value words of the lesson</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">职场</button><span class="concept-tooltip"><div class="tooltip-word">职场</div><div class="tooltip-pinyin">zhíchǎng</div><div class="tooltip-english">workplace</div><div class="tooltip-note">links women’s status to modern labor and employment issues</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">挑战</button><span class="concept-tooltip"><div class="tooltip-word">挑战</div><div class="tooltip-pinyin">tiǎozhàn</div><div class="tooltip-english">challenge; to challenge</div><div class="tooltip-note">useful for describing both pressure and agency</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">翻天覆地</button><span class="concept-tooltip"><div class="tooltip-word">翻天覆地</div><div class="tooltip-pinyin">fāntiān-fùdì</div><div class="tooltip-english">earth-shaking changes</div><div class="tooltip-note">a dramatic phrase for major social transformation</div></span></span>
             </div>
           </div>
 
@@ -683,65 +720,12 @@
             <p>These words help students talk about current conditions, disparity, and change over time.</p>
 
             <div class="concept-list">
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">差距</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">差距</div>
-                  <div class="tooltip-pinyin">chājù</div>
-                  <div class="tooltip-english">gap, disparity</div>
-                  <div class="tooltip-note">excellent for discussing inequality in concrete terms</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">比率</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">比率</div>
-                  <div class="tooltip-pinyin">bǐlǜ</div>
-                  <div class="tooltip-english">ratio, rate, percentage</div>
-                  <div class="tooltip-note">useful for data-based discussion and social analysis</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">失业</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">失业</div>
-                  <div class="tooltip-pinyin">shīyè</div>
-                  <div class="tooltip-english">to lose one’s job</div>
-                  <div class="tooltip-note">important for linking gender and economic pressure</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">目前</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">目前</div>
-                  <div class="tooltip-pinyin">mùqián</div>
-                  <div class="tooltip-english">at the present time</div>
-                  <div class="tooltip-note">useful for framing present-day comparison</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">提高</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">提高</div>
-                  <div class="tooltip-pinyin">tígāo</div>
-                  <div class="tooltip-english">to increase, to raise</div>
-                  <div class="tooltip-note">often used with status, level, awareness, or quality</div>
-                </span>
-              </span>
-
-              <span class="concept-chip-wrap">
-                <button class="concept-chip">拥有</button>
-                <span class="concept-tooltip">
-                  <div class="tooltip-word">拥有</div>
-                  <div class="tooltip-pinyin">yōngyǒu</div>
-                  <div class="tooltip-english">to have, to possess</div>
-                  <div class="tooltip-note">useful for talking about rights, opportunities, and resources</div>
-                </span>
-              </span>
+              <span class="concept-chip-wrap"><button class="concept-chip">差距</button><span class="concept-tooltip"><div class="tooltip-word">差距</div><div class="tooltip-pinyin">chājù</div><div class="tooltip-english">gap, disparity</div><div class="tooltip-note">excellent for discussing inequality in concrete terms</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">比率</button><span class="concept-tooltip"><div class="tooltip-word">比率</div><div class="tooltip-pinyin">bǐlǜ</div><div class="tooltip-english">ratio, rate, percentage</div><div class="tooltip-note">useful for data-based discussion and social analysis</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">失业</button><span class="concept-tooltip"><div class="tooltip-word">失业</div><div class="tooltip-pinyin">shīyè</div><div class="tooltip-english">to lose one’s job</div><div class="tooltip-note">important for linking gender and economic pressure</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">目前</button><span class="concept-tooltip"><div class="tooltip-word">目前</div><div class="tooltip-pinyin">mùqián</div><div class="tooltip-english">at the present time</div><div class="tooltip-note">useful for framing present-day comparison</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">提高</button><span class="concept-tooltip"><div class="tooltip-word">提高</div><div class="tooltip-pinyin">tígāo</div><div class="tooltip-english">to increase, to raise</div><div class="tooltip-note">often used with status, level, awareness, or quality</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">拥有</button><span class="concept-tooltip"><div class="tooltip-word">拥有</div><div class="tooltip-pinyin">yōngyǒu</div><div class="tooltip-english">to have, to possess</div><div class="tooltip-note">useful for talking about rights, opportunities, and resources</div></span></span>
             </div>
           </div>
         </div>
@@ -788,9 +772,7 @@
             </div>
 
             <div class="mcq-box">
-              <div class="mcq-question">
-                In Lesson 4.0, what is the most useful thing about noticing 女字旁?
-              </div>
+              <div class="mcq-question">In Lesson 4.0, what is the most useful thing about noticing 女字旁?</div>
               <div class="mcq-options">
                 <label class="mcq-option"><input type="radio" name="q1" value="A" /> A. It often helps students connect words to women, marriage, kinship, or gendered roles</label>
                 <label class="mcq-option"><input type="radio" name="q1" value="B" /> B. It always means happiness</label>
@@ -828,9 +810,7 @@
             </div>
 
             <div class="mcq-box">
-              <div class="mcq-question">
-                Why is it useful to group 性别, 婚姻, 平等, and 职场 with 女-related vocabulary?
-              </div>
+              <div class="mcq-question">Why is it useful to group 性别, 婚姻, 平等, and 职场 with 女-related vocabulary?</div>
               <div class="mcq-options">
                 <label class="mcq-option"><input type="radio" name="q2" value="A" /> A. Because they all contain 女字旁</label>
                 <label class="mcq-option"><input type="radio" name="q2" value="B" /> B. Because they belong to the same topic field even when they do not all share the same radical</label>
@@ -846,7 +826,7 @@
           </div>
 
           <div class="card pattern-card">
-            <h3>3. 米字旁：从“糟糕”进去记“粗糙、食物、状态”</h3>
+            <h3>3. 米字旁：从“糟糕”进去记“食物、质地、状态”</h3>
             <p>
               This lesson does not have many 米-radical words, but it gives one very useful anchor:
               <strong>糕</strong> in <strong>糟糕</strong>. From there, students can expand toward food, grain,
@@ -869,9 +849,7 @@
             </div>
 
             <div class="mcq-box">
-              <div class="mcq-question">
-                In Lesson 4.0, what is the best anchor word for introducing 米字旁?
-              </div>
+              <div class="mcq-question">In Lesson 4.0, what is the best anchor word for introducing 米字旁?</div>
               <div class="mcq-options">
                 <label class="mcq-option"><input type="radio" name="q3" value="A" /> A. 糟糕</label>
                 <label class="mcq-option"><input type="radio" name="q3" value="B" /> B. 职场</label>
@@ -879,7 +857,7 @@
                 <label class="mcq-option"><input type="radio" name="q3" value="D" /> D. 拥有</label>
               </div>
               <div class="mcq-actions">
-                <button class="small-btn" onclick="checkPatternQuestion('q3','A',`Correct. In this lesson, 糟糕 is the best anchor for introducing 米字旁, because 糕 provides a visible entry point into a small but memorable character family.`)">Check Answer</button>
+                <button class="small-btn" onclick="checkPatternQuestion('q3','A',`Correct. In this lesson, 糟糕 is the best anchor for introducing 米字旁, because 糕 gives students a visible entry point into a small but memorable character family.`)">Check Answer</button>
                 <button class="small-btn secondary" onclick="resetPatternQuestion('q3')">Reset</button>
               </div>
               <div id="feedback-q3" class="mcq-feedback"></div>
@@ -910,9 +888,7 @@
             </div>
 
             <div class="mcq-box">
-              <div class="mcq-question">
-                Why is “权” such a useful teaching anchor in Lesson 4.0?
-              </div>
+              <div class="mcq-question">Why is “权” such a useful teaching anchor in Lesson 4.0?</div>
               <div class="mcq-options">
                 <label class="mcq-option"><input type="radio" name="q4" value="A" /> A. Because it lets students build a whole modern concept network around power and rights</label>
                 <label class="mcq-option"><input type="radio" name="q4" value="B" /> B. Because it only appears once and cannot be expanded</label>
@@ -930,6 +906,24 @@
       </div>
     </section>
 
+    <section id="write-hanzi" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Write the Hanzi</p>
+          <h2>Read the pinyin and English, then write the Chinese characters</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <p>
+            Type the hanzi based on the pinyin and English meaning.
+            Click <strong>Hint</strong> to open a pop-up with stroke-order animation.
+          </p>
+
+          <div id="hanziPracticeGrid" class="hanzi-practice-grid"></div>
+        </div>
+      </div>
+    </section>
+
     <section id="ai-tools" class="section alt-bg">
       <div class="container">
         <div class="section-heading">
@@ -942,7 +936,7 @@
             <h3>Ask AI about this lesson</h3>
             <p>
               You can ask about vocabulary, women-related semantic fields,
-              radicals, or the difference between similar abstract terms.
+              radicals, or the difference between similar abstract words.
             </p>
 
             <label for="studentQuestionInput">Your question</label>
@@ -960,7 +954,7 @@ Why is 权 a good anchor for 夫权, 权益, and 权利?"></textarea>
             <ul class="helper-list">
               <li>Ask one clear question at a time.</li>
               <li>Use Chinese words when possible.</li>
-              <li>Try asking about radicals, semantic fields, or abstract social concepts.</li>
+              <li>Try asking about radicals, semantic fields, or social concepts.</li>
             </ul>
           </div>
 
@@ -972,9 +966,7 @@ Why is 权 a good anchor for 夫权, 权益, and 权利?"></textarea>
               <span class="tag" id="currentTaskTag">Task: student question</span>
             </div>
 
-            <div id="resultBox" class="result-box">
-Ask a question to get started.
-            </div>
+            <div id="resultBox" class="result-box">Ask a question to get started.</div>
 
             <div class="tool-actions" style="margin-top: 1rem;">
               <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
@@ -993,17 +985,10 @@ Ask a question to get started.
 
         <div class="card vocab-card">
           <p>This is the full vocabulary list for the lesson.</p>
-
           <div class="vocab-table-wrap">
             <table class="vocab-table">
               <thead>
-                <tr>
-                  <th>#</th>
-                  <th>词语</th>
-                  <th>Pinyin</th>
-                  <th>POS</th>
-                  <th>English</th>
-                </tr>
+                <tr><th>#</th><th>词语</th><th>Pinyin</th><th>POS</th><th>English</th></tr>
               </thead>
               <tbody>
                 <tr><td>1</td><td class="hanzi">女性</td><td>nǚxìng</td><td>N</td><td>the female, woman</td></tr>
@@ -1080,87 +1065,12 @@ Ask a question to get started.
           <div class="vocab-table-wrap">
             <table class="vocab-table">
               <thead>
-                <tr>
-                  <th>#</th>
-                  <th>专名</th>
-                  <th>Pinyin</th>
-                  <th>English</th>
-                </tr>
+                <tr><th>#</th><th>专名</th><th>Pinyin</th><th>English</th></tr>
               </thead>
               <tbody>
                 <tr><td>1</td><td class="hanzi">蔡文姬</td><td>Cài Wénjī</td><td>a poet and composer who lived in the late Eastern Han Dynasty</td></tr>
               </tbody>
             </table>
-          </div>
-        </div>
-      </div>
-    </section>
-<section id="write-hanzi" class="section">
-  <div class="container">
-    <div class="section-heading">
-      <p class="eyebrow">Write the Hanzi</p>
-      <h2>Read the pinyin and English, then write the Chinese characters</h2>
-    </div>
-
-    <div class="card vocab-card">
-      <p>
-        Type the hanzi based on the pinyin and English meaning.
-        Click <strong>Hint</strong> to open a pop-up with stroke-order animation.
-      </p>
-
-      <div id="hanziPracticeGrid" class="hanzi-practice-grid"></div>
-    </div>
-  </div>
-</section>
-    <section id="ai-tools" class="section alt-bg">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">AI Question Box</p>
-          <h2>Ask about meaning, usage, radicals, or concept groups</h2>
-        </div>
-
-        <div class="tools-layout">
-          <div class="card tool-card">
-            <h3>Ask AI about this lesson</h3>
-            <p>
-              You can ask about vocabulary, women-related semantic fields,
-              radicals, or the difference between similar abstract words.
-            </p>
-
-            <label for="studentQuestionInput">Your question</label>
-            <textarea id="studentQuestionInput" placeholder="Examples:
-How does 女字旁 help me remember 妇女, 媳妇, and 公婆?
-Why do 性别, 婚姻, 平等, and 职场 belong together?
-How should I teach 米字旁 through 糟糕?
-Why is 权 a good anchor for 夫权, 权益, and 权利?"></textarea>
-
-            <div class="tool-actions">
-              <button class="tool-btn" id="askAiBtn">Ask AI</button>
-              <button class="tool-btn secondary" id="fillExampleBtn">Use Example Question</button>
-            </div>
-
-            <ul class="helper-list">
-              <li>Ask one clear question at a time.</li>
-              <li>Use Chinese words when possible.</li>
-              <li>Try asking about radicals, semantic fields, or social concepts.</li>
-            </ul>
-          </div>
-
-          <div class="card result-card">
-            <h3>AI response</h3>
-            <div class="result-meta">
-              <span class="tag">Course: humanities2</span>
-              <span class="tag">Lesson: 4-0</span>
-              <span class="tag" id="currentTaskTag">Task: student question</span>
-            </div>
-
-            <div id="resultBox" class="result-box">
-Ask a question to get started.
-            </div>
-
-            <div class="tool-actions" style="margin-top: 1rem;">
-              <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
-            </div>
           </div>
         </div>
       </div>
@@ -1174,25 +1084,26 @@ Ask a question to get started.
         </div>
       </div>
     </section>
-    <div id="strokeHintModal" class="stroke-modal" aria-hidden="true">
-  <div class="stroke-modal-panel">
-    <div class="stroke-modal-top">
-      <div>
-        <h3 id="strokeModalTitle" class="stroke-modal-title">Stroke Hint</h3>
-        <p id="strokeModalSubtitle" class="stroke-modal-subtitle"></p>
-      </div>
-      <button id="closeStrokeModal" class="stroke-close-btn" type="button">×</button>
-    </div>
-
-    <div class="stroke-modal-actions">
-      <button id="replayStrokeBtn" class="small-btn" type="button">Replay</button>
-      <button id="closeStrokeModalBtn2" class="small-btn secondary" type="button">Close</button>
-    </div>
-
-    <div id="strokeAnimGrid" class="stroke-anim-grid"></div>
-  </div>
-</div>
   </main>
+
+  <div id="strokeHintModal" class="stroke-modal" aria-hidden="true">
+    <div class="stroke-modal-panel">
+      <div class="stroke-modal-top">
+        <div>
+          <h3 id="strokeModalTitle" class="stroke-modal-title">Stroke Hint</h3>
+          <p id="strokeModalSubtitle" class="stroke-modal-subtitle"></p>
+        </div>
+        <button id="closeStrokeModal" class="stroke-close-btn" type="button">×</button>
+      </div>
+
+      <div class="stroke-modal-actions">
+        <button id="replayStrokeBtn" class="small-btn" type="button">Replay</button>
+        <button id="closeStrokeModalBtn2" class="small-btn secondary" type="button">Close</button>
+      </div>
+
+      <div id="strokeAnimGrid" class="stroke-anim-grid"></div>
+    </div>
+  </div>
 
   <footer class="site-footer">
     <div class="container footer-inner">
@@ -1200,8 +1111,9 @@ Ask a question to get started.
       <p>Lesson 4.0 Word Explorer</p>
     </div>
   </footer>
-<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.0/dist/hanzi-writer.min.js"></script>
+
   <script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.0/dist/hanzi-writer.min.js"></script>
   <script>
     const WORKER_URL = "https://quiet-field-a529.xc2375.workers.dev";
 
@@ -1267,9 +1179,7 @@ Ask a question to get started.
 
         const response = await fetch(WORKER_URL, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             course: "humanities2",
             lesson: "4-0",
@@ -1350,241 +1260,227 @@ Ask a question to get started.
         tip.classList.remove("show");
       });
     });
+
     /* ===== Hanzi Writing Practice ===== */
-const hanziPracticeData = [
-  { answer: "妇女", pinyin: "fùnǚ", english: "women" },
-  { answer: "媳妇", pinyin: "xífù", english: "daughter-in-law; wife" },
-  { answer: "婆家", pinyin: "pójia", english: "husband's family" },
-  { answer: "公婆", pinyin: "gōngpó", english: "husband's parents, parents-in-law" },
-  { answer: "夫权", pinyin: "fūquán", english: "authority of the husband" },
-  { answer: "权利", pinyin: "quánlì", english: "rights" },
-  { answer: "权益", pinyin: "quányì", english: "rights and benefits" },
-  { answer: "平等", pinyin: "píngděng", english: "equal" },
-  { answer: "婚姻", pinyin: "hūnyīn", english: "marriage" },
-  { answer: "糟糕", pinyin: "zāogāo", english: "terrible" }
-];
+    const hanziPracticeData = [
+      { answer: "妇女", pinyin: "fùnǚ", english: "women" },
+      { answer: "媳妇", pinyin: "xífù", english: "daughter-in-law; wife" },
+      { answer: "婆家", pinyin: "pójia", english: "husband's family" },
+      { answer: "公婆", pinyin: "gōngpó", english: "husband's parents, parents-in-law" },
+      { answer: "夫权", pinyin: "fūquán", english: "authority of the husband" },
+      { answer: "权利", pinyin: "quánlì", english: "rights" },
+      { answer: "权益", pinyin: "quányì", english: "rights and benefits" },
+      { answer: "平等", pinyin: "píngděng", english: "equal" },
+      { answer: "婚姻", pinyin: "hūnyīn", english: "marriage" },
+      { answer: "糟糕", pinyin: "zāogāo", english: "terrible" }
+    ];
 
-const hanziPracticeGrid = document.getElementById("hanziPracticeGrid");
-const strokeHintModal = document.getElementById("strokeHintModal");
-const strokeAnimGrid = document.getElementById("strokeAnimGrid");
-const strokeModalTitle = document.getElementById("strokeModalTitle");
-const strokeModalSubtitle = document.getElementById("strokeModalSubtitle");
-const closeStrokeModal = document.getElementById("closeStrokeModal");
-const closeStrokeModalBtn2 = document.getElementById("closeStrokeModalBtn2");
-const replayStrokeBtn = document.getElementById("replayStrokeBtn");
+    const hanziPracticeGrid = document.getElementById("hanziPracticeGrid");
+    const strokeHintModal = document.getElementById("strokeHintModal");
+    const strokeAnimGrid = document.getElementById("strokeAnimGrid");
+    const strokeModalTitle = document.getElementById("strokeModalTitle");
+    const strokeModalSubtitle = document.getElementById("strokeModalSubtitle");
+    const closeStrokeModal = document.getElementById("closeStrokeModal");
+    const closeStrokeModalBtn2 = document.getElementById("closeStrokeModalBtn2");
+    const replayStrokeBtn = document.getElementById("replayStrokeBtn");
 
-let currentStrokeWord = null;
-let currentStrokeWriters = [];
+    let currentStrokeWord = null;
+    let currentStrokeWriters = [];
 
-function normalizeHanziAnswer(text) {
-  return text.replace(/\s+/g, "").trim();
-}
+    function normalizeHanziAnswer(text) {
+      return text.replace(/\s+/g, "").trim();
+    }
 
-function renderHanziPractice() {
-  if (!hanziPracticeGrid) return;
+    function renderHanziPractice() {
+      if (!hanziPracticeGrid) return;
 
-  hanziPracticeGrid.innerHTML = hanziPracticeData.map((item, index) => `
-    <div class="hanzi-practice-card" data-index="${index}">
-      <div class="practice-top">
-        <div class="practice-num">${index + 1}</div>
-        <div>
-          <div class="practice-pinyin">${item.pinyin}</div>
-          <div class="practice-english">${item.english}</div>
+      hanziPracticeGrid.innerHTML = hanziPracticeData.map((item, index) => `
+        <div class="hanzi-practice-card" data-index="${index}">
+          <div class="practice-top">
+            <div class="practice-num">${index + 1}</div>
+            <div>
+              <div class="practice-pinyin">${item.pinyin}</div>
+              <div class="practice-english">${item.english}</div>
+            </div>
+          </div>
+
+          <input class="practice-input" type="text" placeholder="Type the hanzi here / 在这里写汉字" data-answer="${item.answer}" />
+
+          <div class="practice-actions">
+            <button class="small-btn check-practice-btn" type="button">Check</button>
+            <button class="small-btn secondary hint-practice-btn" type="button">Hint</button>
+          </div>
+
+          <div class="practice-feedback"></div>
         </div>
-      </div>
+      `).join("");
+    }
 
-      <input
-        class="practice-input"
-        type="text"
-        placeholder="Type the hanzi here / 在这里写汉字"
-        data-answer="${item.answer}"
-      />
+    function setPracticeFeedback(card, ok, message) {
+      const feedback = card.querySelector(".practice-feedback");
+      feedback.className = ok ? "practice-feedback show correct" : "practice-feedback show incorrect";
+      feedback.textContent = message;
+    }
 
-      <div class="practice-actions">
-        <button class="small-btn check-practice-btn" type="button">Check</button>
-        <button class="small-btn secondary hint-practice-btn" type="button">Hint</button>
-      </div>
+    function clearPracticeFeedback(card) {
+      const feedback = card.querySelector(".practice-feedback");
+      feedback.className = "practice-feedback";
+      feedback.textContent = "";
+    }
 
-      <div class="practice-feedback"></div>
-    </div>
-  `).join("");
-}
+    function loadHanziData(char) {
+      return fetch(`https://cdn.jsdelivr.net/npm/hanzi-writer-data/${encodeURIComponent(char)}.json`).then((res) => {
+        if (!res.ok) throw new Error("Character data not found");
+        return res.json();
+      });
+    }
 
-function setPracticeFeedback(card, ok, message) {
-  const feedback = card.querySelector(".practice-feedback");
-  feedback.className = ok
-    ? "practice-feedback show correct"
-    : "practice-feedback show incorrect";
-  feedback.textContent = message;
-}
+    function createStrokeWriter(targetId, char, delay = 0) {
+      const target = document.getElementById(targetId);
+      if (!target) return;
 
-function clearPracticeFeedback(card) {
-  const feedback = card.querySelector(".practice-feedback");
-  feedback.className = "practice-feedback";
-  feedback.textContent = "";
-}
+      target.innerHTML = "";
 
-function loadHanziData(char) {
-  return fetch(`https://cdn.jsdelivr.net/npm/hanzi-writer-data/${encodeURIComponent(char)}.json`)
-    .then((res) => {
-      if (!res.ok) throw new Error("Character data not found");
-      return res.json();
-    });
-}
-
-function createStrokeWriter(targetId, char, delay = 0) {
-  const target = document.getElementById(targetId);
-  if (!target) return;
-
-  target.innerHTML = "";
-
-  if (!window.HanziWriter) {
-    target.textContent = char;
-    return;
-  }
-
-  const writer = HanziWriter.create(target, char, {
-    width: 128,
-    height: 128,
-    padding: 8,
-    showOutline: true,
-    showCharacter: false,
-    strokeAnimationSpeed: 1.05,
-    delayBetweenStrokes: 160,
-    outlineColor: "#d8c3ab",
-    strokeColor: "#1f2937",
-    radicalColor: "#c2410c",
-    charDataLoader: loadHanziData
-  });
-
-  currentStrokeWriters.push(writer);
-
-  setTimeout(() => {
-    writer.animateCharacter();
-  }, delay);
-}
-
-function buildStrokeWriters(word) {
-  currentStrokeWriters = [];
-  strokeAnimGrid.innerHTML = [...word].map((char, index) => `
-    <div class="stroke-char-card">
-      <div class="stroke-char-label">${char}</div>
-      <div class="stroke-writer-box" id="stroke-writer-${index}"></div>
-    </div>
-  `).join("");
-
-  [...word].forEach((char, index) => {
-    createStrokeWriter(`stroke-writer-${index}`, char, index * 350);
-  });
-}
-
-function openStrokeModal(item) {
-  currentStrokeWord = item;
-  strokeModalTitle.textContent = `Hint: ${item.answer}`;
-  strokeModalSubtitle.textContent = `${item.pinyin} • ${item.english}`;
-  strokeHintModal.classList.add("show");
-  strokeHintModal.setAttribute("aria-hidden", "false");
-  document.body.classList.add("modal-open");
-  buildStrokeWriters(item.answer);
-}
-
-function closeStrokeHintModal() {
-  strokeHintModal.classList.remove("show");
-  strokeHintModal.setAttribute("aria-hidden", "true");
-  document.body.classList.remove("modal-open");
-  strokeAnimGrid.innerHTML = "";
-  currentStrokeWord = null;
-  currentStrokeWriters = [];
-}
-
-function replayStrokeAnimations() {
-  if (!currentStrokeWriters.length) return;
-  currentStrokeWriters.forEach((writer, index) => {
-    setTimeout(() => {
-      writer.animateCharacter();
-    }, index * 350);
-  });
-}
-
-if (hanziPracticeGrid) {
-  hanziPracticeGrid.addEventListener("click", (e) => {
-    const card = e.target.closest(".hanzi-practice-card");
-    if (!card) return;
-
-    const index = Number(card.dataset.index);
-    const item = hanziPracticeData[index];
-    const input = card.querySelector(".practice-input");
-    const userAnswer = normalizeHanziAnswer(input.value);
-    const correctAnswer = normalizeHanziAnswer(item.answer);
-
-    if (e.target.classList.contains("check-practice-btn")) {
-      if (!userAnswer) {
-        setPracticeFeedback(card, false, "Please type the hanzi first.");
+      if (!window.HanziWriter) {
+        target.textContent = char;
         return;
       }
 
-      if (userAnswer === correctAnswer) {
-        setPracticeFeedback(card, true, "Correct! 写得对。");
-      } else {
-        setPracticeFeedback(
-          card,
-          false,
-          `Not quite.\nYour answer: ${input.value || "—"}\nCorrect answer: ${item.answer}`
-        );
+      const writer = HanziWriter.create(target, char, {
+        width: 128,
+        height: 128,
+        padding: 8,
+        showOutline: true,
+        showCharacter: false,
+        strokeAnimationSpeed: 1.05,
+        delayBetweenStrokes: 160,
+        outlineColor: "#d8c3ab",
+        strokeColor: "#1f2937",
+        radicalColor: "#c2410c",
+        charDataLoader: loadHanziData
+      });
+
+      currentStrokeWriters.push(writer);
+
+      setTimeout(() => {
+        writer.animateCharacter();
+      }, delay);
+    }
+
+    function buildStrokeWriters(word) {
+      currentStrokeWriters = [];
+      strokeAnimGrid.innerHTML = [...word].map((char, index) => `
+        <div class="stroke-char-card">
+          <div class="stroke-char-label">${char}</div>
+          <div class="stroke-writer-box" id="stroke-writer-${index}"></div>
+        </div>
+      `).join("");
+
+      [...word].forEach((char, index) => {
+        createStrokeWriter(`stroke-writer-${index}`, char, index * 350);
+      });
+    }
+
+    function openStrokeModal(item) {
+      currentStrokeWord = item;
+      strokeModalTitle.textContent = `Hint: ${item.answer}`;
+      strokeModalSubtitle.textContent = `${item.pinyin} • ${item.english}`;
+      strokeHintModal.classList.add("show");
+      strokeHintModal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+      buildStrokeWriters(item.answer);
+    }
+
+    function closeStrokeHintModal() {
+      strokeHintModal.classList.remove("show");
+      strokeHintModal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("modal-open");
+      strokeAnimGrid.innerHTML = "";
+      currentStrokeWord = null;
+      currentStrokeWriters = [];
+    }
+
+    function replayStrokeAnimations() {
+      if (!currentStrokeWriters.length) return;
+      currentStrokeWriters.forEach((writer, index) => {
+        setTimeout(() => {
+          writer.animateCharacter();
+        }, index * 350);
+      });
+    }
+
+    if (hanziPracticeGrid) {
+      hanziPracticeGrid.addEventListener("click", (e) => {
+        const card = e.target.closest(".hanzi-practice-card");
+        if (!card) return;
+
+        const index = Number(card.dataset.index);
+        const item = hanziPracticeData[index];
+        const input = card.querySelector(".practice-input");
+        const userAnswer = normalizeHanziAnswer(input.value);
+        const correctAnswer = normalizeHanziAnswer(item.answer);
+
+        if (e.target.classList.contains("check-practice-btn")) {
+          if (!userAnswer) {
+            setPracticeFeedback(card, false, "Please type the hanzi first.");
+            return;
+          }
+
+          if (userAnswer === correctAnswer) {
+            setPracticeFeedback(card, true, "Correct! 写得对。");
+          } else {
+            setPracticeFeedback(card, false, `Not quite.\nYour answer: ${input.value || "—"}\nCorrect answer: ${item.answer}`);
+          }
+        }
+
+        if (e.target.classList.contains("hint-practice-btn")) {
+          openStrokeModal(item);
+        }
+      });
+
+      hanziPracticeGrid.addEventListener("input", (e) => {
+        const card = e.target.closest(".hanzi-practice-card");
+        if (!card) return;
+        if (e.target.classList.contains("practice-input")) {
+          clearPracticeFeedback(card);
+        }
+      });
+
+      hanziPracticeGrid.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && e.target.classList.contains("practice-input")) {
+          e.preventDefault();
+          const card = e.target.closest(".hanzi-practice-card");
+          if (!card) return;
+          const btn = card.querySelector(".check-practice-btn");
+          if (btn) btn.click();
+        }
+      });
+    }
+
+    if (closeStrokeModal) {
+      closeStrokeModal.addEventListener("click", closeStrokeHintModal);
+    }
+    if (closeStrokeModalBtn2) {
+      closeStrokeModalBtn2.addEventListener("click", closeStrokeHintModal);
+    }
+    if (replayStrokeBtn) {
+      replayStrokeBtn.addEventListener("click", replayStrokeAnimations);
+    }
+    if (strokeHintModal) {
+      strokeHintModal.addEventListener("click", (e) => {
+        if (e.target === strokeHintModal) {
+          closeStrokeHintModal();
+        }
+      });
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && strokeHintModal && strokeHintModal.classList.contains("show")) {
+        closeStrokeHintModal();
       }
-    }
+    });
 
-    if (e.target.classList.contains("hint-practice-btn")) {
-      openStrokeModal(item);
-    }
-  });
-
-  hanziPracticeGrid.addEventListener("input", (e) => {
-    const card = e.target.closest(".hanzi-practice-card");
-    if (!card) return;
-    if (e.target.classList.contains("practice-input")) {
-      clearPracticeFeedback(card);
-    }
-  });
-
-  hanziPracticeGrid.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && e.target.classList.contains("practice-input")) {
-      e.preventDefault();
-      const card = e.target.closest(".hanzi-practice-card");
-      if (!card) return;
-      const btn = card.querySelector(".check-practice-btn");
-      if (btn) btn.click();
-    }
-  });
-}
-
-if (closeStrokeModal) {
-  closeStrokeModal.addEventListener("click", closeStrokeHintModal);
-}
-
-if (closeStrokeModalBtn2) {
-  closeStrokeModalBtn2.addEventListener("click", closeStrokeHintModal);
-}
-
-if (replayStrokeBtn) {
-  replayStrokeBtn.addEventListener("click", replayStrokeAnimations);
-}
-
-if (strokeHintModal) {
-  strokeHintModal.addEventListener("click", (e) => {
-    if (e.target === strokeHintModal) {
-      closeStrokeHintModal();
-    }
-  });
-}
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && strokeHintModal && strokeHintModal.classList.contains("show")) {
-    closeStrokeHintModal();
-  }
-});
-
-renderHanziPractice();
+    renderHanziPractice();
   </script>
 </body>
 </html>
