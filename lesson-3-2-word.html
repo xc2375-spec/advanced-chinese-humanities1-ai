@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 3.2 Word Explorer | Advanced Chinese for Humanities AI</title>
+  <meta
+    name="description"
+    content="Lesson 3.2 Word Explorer for Advanced Chinese for Humanities: 曹植的七步诗 vocabulary system, radicals, character patterns, and guided AI support."
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .lesson-hero {
+      padding-top: 2.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .lesson-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1rem 0 0;
+    }
+
+    .breadcrumb {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .group-grid,
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .group-card h3,
+    .pattern-card h3,
+    .tool-card h3,
+    .result-card h3,
+    .vocab-card h3,
+    .name-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      font-size: 1.08rem;
+      color: var(--primary-dark);
+    }
+
+    .group-card p,
+    .pattern-card p,
+    .tool-card p,
+    .result-card p,
+    .vocab-card p,
+    .name-card p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .concept-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+    }
+
+    .concept-chip-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .concept-chip,
+    .name-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: #f6ecdf;
+      color: var(--primary-dark);
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: 1px solid #e2d0b8;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .concept-chip:hover,
+    .name-chip:hover {
+      background: #f1e2cd;
+      transform: translateY(-1px);
+    }
+
+    .concept-tooltip {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.45rem);
+      min-width: 210px;
+      max-width: 260px;
+      background: #fffdf9;
+      border: 1px solid #decbb2;
+      border-radius: 14px;
+      box-shadow: 0 12px 26px rgba(80, 56, 32, 0.12);
+      padding: 0.75rem 0.85rem;
+      z-index: 30;
+      display: none;
+    }
+
+    .concept-tooltip.show {
+      display: block;
+    }
+
+    .tooltip-word {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-pinyin {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-english {
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-bottom: 0.22rem;
+      line-height: 1.4;
+    }
+
+    .tooltip-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .char-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .char-badge {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      border: 1px solid #e7d7c2;
+      min-width: 84px;
+    }
+
+    .char-badge strong {
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .char-badge span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.24;
+    }
+
+    .memory-tip {
+      margin-top: 0.8rem;
+      padding: 0.85rem 0.95rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      color: var(--text);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .mcq-box {
+      margin-top: 1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid #eadfce;
+    }
+
+    .mcq-question {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.7rem;
+      line-height: 1.5;
+    }
+
+    .mcq-options {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .mcq-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 10px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+    }
+
+    .mcq-actions {
+      margin-top: 0.85rem;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: none;
+      min-height: 38px;
+      padding: 0 0.95rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .small-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .small-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .small-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .mcq-feedback {
+      margin-top: 0.9rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      line-height: 1.6;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    .mcq-feedback.show {
+      display: block;
+    }
+
+    .mcq-feedback.correct {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .mcq-feedback.incorrect {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
+    .tools-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 1.25rem;
+      margin-top: 1.2rem;
+    }
+
+    .tool-card label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--primary-dark);
+      font-size: 0.95rem;
+    }
+
+    .tool-card textarea,
+    .tool-card input {
+      width: 100%;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid #d9c7b1;
+      border-radius: 12px;
+      background: #fffdf9;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .tool-card textarea {
+      min-height: 170px;
+      resize: vertical;
+    }
+
+    .tool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .tool-btn {
+      border: none;
+      min-height: 44px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .tool-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .tool-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .tool-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .result-card {
+      min-height: 400px;
+    }
+
+    .result-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .result-box {
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fffdf9;
+      border: 1px solid #e7dac7;
+      border-radius: 14px;
+      padding: 1rem;
+      min-height: 270px;
+    }
+
+    .loading {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .error-text {
+      color: #a33a2b;
+      font-weight: 700;
+    }
+
+    .helper-list {
+      margin: 0.85rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+    }
+
+    .helper-list li + li {
+      margin-top: 0.35rem;
+    }
+
+    .vocab-table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    table.vocab-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .vocab-table th,
+    .vocab-table td {
+      padding: 0.78rem 0.85rem;
+      border-bottom: 1px solid #eadfce;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.95rem;
+    }
+
+    .vocab-table th {
+      background: #f7efe3;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .vocab-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .vocab-table tr:hover {
+      background: #fcf8f2;
+    }
+
+    .hanzi {
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    @media (max-width: 960px) {
+      .group-grid,
+      .pattern-grid,
+      .tools-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .concept-tooltip {
+        max-width: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities</h1>
+          <p class="site-subtitle">人文天下：高级汉语教程·上 / 下</p>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="word-explorer.html">Word Explorer</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#ai-tools">AI Box</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <div class="container">
+        <div class="breadcrumb">Home → Word Explorer → Unit 3 → Lesson 3.2</div>
+        <p class="eyebrow">Lesson 3.2</p>
+        <h2 class="page-title">曹植的《七步诗》</h2>
+        <p class="page-intro">
+          This lesson connects court politics, family conflict, talent, praise, punishment,
+          and the powerful kitchen imagery inside the poem. Try to learn the new words through
+          character patterns: fire, body-related 月, the knife-side radical, and the category word 家.
+        </p>
+
+        <div class="lesson-meta">
+          <span class="tag">Unit 3: 艺术人生</span>
+          <span class="tag">Theme: Poetry, Court Conflict, Emotion</span>
+          <span class="tag">Module: Word Explorer</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Concept Net</p>
+          <h2>Hover or tap to preview key words</h2>
+        </div>
+
+        <div class="group-grid">
+          <div class="card group-card">
+            <h3>A. 宫廷与身份</h3>
+            <p>These words help students understand rank, court roles, and formal power.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">太子</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">太子</div>
+                  <div class="tooltip-pinyin">tàizǐ</div>
+                  <div class="tooltip-english">crown prince</div>
+                  <div class="tooltip-note">an important title in imperial succession</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">使者</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">使者</div>
+                  <div class="tooltip-pinyin">shǐzhě</div>
+                  <div class="tooltip-english">envoy, messenger</div>
+                  <div class="tooltip-note">someone sent with an order or message</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">封</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">封</div>
+                  <div class="tooltip-pinyin">fēng</div>
+                  <div class="tooltip-english">to confer, to appoint with a title</div>
+                  <div class="tooltip-note">a court action connected with rank and recognition</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">宫</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">宫</div>
+                  <div class="tooltip-pinyin">gōng</div>
+                  <div class="tooltip-english">palace</div>
+                  <div class="tooltip-note">the political and symbolic center of imperial power</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">送行</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">送行</div>
+                  <div class="tooltip-pinyin">sòngxíng</div>
+                  <div class="tooltip-english">to see someone off</div>
+                  <div class="tooltip-note">often used for formal leave-taking</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">临别</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">临别</div>
+                  <div class="tooltip-pinyin">línbié</div>
+                  <div class="tooltip-english">to be at parting, just before departing</div>
+                  <div class="tooltip-note">emotionally strong because it marks separation</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>B. 情感与评价</h3>
+            <p>These words show praise, emotional hurt, envy, and moral reaction.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">赞赏</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">赞赏</div>
+                  <div class="tooltip-pinyin">zànshǎng</div>
+                  <div class="tooltip-english">to praise and appreciate</div>
+                  <div class="tooltip-note">a stronger and warmer evaluation word than just “like”</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">伤心</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">伤心</div>
+                  <div class="tooltip-pinyin">shāngxīn</div>
+                  <div class="tooltip-english">sad, heartbroken</div>
+                  <div class="tooltip-note">literally “to wound the heart”</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">感动</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">感动</div>
+                  <div class="tooltip-pinyin">gǎndòng</div>
+                  <div class="tooltip-english">to be moved emotionally</div>
+                  <div class="tooltip-note">very common for deep moral or emotional response</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">忌恨</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">忌恨</div>
+                  <div class="tooltip-pinyin">jìhèn</div>
+                  <div class="tooltip-english">to be jealous of and hate</div>
+                  <div class="tooltip-note">strong negative emotion that mixes envy and resentment</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">惭愧</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">惭愧</div>
+                  <div class="tooltip-pinyin">cánkuì</div>
+                  <div class="tooltip-english">ashamed</div>
+                  <div class="tooltip-note">a moral-emotional word, often connected with conscience</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">讨好</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">讨好</div>
+                  <div class="tooltip-pinyin">tǎohǎo</div>
+                  <div class="tooltip-english">to try to please, to curry favor</div>
+                  <div class="tooltip-note">often implies a strategic or dependent motive</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>C. 规则、后果与权力</h3>
+            <p>These words help students talk about rules, punishment, and public consequences.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">规定</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">规定</div>
+                  <div class="tooltip-pinyin">guīdìng</div>
+                  <div class="tooltip-english">rules, regulations</div>
+                  <div class="tooltip-note">formal rule language used in institutions and power systems</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">私自</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">私自</div>
+                  <div class="tooltip-pinyin">sīzì</div>
+                  <div class="tooltip-english">without permission, privately</div>
+                  <div class="tooltip-note">often appears when a rule is broken</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">犯</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">犯</div>
+                  <div class="tooltip-pinyin">fàn</div>
+                  <div class="tooltip-english">to commit a crime, to violate</div>
+                  <div class="tooltip-note">used for crossing moral or legal boundaries</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">惩罚</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">惩罚</div>
+                  <div class="tooltip-pinyin">chéngfá</div>
+                  <div class="tooltip-english">to punish</div>
+                  <div class="tooltip-note">a strong institutional consequence word</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">降职</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">降职</div>
+                  <div class="tooltip-pinyin">jiàngzhí</div>
+                  <div class="tooltip-english">to demote</div>
+                  <div class="tooltip-note">a punishment affecting rank or position</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">不顾</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">不顾</div>
+                  <div class="tooltip-pinyin">búgù</div>
+                  <div class="tooltip-english">to disregard</div>
+                  <div class="tooltip-note">important for discussing moral conflict and social expectation</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>D. 《七步诗》的火与泣</h3>
+            <p>These words connect cooking imagery, kinship, and emotional climax inside the poem.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">豆萁</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">豆萁</div>
+                  <div class="tooltip-pinyin">dòuqí</div>
+                  <div class="tooltip-english">beanstalk</div>
+                  <div class="tooltip-note">one of the central images in the poem</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">釜</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">釜</div>
+                  <div class="tooltip-pinyin">fǔ</div>
+                  <div class="tooltip-english">pot, cauldron</div>
+                  <div class="tooltip-note">a classical object word in the poem’s kitchen imagery</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">煮</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">煮</div>
+                  <div class="tooltip-pinyin">zhǔ</div>
+                  <div class="tooltip-english">to boil, to cook</div>
+                  <div class="tooltip-note">contains a fire component and links directly to heat</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">燃</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">燃</div>
+                  <div class="tooltip-pinyin">rán</div>
+                  <div class="tooltip-english">to burn, to light</div>
+                  <div class="tooltip-note">a strong fire word that reinforces the poem’s image system</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">泣</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">泣</div>
+                  <div class="tooltip-pinyin">qì</div>
+                  <div class="tooltip-english">to weep, to sob</div>
+                  <div class="tooltip-note">more literary than 哭, with a more restrained tone</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">同胞</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">同胞</div>
+                  <div class="tooltip-pinyin">tóngbāo</div>
+                  <div class="tooltip-english">brothers and sisters of the same mother</div>
+                  <div class="tooltip-note">a key kinship word that deepens the poem’s emotional force</div>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card name-card" style="margin-top: 1rem;">
+          <h3>Key names in this lesson</h3>
+          <div class="concept-list">
+            <span class="name-chip">曹植</span>
+            <span class="name-chip">曹操</span>
+            <span class="name-chip">曹丕</span>
+            <span class="name-chip">魏国</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="patterns" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Focus on Patterns</p>
+          <h2>Learn through radicals, components, and category words</h2>
+        </div>
+
+        <div class="pattern-grid">
+          <div class="card pattern-card">
+            <h3>1. 火字旁 / 火字底：火、热、煮、燃</h3>
+            <p>
+              In this lesson, the most teachable visual pattern is <strong>火</strong> and its bottom form
+              <strong>灬</strong>. It often points to burning, heating, cooking, or intense transformation.
+              This is especially useful for the imagery of <strong>煮豆燃萁</strong>.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>煮</strong><span>zhǔ</span><span>to boil</span></div>
+              <div class="char-badge"><strong>燃</strong><span>rán</span><span>to burn</span></div>
+              <div class="char-badge"><strong>煎</strong><span>jiān</span><span>to fry / simmer</span></div>
+              <div class="char-badge"><strong>然</strong><span>rán</span><span>form clue</span></div>
+              <div class="char-badge"><strong>热</strong><span>rè</span><span>heat</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> when students see 火 or 灬, ask:
+              “Is there fire, heat, cooking, or transformation here?”
+              In this lesson, <strong>煮</strong>, <strong>燃</strong>, and <strong>煎</strong> can be remembered together
+              as a strong mini-network built around heat.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                In Lesson 3.2, what is the most useful meaning clue carried by 火字旁 or 火字底?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q1" value="A" /> A. family rank only</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="B" /> B. burning, heating, cooking, or transformation</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="C" /> C. hand movement only</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="D" /> D. body parts only</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q1','B',`Correct. In Lesson 3.2, 火字旁 or 火字底 is most useful as a clue for burning, heating, cooking, or transformation. That is why 煮, 燃, and 煎 make such a strong visual and semantic group.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q1')">Reset</button>
+              </div>
+              <div id="feedback-q1" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>2. 月字旁：从 同胞 进去，往“身体”展开</h3>
+            <p>
+              This lesson has fewer direct 月-radical words, so the best anchor is <strong>胞</strong> in
+              <strong>同胞</strong>. In many modern characters, <strong>月字旁</strong> helps students think of the body,
+              flesh, or an inner physical connection.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>胞</strong><span>bāo</span><span>body / womb link</span></div>
+              <div class="char-badge"><strong>同胞</strong><span>tóngbāo</span><span>same-mother siblings</span></div>
+              <div class="char-badge"><strong>肚</strong><span>dù</span><span>belly</span></div>
+              <div class="char-badge"><strong>脸</strong><span>liǎn</span><span>face</span></div>
+              <div class="char-badge"><strong>腿</strong><span>tuǐ</span><span>leg</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> in this lesson, teach 月字旁 through <strong>同胞</strong>:
+              same body, same mother, same source. Then expand outward to other body-related words.
+              That makes the radical feel meaningful instead of random.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                Why is 同胞 a good anchor for teaching 月字旁 in Lesson 3.2?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q2" value="A" /> A. Because it has nothing to do with body or kinship</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="B" /> B. Because 胞 can help students connect 月字旁 with bodily or kinship meaning</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="C" /> C. Because it is a cooking word</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="D" /> D. Because it is formed by three identical parts</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q2','B',`Correct. 同胞 is a strong anchor because 胞 can help students connect 月字旁 with bodily or kinship meaning. From there, the teacher can expand to other 月-radical body words.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q2')">Reset</button>
+              </div>
+              <div id="feedback-q2" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>3. 立刀旁 / 刂：分开、裁断、离别</h3>
+            <p>
+              The radical <strong>刂</strong> often carries a sense of cutting, dividing, separating,
+              or making a distinction. In this lesson, the most practical entry point is <strong>别</strong> in
+              <strong>临别</strong>, because parting is a kind of separation.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>别</strong><span>bié</span><span>separate / other</span></div>
+              <div class="char-badge"><strong>临别</strong><span>línbié</span><span>at parting</span></div>
+              <div class="char-badge"><strong>告别</strong><span>gàobié</span><span>say farewell</span></div>
+              <div class="char-badge"><strong>分别</strong><span>fēnbié</span><span>separate / distinguish</span></div>
+              <div class="char-badge"><strong>判</strong><span>pàn</span><span>judge</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> even when the original “knife” meaning is not literal,
+              刂 often helps build a semantic bridge toward <strong>division, separation, distinction, or decision</strong>.
+              That is why <strong>临别</strong> is such a teachable lesson anchor.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                In Lesson 3.2, what is the best way to explain the learning value of 立刀旁 / 刂?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q3" value="A" /> A. It usually suggests separation, distinction, or cutting away</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="B" /> B. It always means “beautiful”</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="C" /> C. It is only used in names</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="D" /> D. It has the same function as 月字旁</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q3','A',`Correct. 立刀旁 / 刂 is useful because it often suggests separation, distinction, or cutting away. In this lesson, 临别 is the clearest anchor for that meaning bridge.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q3')">Reset</button>
+              </div>
+              <div id="feedback-q3" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>4. “家” 的词：不是“家里”，而是“某一类专家”</h3>
+            <p>
+              In advanced Chinese, <strong>家</strong> after a field noun often marks an accomplished specialist,
+              thinker, or expert. In this lesson, <strong>军事家</strong> and <strong>文学家</strong> are especially useful
+              because they help students move from literal meaning to academic categorization.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>军事家</strong><span>jūnshìjiā</span><span>strategist</span></div>
+              <div class="char-badge"><strong>文学家</strong><span>wénxuéjiā</span><span>man of letters</span></div>
+              <div class="char-badge"><strong>艺术家</strong><span>yìshùjiā</span><span>artist</span></div>
+              <div class="char-badge"><strong>科学家</strong><span>kēxuéjiā</span><span>scientist</span></div>
+              <div class="char-badge"><strong>思想家</strong><span>sīxiǎngjiā</span><span>thinker</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> teach students that 家 here does <strong>not</strong> mainly mean “home.”
+              It works like a category marker for an accomplished person in a field.
+              Once they understand that, 军事家 and 文学家 become much easier to decode.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                In 军事家 and 文学家, what does 家 most usefully signal?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q4" value="A" /> A. a physical building</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="B" /> B. a category marker for an accomplished expert or specialist</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="C" /> C. a tense marker</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="D" /> D. a fire-related radical</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q4','B',`Correct. In 军事家 and 文学家, 家 works as a category marker for an accomplished expert or specialist, not mainly as the everyday noun “home.”`)"">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q4')">Reset</button>
+              </div>
+              <div id="feedback-q4" class="mcq-feedback"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-tools" class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">AI Question Box</p>
+          <h2>Ask about meaning, usage, radicals, or memory tricks</h2>
+        </div>
+
+        <div class="tools-layout">
+          <div class="card tool-card">
+            <h3>Ask AI about this lesson</h3>
+            <p>
+              You can ask about the poem, the vocabulary, the character patterns,
+              or the difference between similar emotional words.
+            </p>
+
+            <label for="studentQuestionInput">Your question</label>
+            <textarea id="studentQuestionInput" placeholder="Examples:
+Why are 煮 and 燃 useful to learn together?
+How does 月字旁 help in 同胞?
+Why is 临别 a good example for 刂?
+What is the difference between 赞赏 and 颂扬?
+How should I understand 家 in 文学家?"></textarea>
+
+            <div class="tool-actions">
+              <button class="tool-btn" id="askAiBtn">Ask AI</button>
+              <button class="tool-btn secondary" id="fillExampleBtn">Use Example Question</button>
+            </div>
+
+            <ul class="helper-list">
+              <li>Ask one clear question at a time.</li>
+              <li>Use Chinese words when possible.</li>
+              <li>Try asking about radicals, imagery, or emotional nuance.</li>
+            </ul>
+          </div>
+
+          <div class="card result-card">
+            <h3>AI response</h3>
+            <div class="result-meta">
+              <span class="tag">Course: humanities2</span>
+              <span class="tag">Lesson: 3-2</span>
+              <span class="tag" id="currentTaskTag">Task: student question</span>
+            </div>
+
+            <div id="resultBox" class="result-box">
+Ask a question to get started.
+            </div>
+
+            <div class="tool-actions" style="margin-top: 1rem;">
+              <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vocabulary" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Vocabulary list</p>
+          <h2>Lesson 3.2 New Words</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <p>This is the full vocabulary list for the lesson.</p>
+
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>词语</th>
+                  <th>Pinyin</th>
+                  <th>POS</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">步</td><td>bù</td><td>N</td><td>step</td></tr>
+                <tr><td>2</td><td class="hanzi">军事家</td><td>jūnshìjiā</td><td>N</td><td>strategist, militarist</td></tr>
+                <tr><td>3</td><td class="hanzi">文学家</td><td>wénxuéjiā</td><td>N</td><td>an accomplished man specializing in literary study, man of letters</td></tr>
+                <tr><td>4</td><td class="hanzi">出色</td><td>chūsè</td><td>Adj</td><td>outstanding, distinguished</td></tr>
+                <tr><td>5</td><td class="hanzi">使者</td><td>shǐzhě</td><td>N</td><td>envoy, messenger</td></tr>
+                <tr><td>6</td><td class="hanzi">处死</td><td>chǔsǐ</td><td>V</td><td>to put to death</td></tr>
+                <tr><td>7</td><td class="hanzi">迫不及待</td><td>pòbùjídài</td><td>IE</td><td>be unable to wait, itching to get on with it</td></tr>
+                <tr><td>8</td><td class="hanzi">出自</td><td>chūzì</td><td>V</td><td>to come from</td></tr>
+                <tr><td>9</td><td class="hanzi">跪</td><td>guì</td><td>V</td><td>to kneel down</td></tr>
+                <tr><td>10</td><td class="hanzi">当面</td><td>dāngmiàn</td><td>Adv</td><td>face to face, in sb.'s presence</td></tr>
+                <tr><td>11</td><td class="hanzi">测试</td><td>cèshì</td><td>V</td><td>to test</td></tr>
+                <tr><td>12</td><td class="hanzi">宠爱</td><td>chǒng'ài</td><td>V</td><td>to dote on</td></tr>
+                <tr><td>13</td><td class="hanzi">封</td><td>fēng</td><td>V</td><td>to confer, to appoint with a title</td></tr>
+                <tr><td>14</td><td class="hanzi">太子</td><td>tàizǐ</td><td>N</td><td>crown prince</td></tr>
+                <tr><td>15</td><td class="hanzi">极力</td><td>jílì</td><td>Adv</td><td>at all costs, strenuously</td></tr>
+                <tr><td>16</td><td class="hanzi">反对</td><td>fǎnduì</td><td>V</td><td>to oppose, to disagree</td></tr>
+                <tr><td>17</td><td class="hanzi">稳定</td><td>wěndìng</td><td>Adj</td><td>steady, stable</td></tr>
+                <tr><td>18</td><td class="hanzi">讨好</td><td>tǎohǎo</td><td>V</td><td>to curry favor with, to please</td></tr>
+                <tr><td>19</td><td class="hanzi">送行</td><td>sòngxíng</td><td>V</td><td>to see ... off</td></tr>
+                <tr><td>20</td><td class="hanzi">临别</td><td>línbié</td><td>V</td><td>to be at parting, to be just before parting</td></tr>
+                <tr><td>21</td><td class="hanzi">颂扬</td><td>sòngyáng</td><td>V</td><td>to sing the praises of, to eulogize</td></tr>
+                <tr><td>22</td><td class="hanzi">赞赏</td><td>zànshǎng</td><td>V</td><td>to praise and appreciate, to admire</td></tr>
+                <tr><td>23</td><td class="hanzi">伤心</td><td>shāngxīn</td><td>Adj</td><td>sad</td></tr>
+                <tr><td>24</td><td class="hanzi">抹</td><td>mǒ</td><td>V</td><td>to wipe</td></tr>
+                <tr><td>25</td><td class="hanzi">感动</td><td>gǎndòng</td><td>V</td><td>to touch emotionally, to move</td></tr>
+                <tr><td>26</td><td class="hanzi">掉</td><td>diào</td><td>V</td><td>to drop, to fall</td></tr>
+                <tr><td>27</td><td class="hanzi">留下</td><td>liúxià</td><td>V</td><td>to leave, to leave behind</td></tr>
+                <tr><td>28</td><td class="hanzi">可靠</td><td>kěkào</td><td>Adj</td><td>reliable, trustworthy</td></tr>
+                <tr><td>29</td><td class="hanzi">老实</td><td>lǎoshi</td><td>Adj</td><td>honest, frank, well-behaved</td></tr>
+                <tr><td>30</td><td class="hanzi">小节</td><td>xiǎojié</td><td>N</td><td>trifle, triviality</td></tr>
+                <tr><td>31</td><td class="hanzi">不顾</td><td>búgù</td><td>V</td><td>to disregard</td></tr>
+                <tr><td>32</td><td class="hanzi">规定</td><td>guīdìng</td><td>N</td><td>rules, regulations</td></tr>
+                <tr><td>33</td><td class="hanzi">私自</td><td>sīzì</td><td>Adv</td><td>without permission, privately</td></tr>
+                <tr><td>34</td><td class="hanzi">宫</td><td>gōng</td><td>N</td><td>palace</td></tr>
+                <tr><td>35</td><td class="hanzi">看管</td><td>kānguǎn</td><td>V</td><td>to look after, to guard</td></tr>
+                <tr><td>36</td><td class="hanzi">打消</td><td>dǎxiāo</td><td>V</td><td>to give up an idea, to dispel doubts or misgivings</td></tr>
+                <tr><td>37</td><td class="hanzi">念头</td><td>niàntou</td><td>N</td><td>idea, thought</td></tr>
+                <tr><td>38</td><td class="hanzi">忌恨</td><td>jìhèn</td><td>V</td><td>to be jealous of and hate</td></tr>
+                <tr><td>39</td><td class="hanzi">看在……的份上</td><td>kànzài...de fènshang</td><td>PP</td><td>for the sake of ...</td></tr>
+                <tr><td>40</td><td class="hanzi">同胞</td><td>tóngbāo</td><td>N</td><td>brothers/sisters of the same mother</td></tr>
+                <tr><td>41</td><td class="hanzi">犯</td><td>fàn</td><td>V</td><td>to commit a crime, to violate</td></tr>
+                <tr><td>42</td><td class="hanzi">光彩</td><td>guāngcǎi</td><td>Adj/N</td><td>glorious; radiance</td></tr>
+                <tr><td>43</td><td class="hanzi">降职</td><td>jiàngzhí</td><td>VO</td><td>to demote</td></tr>
+                <tr><td>44</td><td class="hanzi">惩罚</td><td>chéngfá</td><td>V</td><td>to punish</td></tr>
+                <tr><td>45</td><td class="hanzi">曾经</td><td>céngjīng</td><td>Adv</td><td>once, ever, previously</td></tr>
+                <tr><td>46</td><td class="hanzi">稍微</td><td>shāowēi</td><td>Adv</td><td>slightly, a little</td></tr>
+                <tr><td>47</td><td class="hanzi">迈开</td><td>màikāi</td><td>VC</td><td>to take a step forward</td></tr>
+                <tr><td>48</td><td class="hanzi">煮</td><td>zhǔ</td><td>V</td><td>to boil, to cook</td></tr>
+                <tr><td>49</td><td class="hanzi">燃</td><td>rán</td><td>V</td><td>to burn, to light</td></tr>
+                <tr><td>50</td><td class="hanzi">豆萁</td><td>dòuqí</td><td>N</td><td>beanstalk</td></tr>
+                <tr><td>51</td><td class="hanzi">釜</td><td>fǔ</td><td>N</td><td>pot, cauldron</td></tr>
+                <tr><td>52</td><td class="hanzi">泣</td><td>qì</td><td>V</td><td>to weep, to sob</td></tr>
+                <tr><td>53</td><td class="hanzi">煎</td><td>jiān</td><td>V</td><td>to fry, to simmer</td></tr>
+                <tr><td>54</td><td class="hanzi">何</td><td>hé</td><td>Adv</td><td>why</td></tr>
+                <tr><td>55</td><td class="hanzi">惭愧</td><td>cánkuì</td><td>Adj</td><td>ashamed</td></tr>
+                <tr><td>56</td><td class="hanzi">为难</td><td>wéinán</td><td>V</td><td>to make things difficult for; to feel awkward</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Proper nouns</p>
+          <h2>Key names in Lesson 3.2</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>专名</th>
+                  <th>Pinyin</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">曹植</td><td>Cáo Zhí</td><td>Cao Zhi (192–232), son of Cao Cao, noted poet and calligrapher</td></tr>
+                <tr><td>2</td><td class="hanzi">曹操</td><td>Cáo Cāo</td><td>Cao Cao (155–220), famous statesman and general at the end of Han, noted poet and calligrapher</td></tr>
+                <tr><td>3</td><td class="hanzi">曹丕</td><td>Cáo Pī</td><td>Cao Pi (187–226), son of Cao Cao, the first emperor of the state of Cao Wei in the Three Kingdoms Period</td></tr>
+                <tr><td>4</td><td class="hanzi">魏国</td><td>Wèiguó</td><td>Wei State (220–265), one of the Three Kingdoms established by Cao Pi</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="hero-actions">
+          <a class="btn btn-secondary" href="word-explorer.html#unit3">Back to Word Explorer</a>
+          <a class="btn btn-primary" href="lesson-3-3-word.html">Next lesson</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Advanced Chinese for Humanities AI</p>
+      <p>Lesson 3.2 Word Explorer</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const WORKER_URL = "https://quiet-field-a529.xc2375.workers.dev";
+
+    const resultBox = document.getElementById("resultBox");
+    const studentQuestionInput = document.getElementById("studentQuestionInput");
+    const askAiBtn = document.getElementById("askAiBtn");
+    const fillExampleBtn = document.getElementById("fillExampleBtn");
+    const clearResultBtn = document.getElementById("clearResultBtn");
+
+    function setLoading() {
+      resultBox.innerHTML = '<span class="loading">Thinking…</span>';
+    }
+
+    function setError(message) {
+      resultBox.innerHTML = `<span class="error-text">${message}</span>`;
+    }
+
+    function setResult(text) {
+      resultBox.textContent = text;
+    }
+
+    function checkPatternQuestion(questionName, correctAnswer, correctFeedback) {
+      const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+
+      if (!selected) {
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = "Please choose an answer first.";
+        return;
+      }
+
+      if (selected.value === correctAnswer) {
+        feedbackBox.className = "mcq-feedback show correct";
+        feedbackBox.textContent = correctFeedback;
+      } else {
+        let message = "";
+
+        if (questionName === "q1") {
+          message = "Not quite. In this lesson, 火字旁 or 火字底 is best taught as a clue for burning, heating, cooking, or transformation. Think of 煮、燃、煎 together.";
+        } else if (questionName === "q2") {
+          message = "Not quite. Here 月字旁 is useful because 胞 in 同胞 can help students connect bodily or kinship meaning, and then expand to other body-related words.";
+        } else if (questionName === "q3") {
+          message = "Not quite. 立刀旁 / 刂 is most helpful here as a clue for separation, distinction, or cutting away. 临别 is the clearest lesson anchor.";
+        } else if (questionName === "q4") {
+          message = "Not quite. In 军事家 and 文学家, 家 works as a category marker for an accomplished expert or specialist, not mainly as the everyday noun “home.”";
+        }
+
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = message;
+      }
+    }
+
+    function resetPatternQuestion(questionName) {
+      document.querySelectorAll(`input[name="${questionName}"]`).forEach(input => input.checked = false);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+      feedbackBox.className = "mcq-feedback";
+      feedbackBox.textContent = "";
+    }
+
+    async function askStudentWordHelp(questionText) {
+      try {
+        setLoading();
+
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            course: "humanities2",
+            lesson: "3-2",
+            task: "student_word_help",
+            question: questionText,
+            context: "Lesson 3.2 discusses Cao Zhi, the Seven-Step Poem, court politics, brotherly conflict, praise and punishment, and pattern learning around fire-related characters, 月-radical body/kinship words, the 刂 radical of separation, and category words ending in 家."
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed.");
+        }
+
+        const resultText = data.result || "No response returned.";
+        setResult(resultText);
+      } catch (error) {
+        setError(error.message || "Something went wrong.");
+      }
+    }
+
+    askAiBtn.addEventListener("click", async () => {
+      const question = studentQuestionInput.value.trim();
+      if (!question) {
+        setError("Please enter a question first.");
+        return;
+      }
+      await askStudentWordHelp(question);
+    });
+
+    fillExampleBtn.addEventListener("click", () => {
+      studentQuestionInput.value = "How does 火字旁 or 火字底 help me remember 煮, 燃, and 煎 in Lesson 3.2?";
+    });
+
+    clearResultBtn.addEventListener("click", () => {
+      resultBox.textContent = "Ask a question to get started.";
+    });
+
+    const chipWraps = document.querySelectorAll(".concept-chip-wrap");
+
+    chipWraps.forEach((wrap) => {
+      const chip = wrap.querySelector(".concept-chip");
+      const tooltip = wrap.querySelector(".concept-tooltip");
+
+      chip.addEventListener("mouseenter", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.add("show");
+        }
+      });
+
+      chip.addEventListener("mouseleave", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.remove("show");
+        }
+      });
+
+      chip.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+          e.stopPropagation();
+          document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+            if (tip !== tooltip) tip.classList.remove("show");
+          });
+          tooltip.classList.toggle("show");
+        } else {
+          studentQuestionInput.value = `What does ${chip.textContent.trim()} mean in Lesson 3.2?`;
+          window.location.hash = "ai-tools";
+        }
+      });
+
+      tooltip.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+        tip.classList.remove("show");
+      });
+    });
+  </script>
+</body>
+</html>
