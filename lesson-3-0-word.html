@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 3.0 Word Explorer | Advanced Chinese for Humanities (II) AI</title>
+  <meta
+    name="description"
+    content="Lesson 3.0 Word Explorer for Advanced Chinese for Humanities (II): 琴棋书画 vocabulary system."
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .lesson-hero {
+      padding-top: 2.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .lesson-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1rem 0 0;
+    }
+
+    .breadcrumb {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .group-grid,
+    .pattern-grid,
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .group-card h3,
+    .pattern-card h3,
+    .tool-card h3,
+    .result-card h3,
+    .vocab-card h3,
+    .name-card h3,
+    .usage-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      font-size: 1.08rem;
+      color: var(--primary-dark);
+    }
+
+    .group-card p,
+    .pattern-card p,
+    .tool-card p,
+    .result-card p,
+    .vocab-card p,
+    .name-card p,
+    .usage-card p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .concept-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+    }
+
+    .concept-chip-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .concept-chip,
+    .name-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: #f6ecdf;
+      color: var(--primary-dark);
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: 1px solid #e2d0b8;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .concept-chip:hover,
+    .name-chip:hover {
+      background: #f1e2cd;
+      transform: translateY(-1px);
+    }
+
+    .concept-tooltip {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.45rem);
+      min-width: 210px;
+      max-width: 260px;
+      background: #fffdf9;
+      border: 1px solid #decbb2;
+      border-radius: 14px;
+      box-shadow: 0 12px 26px rgba(80, 56, 32, 0.12);
+      padding: 0.75rem 0.85rem;
+      z-index: 30;
+      display: none;
+    }
+
+    .concept-tooltip.show {
+      display: block;
+    }
+
+    .tooltip-word {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-pinyin {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-english {
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-bottom: 0.22rem;
+      line-height: 1.4;
+    }
+
+    .tooltip-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .char-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .char-badge {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      border: 1px solid #e7d7c2;
+      min-width: 84px;
+    }
+
+    .char-badge strong {
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .char-badge span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.24;
+    }
+
+    .memory-tip {
+      margin-top: 0.8rem;
+      padding: 0.85rem 0.95rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      color: var(--text);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .example-list {
+      margin-top: 0.8rem;
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .example-item {
+      padding: 0.7rem 0.8rem;
+      border-radius: 12px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    .mcq-box {
+      margin-top: 1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid #eadfce;
+    }
+
+    .mcq-question {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.7rem;
+      line-height: 1.5;
+    }
+
+    .mcq-options {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .mcq-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 10px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+    }
+
+    .mcq-actions {
+      margin-top: 0.85rem;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: none;
+      min-height: 38px;
+      padding: 0 0.95rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .small-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .small-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .small-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .mcq-feedback {
+      margin-top: 0.9rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      line-height: 1.6;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    .mcq-feedback.show {
+      display: block;
+    }
+
+    .mcq-feedback.correct {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .mcq-feedback.incorrect {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
+    .tools-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 1.25rem;
+      margin-top: 1.2rem;
+    }
+
+    .tool-card label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--primary-dark);
+      font-size: 0.95rem;
+    }
+
+    .tool-card textarea,
+    .tool-card input {
+      width: 100%;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid #d9c7b1;
+      border-radius: 12px;
+      background: #fffdf9;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .tool-card textarea {
+      min-height: 170px;
+      resize: vertical;
+    }
+
+    .tool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .tool-btn {
+      border: none;
+      min-height: 44px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .tool-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .tool-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .tool-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .result-card {
+      min-height: 400px;
+    }
+
+    .result-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .result-box {
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fffdf9;
+      border: 1px solid #e7dac7;
+      border-radius: 14px;
+      padding: 1rem;
+      min-height: 270px;
+    }
+
+    .loading {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .error-text {
+      color: #a33a2b;
+      font-weight: 700;
+    }
+
+    .helper-list {
+      margin: 0.85rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+    }
+
+    .helper-list li + li {
+      margin-top: 0.35rem;
+    }
+
+    .vocab-table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    table.vocab-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .vocab-table th,
+    .vocab-table td {
+      padding: 0.78rem 0.85rem;
+      border-bottom: 1px solid #eadfce;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.95rem;
+    }
+
+    .vocab-table th {
+      background: #f7efe3;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .vocab-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .vocab-table tr:hover {
+      background: #fcf8f2;
+    }
+
+    .hanzi {
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    .subtable-title {
+      margin-top: 1.1rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    @media (max-width: 960px) {
+      .group-grid,
+      .pattern-grid,
+      .usage-grid,
+      .tools-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .concept-tooltip {
+        max-width: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH2 AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities (II)</h1>
+          <p class="site-subtitle">人文天下：高级汉语教程·下</p>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="word-explorer.html">Word Explorer</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#ai-tools">AI Box</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <div class="container">
+        <div class="breadcrumb">Home → Word Explorer → Unit 3 → Lesson 3.0</div>
+        <p class="eyebrow">Lesson 3.0</p>
+        <h2 class="page-title">琴棋书画</h2>
+        <p class="page-intro">
+          This lesson introduces the traditional cultural world of qin, qi, shu, and hua.
+          Try to learn the words as connected systems: art and literati life, mind and inner
+          cultivation, heart-related expressions, and the brush-and-ink world of writing and painting.
+        </p>
+
+        <div class="lesson-meta">
+          <span class="tag">Unit 3: 艺术人生</span>
+          <span class="tag">Theme: Arts, Aesthetic Life, Self-Cultivation</span>
+          <span class="tag">Module: Word Explorer</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Concept Net</p>
+          <h2>Hover or tap to preview key words</h2>
+        </div>
+
+        <div class="group-grid">
+          <div class="card group-card">
+            <h3>A. 琴与文人艺术</h3>
+            <p>Words for refined taste, literati culture, and musical practice.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">琴</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">琴</div>
+                  <div class="tooltip-pinyin">qín</div>
+                  <div class="tooltip-english">qin; a general name for certain stringed instruments</div>
+                  <div class="tooltip-note">often linked with refined artistic cultivation</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">文人</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">文人</div>
+                  <div class="tooltip-pinyin">wénrén</div>
+                  <div class="tooltip-english">scholar, literati</div>
+                  <div class="tooltip-note">a cultured person associated with writing and art</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">艺术</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">艺术</div>
+                  <div class="tooltip-pinyin">yìshù</div>
+                  <div class="tooltip-english">art; skill</div>
+                  <div class="tooltip-note">both artistic creation and cultivated technique</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">乐器</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">乐器</div>
+                  <div class="tooltip-pinyin">yuèqì</div>
+                  <div class="tooltip-english">musical instrument</div>
+                  <div class="tooltip-note">tools for musical performance</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">高雅</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">高雅</div>
+                  <div class="tooltip-pinyin">gāoyǎ</div>
+                  <div class="tooltip-english">elegant, refined</div>
+                  <div class="tooltip-note">often describes taste, style, or atmosphere</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">弹奏</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">弹奏</div>
+                  <div class="tooltip-pinyin">tánzòu</div>
+                  <div class="tooltip-english">to play a musical instrument</div>
+                  <div class="tooltip-note">used with piano, guqin, and similar instruments</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>B. 围棋与心智修养</h3>
+            <p>Words for the game of Go, strategy, patience, and stillness of mind.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">围棋</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">围棋</div>
+                  <div class="tooltip-pinyin">wéiqí</div>
+                  <div class="tooltip-english">the game of Go</div>
+                  <div class="tooltip-note">a strategic board game linked to mental discipline</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">下棋</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">下棋</div>
+                  <div class="tooltip-pinyin">xià qí</div>
+                  <div class="tooltip-english">to play Go / to play chess-like games</div>
+                  <div class="tooltip-note">the action of playing a board game</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">心智</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">心智</div>
+                  <div class="tooltip-pinyin">xīnzhì</div>
+                  <div class="tooltip-english">mind, intelligence</div>
+                  <div class="tooltip-note">mental ability, thought, and cognitive strength</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">胆识</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">胆识</div>
+                  <div class="tooltip-pinyin">dǎnshí</div>
+                  <div class="tooltip-english">courage and insight</div>
+                  <div class="tooltip-note">inner boldness plus judgment</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">耐力</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">耐力</div>
+                  <div class="tooltip-pinyin">nàilì</div>
+                  <div class="tooltip-english">endurance, stamina</div>
+                  <div class="tooltip-note">the ability to persist over time</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">心如止水</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">心如止水</div>
+                  <div class="tooltip-pinyin">xīn rú zhǐ shuǐ</div>
+                  <div class="tooltip-english">a mind tranquil as still waters</div>
+                  <div class="tooltip-note">a calm inner state, especially under pressure</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>C. 笔墨与书写世界</h3>
+            <p>Words for writing tools, brush movement, copying, and artistic technique.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">墨</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">墨</div>
+                  <div class="tooltip-pinyin">mò</div>
+                  <div class="tooltip-english">ink</div>
+                  <div class="tooltip-note">the dark writing medium in traditional calligraphy and painting</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">砚</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">砚</div>
+                  <div class="tooltip-pinyin">yàn</div>
+                  <div class="tooltip-english">inkstone</div>
+                  <div class="tooltip-note">used to grind ink in traditional brush writing</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">下笔</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">下笔</div>
+                  <div class="tooltip-pinyin">xiàbǐ</div>
+                  <div class="tooltip-english">to start to write</div>
+                  <div class="tooltip-note">the moment writing actually begins</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">提笔</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">提笔</div>
+                  <div class="tooltip-pinyin">tí bǐ</div>
+                  <div class="tooltip-english">to take up one’s pen</div>
+                  <div class="tooltip-note">the action before writing starts</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">临摹</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">临摹</div>
+                  <div class="tooltip-pinyin">línmó</div>
+                  <div class="tooltip-english">to copy from a model</div>
+                  <div class="tooltip-note">a traditional way to practice calligraphy or painting</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">模仿</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">模仿</div>
+                  <div class="tooltip-pinyin">mófǎng</div>
+                  <div class="tooltip-english">to imitate</div>
+                  <div class="tooltip-note">to learn by following an example or model</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>D. 审美、修身与和谐</h3>
+            <p>Words for aesthetic judgment, balance, essence, and cultivated character.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">审美</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">审美</div>
+                  <div class="tooltip-pinyin">shěnměi</div>
+                  <div class="tooltip-english">to appreciate the arts; aesthetic judgment</div>
+                  <div class="tooltip-note">how one sees and evaluates beauty</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">静心养性</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">静心养性</div>
+                  <div class="tooltip-pinyin">jìngxīn yǎngxìng</div>
+                  <div class="tooltip-english">to calm the mind and nourish one’s nature</div>
+                  <div class="tooltip-note">a classic expression of inner cultivation</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">平衡</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">平衡</div>
+                  <div class="tooltip-pinyin">pínghéng</div>
+                  <div class="tooltip-english">balance; to balance</div>
+                  <div class="tooltip-note">used both literally and abstractly</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">和谐</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">和谐</div>
+                  <div class="tooltip-pinyin">héxié</div>
+                  <div class="tooltip-english">harmonious</div>
+                  <div class="tooltip-note">a key cultural value in art and society</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">精髓</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">精髓</div>
+                  <div class="tooltip-pinyin">jīngsuǐ</div>
+                  <div class="tooltip-english">essence</div>
+                  <div class="tooltip-note">the most important and concentrated part</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button type="button" class="concept-chip">修身</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">修身</div>
+                  <div class="tooltip-pinyin">xiūshēn</div>
+                  <div class="tooltip-english">to cultivate one’s moral character</div>
+                  <div class="tooltip-note">self-cultivation in conduct and values</div>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card name-card" style="margin-top: 1rem;">
+          <h3>Key names in this lesson</h3>
+          <div class="concept-list">
+            <span class="name-chip">三国演义</span>
+            <span class="name-chip">诸葛亮</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="patterns" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Focus on Patterns</p>
+          <h2>Learn through 心, 忄, and the brush-and-ink system</h2>
+        </div>
+
+        <div class="pattern-grid">
+          <div class="card pattern-card">
+            <h3>1. 心 as the center of mind, inner state, and cultivation</h3>
+            <p>
+              In this lesson, <strong>心</strong> is not just a body part. It points to mind,
+              inner condition, attention, calmness, and self-cultivation.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>心</strong><span>xīn</span><span>heart / mind</span></div>
+              <div class="char-badge"><strong>心智</strong><span>xīnzhì</span><span>mind</span></div>
+              <div class="char-badge"><strong>心如止水</strong><span>xīn rú zhǐ shuǐ</span><span>still mind</span></div>
+              <div class="char-badge"><strong>静心</strong><span>jìngxīn</span><span>calm the mind</span></div>
+              <div class="char-badge"><strong>入迷</strong><span>rùmí</span><span>be engrossed</span></div>
+              <div class="char-badge"><strong>修身</strong><span>xiūshēn</span><span>cultivate oneself</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> when you see 心 in this lesson, ask whether the word is about
+              thought, concentration, emotional state, or inner cultivation. This helps connect 心智,
+              心如止水, 静心养性, and even words like 入迷.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                What best connects 心智, 心如止水, and 静心养性 in this lesson?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q1" value="A" /> A. They are all names of painting tools</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="B" /> B. They all relate to the inner mind, mental state, and cultivation</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="C" /> C. They all refer to military strategy only</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="D" /> D. They are all used only for physical objects</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q1','B',`Correct. In this lesson, 心 helps connect words about the mind, inner stillness, self-control, and cultivation. It creates a strong semantic net across 心智, 心如止水, and 静心养性.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q1')">Reset</button>
+              </div>
+              <div id="feedback-q1" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>2. 心字旁 / 忄 often suggests emotion, nature, or inner condition</h3>
+            <p>
+              The component <strong>忄</strong> often appears in characters related to emotion,
+              temperament, or mental state. It is a very useful clue in advanced vocabulary.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>惊</strong><span>jīng</span><span>in 惊慌</span></div>
+              <div class="char-badge"><strong>慌</strong><span>huāng</span><span>in 惊慌</span></div>
+              <div class="char-badge"><strong>性</strong><span>xìng</span><span>in 养性</span></div>
+              <div class="char-badge"><strong>心</strong><span>xīn</span><span>full form</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> 忄 is a compressed form related to 心. When you see 忄,
+              try thinking: is this character connected with feeling, reaction, disposition, or inner state?
+              That helps with 惊慌 and 养性.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                Why is 忄 a helpful clue in words like 惊慌 and 养性?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q2" value="A" /> A. It usually marks a location word</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="B" /> B. It means the word must be about food</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="C" /> C. It often points to emotion, temperament, or inner condition</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="D" /> D. It shows the word is always a verb-object phrase</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q2','C',`Correct. The component 忄 often helps signal emotion, character, or inner state. That makes it a useful memory clue in 惊慌 and 养性-related vocabulary.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q2')">Reset</button>
+              </div>
+              <div id="feedback-q2" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>3. 笔墨系统: learn writing as a sequence</h3>
+            <p>
+              Traditional writing and painting vocabulary becomes easier when learned as a sequence:
+              tool → action → model → imitation.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>墨</strong><span>mò</span><span>ink</span></div>
+              <div class="char-badge"><strong>砚</strong><span>yàn</span><span>inkstone</span></div>
+              <div class="char-badge"><strong>提笔</strong><span>tí bǐ</span><span>take up pen</span></div>
+              <div class="char-badge"><strong>下笔</strong><span>xiàbǐ</span><span>start writing</span></div>
+              <
