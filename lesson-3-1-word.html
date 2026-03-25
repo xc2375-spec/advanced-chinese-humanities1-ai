@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 3.1 Word Explorer | Advanced Chinese for Humanities AI</title>
+  <meta
+    name="description"
+    content="Lesson 3.1 Word Explorer for Advanced Chinese for Humanities: 王羲之换鹅 vocabulary system, radicals, character patterns, and guided AI support."
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .lesson-hero {
+      padding-top: 2.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .lesson-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1rem 0 0;
+    }
+
+    .breadcrumb {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .group-grid,
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .group-card h3,
+    .pattern-card h3,
+    .tool-card h3,
+    .result-card h3,
+    .vocab-card h3,
+    .name-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      font-size: 1.08rem;
+      color: var(--primary-dark);
+    }
+
+    .group-card p,
+    .pattern-card p,
+    .tool-card p,
+    .result-card p,
+    .vocab-card p,
+    .name-card p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .concept-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+    }
+
+    .concept-chip-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .concept-chip,
+    .name-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: #f6ecdf;
+      color: var(--primary-dark);
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: 1px solid #e2d0b8;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .concept-chip:hover,
+    .name-chip:hover {
+      background: #f1e2cd;
+      transform: translateY(-1px);
+    }
+
+    .concept-tooltip {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.45rem);
+      min-width: 210px;
+      max-width: 260px;
+      background: #fffdf9;
+      border: 1px solid #decbb2;
+      border-radius: 14px;
+      box-shadow: 0 12px 26px rgba(80, 56, 32, 0.12);
+      padding: 0.75rem 0.85rem;
+      z-index: 30;
+      display: none;
+    }
+
+    .concept-tooltip.show {
+      display: block;
+    }
+
+    .tooltip-word {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-pinyin {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-english {
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-bottom: 0.22rem;
+      line-height: 1.4;
+    }
+
+    .tooltip-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .char-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .char-badge {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      border: 1px solid #e7d7c2;
+      min-width: 84px;
+    }
+
+    .char-badge strong {
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .char-badge span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.24;
+    }
+
+    .memory-tip {
+      margin-top: 0.8rem;
+      padding: 0.85rem 0.95rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      color: var(--text);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .mcq-box {
+      margin-top: 1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid #eadfce;
+    }
+
+    .mcq-question {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.7rem;
+      line-height: 1.5;
+    }
+
+    .mcq-options {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .mcq-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 10px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+    }
+
+    .mcq-actions {
+      margin-top: 0.85rem;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: none;
+      min-height: 38px;
+      padding: 0 0.95rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .small-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .small-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .small-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .mcq-feedback {
+      margin-top: 0.9rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      line-height: 1.6;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    .mcq-feedback.show {
+      display: block;
+    }
+
+    .mcq-feedback.correct {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .mcq-feedback.incorrect {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
+    .tools-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 1.25rem;
+      margin-top: 1.2rem;
+    }
+
+    .tool-card label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--primary-dark);
+      font-size: 0.95rem;
+    }
+
+    .tool-card textarea,
+    .tool-card input {
+      width: 100%;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid #d9c7b1;
+      border-radius: 12px;
+      background: #fffdf9;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .tool-card textarea {
+      min-height: 170px;
+      resize: vertical;
+    }
+
+    .tool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .tool-btn {
+      border: none;
+      min-height: 44px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .tool-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .tool-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .tool-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .result-card {
+      min-height: 400px;
+    }
+
+    .result-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .result-box {
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fffdf9;
+      border: 1px solid #e7dac7;
+      border-radius: 14px;
+      padding: 1rem;
+      min-height: 270px;
+    }
+
+    .loading {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .error-text {
+      color: #a33a2b;
+      font-weight: 700;
+    }
+
+    .helper-list {
+      margin: 0.85rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+    }
+
+    .helper-list li + li {
+      margin-top: 0.35rem;
+    }
+
+    .vocab-table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    table.vocab-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .vocab-table th,
+    .vocab-table td {
+      padding: 0.78rem 0.85rem;
+      border-bottom: 1px solid #eadfce;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.95rem;
+    }
+
+    .vocab-table th {
+      background: #f7efe3;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .vocab-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .vocab-table tr:hover {
+      background: #fcf8f2;
+    }
+
+    .hanzi {
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    @media (max-width: 960px) {
+      .group-grid,
+      .pattern-grid,
+      .tools-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .concept-tooltip {
+        max-width: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities</h1>
+          <p class="site-subtitle">人文天下：高级汉语教程·上 / 下</p>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="word-explorer.html">Word Explorer</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#ai-tools">AI Box</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <div class="container">
+        <div class="breadcrumb">Home → Word Explorer → Unit 3 → Lesson 3.1</div>
+        <p class="eyebrow">Lesson 3.1</p>
+        <h2 class="page-title">王羲之换鹅</h2>
+        <p class="page-intro">
+          This lesson connects calligraphy, gesture, practice, talent, and public recognition.
+          Try to learn the new words through patterns: repeated hand actions, effort and strength,
+          and character-building logic such as 众.
+        </p>
+
+        <div class="lesson-meta">
+          <span class="tag">Unit 3: 艺术人生</span>
+          <span class="tag">Theme: Calligraphy, Talent, Practice</span>
+          <span class="tag">Module: Word Explorer</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Concept Net</p>
+          <h2>Hover or tap to preview key words</h2>
+        </div>
+
+        <div class="group-grid">
+          <div class="card group-card">
+            <h3>A. 书法与动作</h3>
+            <p>These words belong to writing, hand movement, and visible artistic action.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">比画</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">比画</div>
+                  <div class="tooltip-pinyin">bǐhua</div>
+                  <div class="tooltip-english">to make hand gestures</div>
+                  <div class="tooltip-note">useful for describing movement with the hands while explaining or demonstrating</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">划</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">划</div>
+                  <div class="tooltip-pinyin">huá</div>
+                  <div class="tooltip-english">to scratch, to cut the surface of something</div>
+                  <div class="tooltip-note">often connected with marks or lines on a surface</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">抄写</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">抄写</div>
+                  <div class="tooltip-pinyin">chāoxiě</div>
+                  <div class="tooltip-english">to copy by hand, to transcribe</div>
+                  <div class="tooltip-note">a common action in traditional writing practice</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">拍</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">拍</div>
+                  <div class="tooltip-pinyin">pāi</div>
+                  <div class="tooltip-english">to clap; to拍照 in modern use</div>
+                  <div class="tooltip-note">still a hand action word, useful for linking to 扌 pattern memory</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">紧握</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">紧握</div>
+                  <div class="tooltip-pinyin">jǐnwò</div>
+                  <div class="tooltip-english">to grip tightly</div>
+                  <div class="tooltip-note">important for gesture, emotion, and physical control</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>B. 学习、练习与成就</h3>
+            <p>These words describe how ability is built and how success is judged.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">勤学苦练</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">勤学苦练</div>
+                  <div class="tooltip-pinyin">qín xué kǔ liàn</div>
+                  <div class="tooltip-english">to study diligently and practice hard</div>
+                  <div class="tooltip-note">a classic phrase for discipline and repeated effort</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">达到</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">达到</div>
+                  <div class="tooltip-pinyin">dádào</div>
+                  <div class="tooltip-english">to reach, to achieve</div>
+                  <div class="tooltip-note">often used with goals, standards, or levels</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">认真</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">认真</div>
+                  <div class="tooltip-pinyin">rènzhēn</div>
+                  <div class="tooltip-english">serious, earnest</div>
+                  <div class="tooltip-note">describes one’s attitude toward work or learning</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">才华</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">才华</div>
+                  <div class="tooltip-pinyin">cáihuá</div>
+                  <div class="tooltip-english">talent</div>
+                  <div class="tooltip-note">often used for literature, art, music, or intellectual ability</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">有出息</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">有出息</div>
+                  <div class="tooltip-pinyin">yǒu chūxi</div>
+                  <div class="tooltip-english">to have a promising future</div>
+                  <div class="tooltip-note">a common family and social evaluation word</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>C. 心神、情绪与注意力</h3>
+            <p>These words describe inner state, focus, attachment, or mental direction.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">心思</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">心思</div>
+                  <div class="tooltip-pinyin">xīnsi</div>
+                  <div class="tooltip-english">thoughts, mood, mental intention</div>
+                  <div class="tooltip-note">very useful in daily Chinese for what someone is thinking or feeling</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">舍不得</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">舍不得</div>
+                  <div class="tooltip-pinyin">shěbude</div>
+                  <div class="tooltip-english">to hate to part with</div>
+                  <div class="tooltip-note">often expresses emotional attachment</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">聚精会神</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">聚精会神</div>
+                  <div class="tooltip-pinyin">jùjīng-huìshén</div>
+                  <div class="tooltip-english">to concentrate one’s attention</div>
+                  <div class="tooltip-note">literally gathers spirit and mind together</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">盯</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">盯</div>
+                  <div class="tooltip-pinyin">dīng</div>
+                  <div class="tooltip-english">to stare at, to fix one’s eyes on</div>
+                  <div class="tooltip-note">a strong attention word; visually intense</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">悠闲</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">悠闲</div>
+                  <div class="tooltip-pinyin">yōuxián</div>
+                  <div class="tooltip-english">leisurely and carefree</div>
+                  <div class="tooltip-note">a calm opposite to pressure or urgency</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>D. 人物评价与“众”</h3>
+            <p>These words help students describe distinction, public comparison, and recognition.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">与众不同</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">与众不同</div>
+                  <div class="tooltip-pinyin">yǔ zhòng bù tóng</div>
+                  <div class="tooltip-english">out of the ordinary, distinctive</div>
+                  <div class="tooltip-note">literally “not the same as the crowd”</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">出众</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">出众</div>
+                  <div class="tooltip-pinyin">chūzhòng</div>
+                  <div class="tooltip-english">outstanding</div>
+                  <div class="tooltip-note">literally standing out from the many</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">特殊</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">特殊</div>
+                  <div class="tooltip-pinyin">tèshū</div>
+                  <div class="tooltip-english">special</div>
+                  <div class="tooltip-note">often used for unusual situations, treatment, or qualities</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">表现</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">表现</div>
+                  <div class="tooltip-pinyin">biǎoxiàn</div>
+                  <div class="tooltip-english">to show; performance; manifestation</div>
+                  <div class="tooltip-note">a key evaluation word in school and society</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">功劳</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">功劳</div>
+                  <div class="tooltip-pinyin">gōngláo</div>
+                  <div class="tooltip-english">credit, merit</div>
+                  <div class="tooltip-note">used when recognizing contribution or achievement</div>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card name-card" style="margin-top: 1rem;">
+          <h3>Key names in this lesson</h3>
+          <div class="concept-list">
+            <span class="name-chip">王羲之</span>
+            <span class="name-chip">东晋</span>
+            <span class="name-chip">道德经</span>
+            <span class="name-chip">王献之</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="patterns" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Focus on Patterns</p>
+          <h2>Learn through radicals, parts, and character-building logic</h2>
+        </div>
+
+        <div class="pattern-grid">
+          <div class="card pattern-card">
+            <h3>1. 牛字旁：从 “特” 进去记</h3>
+            <p>
+              In this lesson, the easiest entry point for the <strong>牛字旁 / 牜</strong> pattern
+              is the character <strong>特</strong> in <strong>特殊</strong> and <strong>特地</strong>.
+              Historically, 牜 comes from 牛. In modern words, the semantic link is not always transparent,
+              but noticing the form still helps memory.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>特</strong><span>tè</span><span>special</span></div>
+              <div class="char-badge"><strong>特殊</strong><span>tèshū</span><span>special</span></div>
+              <div class="char-badge"><strong>特地</strong><span>tèdì</span><span>especially</span></div>
+              <div class="char-badge"><strong>物</strong><span>wù</span><span>thing</span></div>
+              <div class="char-badge"><strong>牧</strong><span>mù</span><span>to herd</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> 牛字旁 is useful not because every word still clearly means “cow,”
+              but because it helps students notice recurring shape families. In this lesson, start from
+              <strong>特 → 特殊 / 特地</strong>, then expand outward.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                In this lesson, which word is the best anchor for noticing the 牛字旁 pattern?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q1" value="A" /> A. 心思</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="B" /> B. 特</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="C" /> C. 拍</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="D" /> D. 众</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q1','B',`Correct. In Lesson 3.1, 特 is the most practical anchor for noticing the 牛字旁 pattern, because it directly connects to lesson words such as 特殊 and 特地.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q1')">Reset</button>
+              </div>
+              <div id="feedback-q1" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>2. 提手旁：手的动作特别多</h3>
+            <p>
+              The component <strong>扌</strong> often signals hand action. This lesson is especially good
+              for this pattern because many important verbs involve writing, asking, touching, or moving with the hand.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>打</strong><span>dǎ</span><span>to do / hit</span></div>
+              <div class="char-badge"><strong>打听</strong><span>dǎting</span><span>to inquire</span></div>
+              <div class="char-badge"><strong>抄</strong><span>chāo</span><span>copy by hand</span></div>
+              <div class="char-badge"><strong>拍</strong><span>pāi</span><span>to clap</span></div>
+              <div class="char-badge"><strong>把</strong><span>bǎ</span><span>to hold</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> when students see 扌, ask: “Is this a hand action?”
+              In this lesson, <strong>打听</strong>, <strong>抄写</strong>, and <strong>拍</strong> all become easier to remember that way.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                Why are 打听, 抄, and 拍 useful to learn together?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q2" value="A" /> A. They are all proper nouns</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="B" /> B. They all contain 扌 and often describe hand actions</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="C" /> C. They all mean emotions</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="D" /> D. They all contain 心</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q2','B',`Correct. 打听, 抄, and 拍 are a strong mini-group because they all involve 扌 and can be remembered as hand-action words.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q2')">Reset</button>
+              </div>
+              <div id="feedback-q2" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>3. 部件 “力”：力气、干劲、功劳</h3>
+            <p>
+              The part <strong>力</strong> often points toward strength, effort, labor, or result.
+              This lesson gives a very teachable group around work, drive, and recognized contribution.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>力</strong><span>lì</span><span>strength</span></div>
+              <div class="char-badge"><strong>劲</strong><span>jìn</span><span>drive</span></div>
+              <div class="char-badge"><strong>干劲</strong><span>gànjìn</span><span>vigor</span></div>
+              <div class="char-badge"><strong>功</strong><span>gōng</span><span>achievement</span></div>
+              <div class="char-badge"><strong>劳</strong><span>láo</span><span>labor</span></div>
+              <div class="char-badge"><strong>功劳</strong><span>gōngláo</span><span>credit, merit</span></div>
+              <div class="char-badge"><strong>眼力</strong><span>yǎnlì</span><span>judgment</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> 力 can help students build a semantic bridge:
+              <strong>physical strength → drive → effort → achievement → credit</strong>.
+              That makes 干劲, 功劳, and 眼力 feel less isolated.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                In this lesson, what is the most useful meaning clue carried by 力?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q3" value="A" /> A. family relationship only</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="B" /> B. weather and nature</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="C" /> C. strength, effort, labor, or resulting merit</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="D" /> D. writing materials only</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q3','C',`Correct. In Lesson 3.1, 力 is best taught as a clue for strength, effort, labor, or achievement-related result. That is why 干劲 and 功劳 make a natural pair.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q3')">Reset</button>
+              </div>
+              <div id="feedback-q3" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>4. 三个一样的部件：从 众 走向 品、晶、森</h3>
+            <p>
+              The character <strong>众</strong> is a great teaching point because it is built from repeated
+              human figures. In this lesson, it appears in <strong>与众不同</strong> and <strong>出众</strong>.
+              From there, students can expand to other “tripled” characters.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>众</strong><span>zhòng</span><span>many people</span></div>
+              <div class="char-badge"><strong>与众不同</strong><span>yǔ zhòng bù tóng</span><span>distinctive</span></div>
+              <div class="char-badge"><strong>出众</strong><span>chūzhòng</span><span>stand out</span></div>
+              <div class="char-badge"><strong>品</strong><span>pǐn</span><span>grade /品味</span></div>
+              <div class="char-badge"><strong>晶</strong><span>jīng</span><span>crystal / bright</span></div>
+              <div class="char-badge"><strong>森</strong><span>sēn</span><span>forest</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> repeated-component characters are visually memorable.
+              Teach students to notice the logic: <strong>three 人 → 众</strong>, <strong>three 木 → 森</strong>,
+              <strong>three 日 → 晶</strong>. In this lesson, 众 is the anchor because it directly feeds two useful advanced words.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                Why is 众 a strong teaching anchor in Lesson 3.1?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q4" value="A" /> A. Because it only appears as a name</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="B" /> B. Because it helps connect 与众不同 and 出众, and it introduces repeated-component character logic</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="C" /> C. Because it is a hand-action radical</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="D" /> D. Because it means the same as 鹅</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q4','B',`Correct. 众 is especially useful because it appears inside lesson words such as 与众不同 and 出众, while also letting students notice a broader visual pattern: characters formed by repeating the same component.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q4')">Reset</button>
+              </div>
+              <div id="feedback-q4" class="mcq-feedback"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-tools" class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">AI Question Box</p>
+          <h2>Ask about radicals, usage, meaning, or memory tricks</h2>
+        </div>
+
+        <div class="tools-layout">
+          <div class="card tool-card">
+            <h3>Ask AI about this lesson</h3>
+            <p>
+              You can ask about meaning, usage, similar words, radical clues,
+              memory tips, or sentence examples.
+            </p>
+
+            <label for="studentQuestionInput">Your question</label>
+            <textarea id="studentQuestionInput" placeholder="Examples:
+How does 扌 help me remember 打听, 抄写, and 拍?
+Why is 众 useful in 与众不同 and 出众?
+Please give me a sentence with 才华.
+What is the difference between 特殊 and 与众不同?"></textarea>
+
+            <div class="tool-actions">
+              <button class="tool-btn" id="askAiBtn">Ask AI</button>
+              <button class="tool-btn secondary" id="fillExampleBtn">Use Example Question</button>
+            </div>
+
+            <ul class="helper-list">
+              <li>Ask one clear question at a time.</li>
+              <li>Use Chinese words when possible.</li>
+              <li>Try asking about radicals, repeated components, or usage differences.</li>
+            </ul>
+          </div>
+
+          <div class="card result-card">
+            <h3>AI response</h3>
+            <div class="result-meta">
+              <span class="tag">Course: humanities2</span>
+              <span class="tag">Lesson: 3-1</span>
+              <span class="tag" id="currentTaskTag">Task: student question</span>
+            </div>
+
+            <div id="resultBox" class="result-box">
+Ask a question to get started.
+            </div>
+
+            <div class="tool-actions" style="margin-top: 1rem;">
+              <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vocabulary" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Vocabulary list</p>
+          <h2>Lesson 3.1 New Words</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <p>This is the full vocabulary list for the lesson.</p>
+
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>词语</th>
+                  <th>Pinyin</th>
+                  <th>POS</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">鹅</td><td>é</td><td>N</td><td>goose</td></tr>
+                <tr><td>2</td><td class="hanzi">比画</td><td>bǐhua</td><td>V</td><td>to make hand gestures</td></tr>
+                <tr><td>3</td><td class="hanzi">划</td><td>huá</td><td>V</td><td>to scratch (cut the surface of sth.)</td></tr>
+                <tr><td>4</td><td class="hanzi">勤学苦练</td><td>qín xué kǔ liàn</td><td>IE</td><td>to study diligently and practice hard</td></tr>
+                <tr><td>5</td><td class="hanzi">达到</td><td>dádào</td><td>V</td><td>to reach, to achieve</td></tr>
+                <tr><td>6</td><td class="hanzi">宝贝</td><td>bǎobèi</td><td>N</td><td>treasure</td></tr>
+                <tr><td>7</td><td class="hanzi">看待</td><td>kàndài</td><td>V</td><td>to treat, to view</td></tr>
+                <tr><td>8</td><td class="hanzi">篮</td><td>lán</td><td>N</td><td>basket</td></tr>
+                <tr><td>9</td><td class="hanzi">扇子</td><td>shànzi</td><td>N</td><td>fan</td></tr>
+                <tr><td>10</td><td class="hanzi">装饰</td><td>zhuāngshì</td><td>N/V</td><td>decoration; to decorate</td></tr>
+                <tr><td>11</td><td class="hanzi">引起</td><td>yǐnqǐ</td><td>V</td><td>to give rise to, to bring about</td></tr>
+                <tr><td>12</td><td class="hanzi">龙飞凤舞</td><td>lóngfēi-fèngwǔ</td><td>IE</td><td>lively and vigorous flourishes in calligraphy</td></tr>
+                <tr><td>13</td><td class="hanzi">潦草</td><td>liáocǎo</td><td>Adj</td><td>(of handwriting) careless, scratchy</td></tr>
+                <tr><td>14</td><td class="hanzi">果然</td><td>guǒrán</td><td>Adv</td><td>just as expected, really</td></tr>
+                <tr><td>15</td><td class="hanzi">特殊</td><td>tèshū</td><td>Adj</td><td>special</td></tr>
+                <tr><td>16</td><td class="hanzi">玩赏</td><td>wánshǎng</td><td>V</td><td>to take pleasure in, to appreciate</td></tr>
+                <tr><td>17</td><td class="hanzi">道士</td><td>dàoshì</td><td>N</td><td>Taoist priest</td></tr>
+                <tr><td>18</td><td class="hanzi">卷</td><td>juàn</td><td>M</td><td>volume (for books)</td></tr>
+                <tr><td>19</td><td class="hanzi">轻易</td><td>qīngyì</td><td>Adv</td><td>easily, rashly</td></tr>
+                <tr><td>20</td><td class="hanzi">抄写</td><td>chāoxiě</td><td>V</td><td>to copy (by hand), to transcribe</td></tr>
+                <tr><td>21</td><td class="hanzi">打听</td><td>dǎting</td><td>V</td><td>to inquire about, to ask about</td></tr>
+                <tr><td>22</td><td class="hanzi">特地</td><td>tèdì</td><td>Adv</td><td>specially, for a special purpose</td></tr>
+                <tr><td>23</td><td class="hanzi">悠闲</td><td>yōuxián</td><td>Adj</td><td>leisurely and carefree</td></tr>
+                <tr><td>24</td><td class="hanzi">浮游</td><td>fúyóu</td><td>V</td><td>to float</td></tr>
+                <tr><td>25</td><td class="hanzi">羽毛</td><td>yǔmáo</td><td>N</td><td>feather</td></tr>
+                <tr><td>26</td><td class="hanzi">映衬</td><td>yìngchèn</td><td>V</td><td>to set off by contrast</td></tr>
+                <tr><td>27</td><td class="hanzi">舍不得</td><td>shěbude</td><td>V</td><td>to hate to part with, to hate to give up or use</td></tr>
+                <tr><td>28</td><td class="hanzi">要求</td><td>yāoqiú</td><td>V/N</td><td>to demand, to request; requirement</td></tr>
+                <tr><td>29</td><td class="hanzi">心思</td><td>xīnsi</td><td>N</td><td>thoughts, mood</td></tr>
+                <tr><td>30</td><td class="hanzi">才华</td><td>cáihuá</td><td>N</td><td>talent</td></tr>
+                <tr><td>31</td><td class="hanzi">女婿</td><td>nǚxu</td><td>N</td><td>son-in-law</td></tr>
+                <tr><td>32</td><td class="hanzi">消息</td><td>xiāoxi</td><td>N</td><td>information, news</td></tr>
+                <tr><td>33</td><td class="hanzi">娶</td><td>qǔ</td><td>V</td><td>to take a wife, to marry (a woman)</td></tr>
+                <tr><td>34</td><td class="hanzi">学堂</td><td>xuétáng</td><td>N</td><td>school in old times</td></tr>
+                <tr><td>35</td><td class="hanzi">与众不同</td><td>yǔ zhòng bù tóng</td><td>IE</td><td>out of the ordinary, distinctive</td></tr>
+                <tr><td>36</td><td class="hanzi">聚精会神</td><td>jùjīng-huìshén</td><td>IE</td><td>to concentrate one’s attention</td></tr>
+                <tr><td>37</td><td class="hanzi">解开</td><td>jiěkāi</td><td>VC</td><td>to unbutton, to untie, to unfasten</td></tr>
+                <tr><td>38</td><td class="hanzi">露</td><td>lù</td><td>V</td><td>to reveal, to show</td></tr>
+                <tr><td>39</td><td class="hanzi">肚皮</td><td>dùpí</td><td>N</td><td>belly</td></tr>
+                <tr><td>40</td><td class="hanzi">馒头</td><td>mántou</td><td>N</td><td>steamed bun</td></tr>
+                <tr><td>41</td><td class="hanzi">盯</td><td>dīng</td><td>V</td><td>to stare at, to fix one’s eyes on</td></tr>
+                <tr><td>42</td><td class="hanzi">紧握</td><td>jǐnwò</td><td>VP</td><td>to grip, to hold firmly</td></tr>
+                <tr><td>43</td><td class="hanzi">认真</td><td>rènzhēn</td><td>Adj</td><td>serious, earnest</td></tr>
+                <tr><td>44</td><td class="hanzi">出众</td><td>chūzhòng</td><td>Adj</td><td>outstanding</td></tr>
+                <tr><td>45</td><td class="hanzi">拍</td><td>pāi</td><td>V</td><td>to clap</td></tr>
+                <tr><td>46</td><td class="hanzi">利用</td><td>lìyòng</td><td>V</td><td>to make use of</td></tr>
+                <tr><td>47</td><td class="hanzi">有出息</td><td>yǒu chūxi</td><td>VP</td><td>to have a promising future</td></tr>
+                <tr><td>48</td><td class="hanzi">表现</td><td>biǎoxiàn</td><td>V/*N</td><td>to show, to manifest; manifestation, conduct</td></tr>
+                <tr><td>49</td><td class="hanzi">干劲</td><td>gànjìn</td><td>N</td><td>(informal) drive, vigor</td></tr>
+                <tr><td>50</td><td class="hanzi">眼力</td><td>yǎnlì</td><td>N</td><td>vision, level of judgment</td></tr>
+                <tr><td>51</td><td class="hanzi">功劳</td><td>gōngláo</td><td>N</td><td>credit, merit</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Proper nouns</p>
+          <h2>Key names in Lesson 3.1</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>专名</th>
+                  <th>Pinyin</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">王羲之</td><td>Wáng Xīzhī</td><td>Wang Xizhi (303–361), famous calligrapher of the Eastern Jin Dynasty</td></tr>
+                <tr><td>2</td><td class="hanzi">东晋</td><td>Dōng Jìn</td><td>Eastern Jin Dynasty (317–420)</td></tr>
+                <tr><td>3</td><td class="hanzi">道德经</td><td>Dàodé Jīng</td><td>Tao Te Ching, book of Laozi</td></tr>
+                <tr><td>4</td><td class="hanzi">王献之</td><td>Wáng Xiànzhī</td><td>Wang Xianzhi (344–386), famous Chinese calligrapher, son of Wang Xizhi</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="hero-actions">
+          <a class="btn btn-secondary" href="word-explorer.html#unit3">Back to Word Explorer</a>
+          <a class="btn btn-primary" href="lesson-3-2-word.html">Next lesson</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Advanced Chinese for Humanities AI</p>
+      <p>Lesson 3.1 Word Explorer</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const WORKER_URL = "https://quiet-field-a529.xc2375.workers.dev";
+
+    const resultBox = document.getElementById("resultBox");
+    const studentQuestionInput = document.getElementById("studentQuestionInput");
+    const askAiBtn = document.getElementById("askAiBtn");
+    const fillExampleBtn = document.getElementById("fillExampleBtn");
+    const clearResultBtn = document.getElementById("clearResultBtn");
+
+    function setLoading() {
+      resultBox.innerHTML = '<span class="loading">Thinking…</span>';
+    }
+
+    function setError(message) {
+      resultBox.innerHTML = `<span class="error-text">${message}</span>`;
+    }
+
+    function setResult(text) {
+      resultBox.textContent = text;
+    }
+
+    function checkPatternQuestion(questionName, correctAnswer, correctFeedback) {
+      const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+
+      if (!selected) {
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = "Please choose an answer first.";
+        return;
+      }
+
+      if (selected.value === correctAnswer) {
+        feedbackBox.className = "mcq-feedback show correct";
+        feedbackBox.textContent = correctFeedback;
+      } else {
+        let message = "";
+
+        if (questionName === "q1") {
+          message = "Not quite. Here the key practical anchor is 特, because it directly links to lesson words such as 特殊 and 特地.";
+        } else if (questionName === "q2") {
+          message = "Not quite. Think about 扌 as a clue for hand actions. 打听, 抄, and 拍 are useful because they can be remembered together that way.";
+        } else if (questionName === "q3") {
+          message = "Not quite. In this lesson, 力 is most useful as a clue for strength, effort, labor, or achievement-related result.";
+        } else if (questionName === "q4") {
+          message = "Not quite. 众 is important because it appears in 与众不同 and 出众, and it also introduces the visual logic of repeated-component characters.";
+        }
+
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = message;
+      }
+    }
+
+    function resetPatternQuestion(questionName) {
+      document.querySelectorAll(`input[name="${questionName}"]`).forEach(input => input.checked = false);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+      feedbackBox.className = "mcq-feedback";
+      feedbackBox.textContent = "";
+    }
+
+    async function askStudentWordHelp(questionText) {
+      try {
+        setLoading();
+
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            course: "humanities2",
+            lesson: "3-1",
+            task: "student_word_help",
+            question: questionText,
+            context: "Lesson 3.1 discusses Wang Xizhi, calligraphy, practice, talent, public distinction, and character patterns such as 牛字旁 in 特, 扌 hand-action words, 力 as strength or effort, and repeated-component characters such as 众."
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed.");
+        }
+
+        const resultText = data.result || "No response returned.";
+        setResult(resultText);
+      } catch (error) {
+        setError(error.message || "Something went wrong.");
+      }
+    }
+
+    askAiBtn.addEventListener("click", async () => {
+      const question = studentQuestionInput.value.trim();
+      if (!question) {
+        setError("Please enter a question first.");
+        return;
+      }
+      await askStudentWordHelp(question);
+    });
+
+    fillExampleBtn.addEventListener("click", () => {
+      studentQuestionInput.value = "How does 众 help me understand 与众不同 and 出众 in this lesson?";
+    });
+
+    clearResultBtn.addEventListener("click", () => {
+      resultBox.textContent = "Ask a question to get started.";
+    });
+
+    const chipWraps = document.querySelectorAll(".concept-chip-wrap");
+
+    chipWraps.forEach((wrap) => {
+      const chip = wrap.querySelector(".concept-chip");
+      const tooltip = wrap.querySelector(".concept-tooltip");
+
+      chip.addEventListener("mouseenter", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.add("show");
+        }
+      });
+
+      chip.addEventListener("mouseleave", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.remove("show");
+        }
+      });
+
+      chip.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+          e.stopPropagation();
+          document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+            if (tip !== tooltip) tip.classList.remove("show");
+          });
+          tooltip.classList.toggle("show");
+        } else {
+          studentQuestionInput.value = `What does ${chip.textContent.trim()} mean in Lesson 3.1?`;
+          window.location.hash = "ai-tools";
+        }
+      });
+
+      tooltip.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+        tip.classList.remove("show");
+      });
+    });
+  </script>
+</body>
+</html>
