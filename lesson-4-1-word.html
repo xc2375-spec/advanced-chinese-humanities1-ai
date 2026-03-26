@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 4.1 Word Explorer | Advanced Chinese for Humanities AI</title>
+  <meta
+    name="description"
+    content="Lesson 4.1 Word Explorer for Advanced Chinese for Humanities: 梁山伯与祝英台 vocabulary system, radicals, character patterns, and guided AI support."
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .lesson-hero {
+      padding-top: 2.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .lesson-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1rem 0 0;
+    }
+
+    .breadcrumb {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .group-grid,
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .group-card h3,
+    .pattern-card h3,
+    .tool-card h3,
+    .result-card h3,
+    .vocab-card h3,
+    .name-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      font-size: 1.08rem;
+      color: var(--primary-dark);
+    }
+
+    .group-card p,
+    .pattern-card p,
+    .tool-card p,
+    .result-card p,
+    .vocab-card p,
+    .name-card p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .concept-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+    }
+
+    .concept-chip-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .concept-chip,
+    .name-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: #f6ecdf;
+      color: var(--primary-dark);
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: 1px solid #e2d0b8;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .concept-chip:hover,
+    .name-chip:hover {
+      background: #f1e2cd;
+      transform: translateY(-1px);
+    }
+
+    .concept-tooltip {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.45rem);
+      min-width: 210px;
+      max-width: 270px;
+      background: #fffdf9;
+      border: 1px solid #decbb2;
+      border-radius: 14px;
+      box-shadow: 0 12px 26px rgba(80, 56, 32, 0.12);
+      padding: 0.75rem 0.85rem;
+      z-index: 30;
+      display: none;
+    }
+
+    .concept-tooltip.show {
+      display: block;
+    }
+
+    .tooltip-word {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-pinyin {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-english {
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-bottom: 0.22rem;
+      line-height: 1.4;
+    }
+
+    .tooltip-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .char-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .char-badge {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      border: 1px solid #e7d7c2;
+      min-width: 90px;
+    }
+
+    .char-badge strong {
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .char-badge span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.24;
+    }
+
+    .memory-tip {
+      margin-top: 0.8rem;
+      padding: 0.85rem 0.95rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      color: var(--text);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .mcq-box {
+      margin-top: 1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid #eadfce;
+    }
+
+    .mcq-question {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.7rem;
+      line-height: 1.5;
+    }
+
+    .mcq-options {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .mcq-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 10px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+    }
+
+    .mcq-actions {
+      margin-top: 0.85rem;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: none;
+      min-height: 38px;
+      padding: 0 0.95rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .small-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .small-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .small-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .mcq-feedback {
+      margin-top: 0.9rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      line-height: 1.6;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    .mcq-feedback.show {
+      display: block;
+    }
+
+    .mcq-feedback.correct {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .mcq-feedback.incorrect {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
+    .tools-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 1.25rem;
+      margin-top: 1.2rem;
+    }
+
+    .tool-card label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--primary-dark);
+      font-size: 0.95rem;
+    }
+
+    .tool-card textarea,
+    .tool-card input {
+      width: 100%;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid #d9c7b1;
+      border-radius: 12px;
+      background: #fffdf9;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .tool-card textarea {
+      min-height: 170px;
+      resize: vertical;
+    }
+
+    .tool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .tool-btn {
+      border: none;
+      min-height: 44px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .tool-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .tool-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .tool-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .result-card {
+      min-height: 400px;
+    }
+
+    .result-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .result-box {
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fffdf9;
+      border: 1px solid #e7dac7;
+      border-radius: 14px;
+      padding: 1rem;
+      min-height: 270px;
+    }
+
+    .loading {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .error-text {
+      color: #a33a2b;
+      font-weight: 700;
+    }
+
+    .helper-list {
+      margin: 0.85rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+    }
+
+    .helper-list li + li {
+      margin-top: 0.35rem;
+    }
+
+    .vocab-table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    table.vocab-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .vocab-table th,
+    .vocab-table td {
+      padding: 0.78rem 0.85rem;
+      border-bottom: 1px solid #eadfce;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.95rem;
+    }
+
+    .vocab-table th {
+      background: #f7efe3;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .vocab-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .vocab-table tr:hover {
+      background: #fcf8f2;
+    }
+
+    .hanzi {
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    /* Hanzi writing */
+    .hanzi-practice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .hanzi-practice-card {
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      border-radius: 16px;
+      padding: 1rem;
+    }
+
+    .practice-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .practice-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: #f4e7d6;
+      color: var(--primary-dark);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .practice-pinyin {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.15rem;
+    }
+
+    .practice-english {
+      font-size: 0.93rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .practice-input {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid #d9c7b1;
+      border-radius: 12px;
+      background: #fff;
+      padding: 0.7rem 0.85rem;
+      font: inherit;
+      font-size: 1.05rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    .practice-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .practice-feedback {
+      display: none;
+      margin-top: 0.8rem;
+      padding: 0.8rem 0.9rem;
+      border-radius: 12px;
+      line-height: 1.6;
+      border: 1px solid #eadfce;
+      background: #fffdf9;
+      white-space: pre-wrap;
+    }
+
+    .practice-feedback.show {
+      display: block;
+    }
+
+    .practice-feedback.correct {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .practice-feedback.incorrect {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
+    /* Stroke modal */
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    .stroke-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(45, 36, 28, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 9999;
+    }
+
+    .stroke-modal.show {
+      display: flex;
+    }
+
+    .stroke-modal-panel {
+      width: min(820px, 96vw);
+      max-height: 88vh;
+      overflow: auto;
+      background: #fffdf9;
+      border: 1px solid #e2d3c2;
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(42, 30, 20, 0.18);
+      padding: 1.1rem 1.1rem 1.2rem;
+    }
+
+    .stroke-modal-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stroke-modal-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 0;
+    }
+
+    .stroke-modal-subtitle {
+      color: var(--muted);
+      margin: 0.2rem 0 0;
+      line-height: 1.5;
+    }
+
+    .stroke-close-btn {
+      border: none;
+      background: #f4e7d6;
+      color: var(--primary-dark);
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .stroke-modal-actions {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin: 0.8rem 0 1rem;
+    }
+
+    .stroke-anim-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .stroke-char-card {
+      background: #fcf8f2;
+      border: 1px solid #eadfce;
+      border-radius: 16px;
+      padding: 0.85rem;
+      min-width: 150px;
+    }
+
+    .stroke-char-label {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .stroke-writer-box {
+      width: 128px;
+      height: 128px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #e3d5c5;
+      border-radius: 14px;
+    }
+
+    @media (max-width: 960px) {
+      .group-grid,
+      .pattern-grid,
+      .tools-layout,
+      .hanzi-practice-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .concept-tooltip {
+        max-width: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities</h1>
+          <p class="site-subtitle">人文天下：高级汉语教程·上 / 下</p>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="word-explorer.html">Word Explorer</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#ai-tools">AI Box</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <div class="container">
+        <div class="breadcrumb">Home → Word Explorer → Unit 4 → Lesson 4.1</div>
+        <p class="eyebrow">Lesson 4.1</p>
+        <h2 class="page-title">梁山伯与祝英台</h2>
+        <p class="page-intro">
+          This lesson connects legend, folk transmission, education, talent, arranged marriage,
+          loyalty, separation, and tragic love. Try to learn the new words through visible character
+          patterns: characters with the 口 component, top-bottom structures, 土-bottom forms,
+          王-bottom forms, and 言-related forms.
+        </p>
+
+        <div class="lesson-meta">
+          <span class="tag">Unit 4: 女性・婚姻・社会</span>
+          <span class="tag">Theme: Love, Legend, Marriage, Social Constraint</span>
+          <span class="tag">Module: Word Explorer</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Concept Net</p>
+          <h2>Hover or tap to preview key words</h2>
+        </div>
+
+        <div class="group-grid">
+          <div class="card group-card">
+            <h3>A. 民间传说与艺术传播</h3>
+            <p>These words help students understand the story as a cultural work that circulates through performance and memory.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">民间</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">民间</div>
+                  <div class="tooltip-pinyin">mínjiān</div>
+                  <div class="tooltip-english">folk, non-governmental</div>
+                  <div class="tooltip-note">a key word for cultural tradition outside official institutions</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">口头</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">口头</div>
+                  <div class="tooltip-pinyin">kǒutóu</div>
+                  <div class="tooltip-english">oral, verbal</div>
+                  <div class="tooltip-note">helps students understand oral transmission and spoken tradition</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">传承</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">传承</div>
+                  <div class="tooltip-pinyin">chuánchéng</div>
+                  <div class="tooltip-english">to pass on to future generations</div>
+                  <div class="tooltip-note">a strong culture-and-memory word</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">戏剧</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">戏剧</div>
+                  <div class="tooltip-pinyin">xìjù</div>
+                  <div class="tooltip-english">drama, play, theater</div>
+                  <div class="tooltip-note">the story exists not only as a tale, but also through staged performance</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">作品</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">作品</div>
+                  <div class="tooltip-pinyin">zuòpǐn</div>
+                  <div class="tooltip-english">works of art</div>
+                  <div class="tooltip-note">good for discussing adaptation across genres</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">家喻户晓</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">家喻户晓</div>
+                  <div class="tooltip-pinyin">jiāyù-hùxiǎo</div>
+                  <div class="tooltip-english">known to every household</div>
+                  <div class="tooltip-note">perfect for describing a story that everyone knows</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>B. 才学、名声与人物评价</h3>
+            <p>These words help students describe learning, talent, reputation, and excellence.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">才学</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">才学</div>
+                  <div class="tooltip-pinyin">cáixué</div>
+                  <div class="tooltip-english">talent and learning, scholarship</div>
+                  <div class="tooltip-note">combines natural ability and cultivated learning</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">名师</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">名师</div>
+                  <div class="tooltip-pinyin">míngshī</div>
+                  <div class="tooltip-english">famous master, great teacher</div>
+                  <div class="tooltip-note">useful for discussing prestige in education</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">博学多才</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">博学多才</div>
+                  <div class="tooltip-pinyin">bóxué duōcái</div>
+                  <div class="tooltip-english">erudite and multi-talented</div>
+                  <div class="tooltip-note">a high-value descriptive phrase for accomplished people</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">优秀</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">优秀</div>
+                  <div class="tooltip-pinyin">yōuxiù</div>
+                  <div class="tooltip-english">outstanding, excellent</div>
+                  <div class="tooltip-note">common modern evaluation word</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">多才多艺</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">多才多艺</div>
+                  <div class="tooltip-pinyin">duōcái-duōyì</div>
+                  <div class="tooltip-english">multi-talented</div>
+                  <div class="tooltip-note">good for comparing different shades of accomplishment</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">富足</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">富足</div>
+                  <div class="tooltip-pinyin">fùzú</div>
+                  <div class="tooltip-english">rich, plentiful</div>
+                  <div class="tooltip-note">describes abundance in material life</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>C. 婚姻、门第与社会束缚</h3>
+            <p>These words help students discuss arranged marriage, social match, and compromise under pressure.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">做媒</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">做媒</div>
+                  <div class="tooltip-pinyin">zuòméi</div>
+                  <div class="tooltip-english">to act as go-between</div>
+                  <div class="tooltip-note">a central marriage word in traditional society</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">门当户对</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">门当户对</div>
+                  <div class="tooltip-pinyin">méndāng-hùduì</div>
+                  <div class="tooltip-english">well-matched in family status</div>
+                  <div class="tooltip-note">a classic phrase for socially acceptable marriage matching</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">家境</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">家境</div>
+                  <div class="tooltip-pinyin">jiājìng</div>
+                  <div class="tooltip-english">family financial situation</div>
+                  <div class="tooltip-note">helps students see how marriage is tied to class background</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">妥协</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">妥协</div>
+                  <div class="tooltip-pinyin">tuǒxié</div>
+                  <div class="tooltip-english">to compromise</div>
+                  <div class="tooltip-note">useful for discussing emotional and social pressure</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">许配</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">许配</div>
+                  <div class="tooltip-pinyin">xǔpèi</div>
+                  <div class="tooltip-english">to betroth a girl</div>
+                  <div class="tooltip-note">a traditional arranged-marriage term</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">有钱有势</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">有钱有势</div>
+                  <div class="tooltip-pinyin">yǒu qián yǒu shì</div>
+                  <div class="tooltip-english">rich and powerful</div>
+                  <div class="tooltip-note">links directly to class and marriage status</div>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>D. 悲剧、风雨与离别</h3>
+            <p>These words help students describe emotional crisis, physical disruption, and tragic intensity.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">形影不离</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">形影不离</div>
+                  <div class="tooltip-pinyin">xíngyǐng-bùlí</div>
+                  <div class="tooltip-english">inseparable as form and shadow</div>
+                  <div class="tooltip-note">a beautiful phrase for deep closeness</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">悲痛欲绝</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">悲痛欲绝</div>
+                  <div class="tooltip-pinyin">bēitòng yù jué</div>
+                  <div class="tooltip-english">extremely grieved</div>
+                  <div class="tooltip-note">a high-intensity grief phrase</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">狂风大作</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">狂风大作</div>
+                  <div class="tooltip-pinyin">kuángfēng dà zuò</div>
+                  <div class="tooltip-english">a fierce gale sprang up</div>
+                  <div class="tooltip-note">very visual and dramatic, useful for storytelling</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">裂开</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">裂开</div>
+                  <div class="tooltip-pinyin">lièkāi</div>
+                  <div class="tooltip-english">to split open</div>
+                  <div class="tooltip-note">strong visual resultative expression</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">合上</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">合上</div>
+                  <div class="tooltip-pinyin">héshang</div>
+                  <div class="tooltip-english">to close</div>
+                  <div class="tooltip-note">useful everyday verb with clear directional/result sense</div>
+                </span>
+              </span>
+
+              <span class="concept-chip-wrap">
+                <button class="concept-chip">彩虹</button>
+                <span class="concept-tooltip">
+                  <div class="tooltip-word">彩虹</div>
+                  <div class="tooltip-pinyin">cǎihóng</div>
+                  <div class="tooltip-english">rainbow</div>
+                  <div class="tooltip-note">a visual word that also softens the emotional ending in memory work</div>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card name-card" style="margin-top: 1rem;">
+          <h3>Key names in this lesson</h3>
+          <div class="concept-list">
+            <span class="name-chip">梁山伯</span>
+            <span class="name-chip">祝英台</span>
+            <span class="name-chip">班昭</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="patterns" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Focus on Patterns</p>
+          <h2>Learn through parts, structures, and visible character families</h2>
+        </div>
+
+        <div class="pattern-grid">
+          <div class="card pattern-card">
+            <h3>1. 含口字部件的字：说、答、合、名、喻</h3>
+            <p>
+              This lesson gives several useful words containing the <strong>口</strong> component,
+              which often helps students think about speech, response, naming, or an opening/closing action.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>口头</strong><span>kǒutóu</span><span>oral</span></div>
+              <div class="char-badge"><strong>答应</strong><span>dāying</span><span>to agree / respond</span></div>
+              <div class="char-badge"><strong>合上</strong><span>héshang</span><span>to close</span></div>
+              <div class="char-badge"><strong>名师</strong><span>míngshī</span><span>great teacher</span></div>
+              <div class="char-badge"><strong>家喻户晓</strong><span>yù / xiǎo</span><span>known to all</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> when students see 口 as a component, ask whether the word involves
+              saying, responding, naming, calling, or an opening/closing movement.
+              In this lesson, <strong>口头 / 答应 / 合上 / 名师</strong> make a nice starter cluster.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                In Lesson 4.1, what is the most useful way to teach characters containing 口?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q1" value="A" /> A. Link them to speech, response, naming, or mouth/opening actions when relevant</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="B" /> B. Treat them all as identical in meaning</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="C" /> C. Ignore the component completely</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="D" /> D. Teach them only as proper nouns</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q1','A',`Correct. In this lesson, 口-containing characters are most useful when linked to speech, response, naming, or mouth/opening actions where that connection is helpful.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q1')">Reset</button>
+              </div>
+              <div id="feedback-q1" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>2. 上下结构：看“学、答、委、墓、虹”这些字怎么叠起来</h3>
+            <p>
+              This lesson is rich in <strong>top-bottom structure</strong>. Students can strengthen visual organization
+              by noticing that many important characters are built vertically rather than left-right.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>学</strong><span>xué</span><span>top-bottom</span></div>
+              <div class="char-badge"><strong>答</strong><span>dá</span><span>top-bottom</span></div>
+              <div class="char-badge"><strong>委</strong><span>wěi</span><span>top-bottom</span></div>
+              <div class="char-badge"><strong>墓</strong><span>mù</span><span>top-bottom</span></div>
+              <div class="char-badge"><strong>虹</strong><span>hóng</span><span>left-right actually, contrast</span></div>
+              <div class="char-badge"><strong>英</strong><span>yīng</span><span>top-bottom</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> do not only teach meaning—teach <strong>shape habits</strong>.
+              In this lesson, students can compare top-bottom words like <strong>学 / 答 / 委 / 墓 / 英</strong>
+              with non-top-bottom words to sharpen visual awareness.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                Why is noticing 上下结构 helpful in Lesson 4.1?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q2" value="A" /> A. It helps students build stronger visual memory for character shape</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="B" /> B. It replaces the need to learn meaning</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="C" /> C. It only matters for handwriting competitions</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="D" /> D. It means every word in the lesson has the same structure</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q2','A',`Correct. Noticing 上下结构 helps students strengthen visual memory and see how characters are built, which supports both reading and writing.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q2')">Reset</button>
+              </div>
+              <div id="feedback-q2" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>3. 土字底、王字底：墓、墓地；宝、英台里的“王”形收尾</h3>
+            <p>
+              This lesson offers a good chance to point out <strong>土-bottom</strong> and also some visually memorable
+              lower parts that students can notice as “ending shapes,” including 王-like bottoms in certain characters.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>墓</strong><span>mù</span><span>土 at the bottom</span></div>
+              <div class="char-badge"><strong>坟墓</strong><span>fénmù</span><span>tomb</span></div>
+              <div class="char-badge"><strong>台</strong><span>tái</span><span>base / platform shape</span></div>
+              <div class="char-badge"><strong>宝</strong><span>bǎo</span><span>bottom shape cue</span></div>
+              <div class="char-badge"><strong>英</strong><span>yīng</span><span>clear lower ending</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> for intermediate learners, it is often enough to say:
+              “Look at the <strong>bottom ending shape</strong>.” That makes characters like
+              <strong>墓</strong> easier to remember because students can anchor the lower part visually.
+              Here, <strong>墓</strong> is the strongest 土字底 example in the lesson.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                In Lesson 4.1, which word is the clearest 土字底 teaching anchor?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q3" value="A" /> A. 民间</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="B" /> B. 坟墓</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="C" /> C. 口头</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="D" /> D. 彩虹</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q3','B',`Correct. 坟墓 is the clearest 土字底 anchor in this lesson, especially through the character 墓.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q3')">Reset</button>
+              </div>
+              <div id="feedback-q3" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>4. 言字底 / 言字旁相关：许、答应、口头、发誓</h3>
+            <p>
+              This lesson is also strong for <strong>speech and promise language</strong>.
+              Even when the exact form is not always the same, students can group together words tied to speaking,
+              promising, swearing, and verbal agreement.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>许</strong><span>xǔ</span><span>permit / promise</span></div>
+              <div class="char-badge"><strong>允许</strong><span>yǔnxǔ</span><span>to permit</span></div>
+              <div class="char-badge"><strong>答应</strong><span>dāying</span><span>to agree</span></div>
+              <div class="char-badge"><strong>发誓</strong><span>fāshì</span><span>to vow</span></div>
+              <div class="char-badge"><strong>口头</strong><span>kǒutóu</span><span>oral</span></div>
+              <div class="char-badge"><strong>许配</strong><span>xǔpèi</span><span>to betroth</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> here the best teaching move is to build a <strong>speech-act network</strong>:
+              speaking, agreeing, promising, permitting, vowing. That makes
+              <strong>允许 / 答应 / 发誓 / 口头 / 许配</strong> easier to remember together.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">
+                What is the best way to teach this lesson’s “言-related” words?
+              </div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q4" value="A" /> A. Build a speech-act meaning network: speak, agree, permit, promise, vow</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="B" /> B. Teach them as random unrelated words</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="C" /> C. Ignore meaning and only copy the characters</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="D" /> D. Treat every one of them as exactly the same as 说</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q4','A',`Correct. The strongest move here is to build a speech-act meaning network: speaking, agreeing, permitting, promising, and vowing.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q4')">Reset</button>
+              </div>
+              <div id="feedback-q4" class="mcq-feedback"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="write-hanzi" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Write the Hanzi</p>
+          <h2>Read the pinyin and English, then write the Chinese characters</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <p>
+            Type the hanzi based on the pinyin and English meaning.
+            Click <strong>Hint</strong> to open a pop-up with stroke-order animation.
+          </p>
+
+          <div id="hanziPracticeGrid" class="hanzi-practice-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-tools" class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">AI Question Box</p>
+          <h2>Ask about meaning, usage, radicals, or structure patterns</h2>
+        </div>
+
+        <div class="tools-layout">
+          <div class="card tool-card">
+            <h3>Ask AI about this lesson</h3>
+            <p>
+              You can ask about vocabulary, marriage terms, structure patterns,
+              components, or the emotional language of the story.
+            </p>
+
+            <label for="studentQuestionInput">Your question</label>
+            <textarea id="studentQuestionInput" placeholder="Examples:
+How do I remember 门当户对 and 做媒 together?
+Why is 坟墓 a good 土字底 example?
+What is the difference between 博学多才 and 多才多艺?
+How should I teach 允许, 答应, and 发誓 together?"></textarea>
+
+            <div class="tool-actions">
+              <button class="tool-btn" id="askAiBtn">Ask AI</button>
+              <button class="tool-btn secondary" id="fillExampleBtn">Use Example Question</button>
+            </div>
+
+            <ul class="helper-list">
+              <li>Ask one clear question at a time.</li>
+              <li>Use Chinese words when possible.</li>
+              <li>Try asking about visible parts, structure, or meaning networks.</li>
+            </ul>
+          </div>
+
+          <div class="card result-card">
+            <h3>AI response</h3>
+            <div class="result-meta">
+              <span class="tag">Course: humanities2</span>
+              <span class="tag">Lesson: 4-1</span>
+              <span class="tag" id="currentTaskTag">Task: student question</span>
+            </div>
+
+            <div id="resultBox" class="result-box">
+Ask a question to get started.
+            </div>
+
+            <div class="tool-actions" style="margin-top: 1rem;">
+              <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vocabulary" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Vocabulary list</p>
+          <h2>Lesson 4.1 New Words</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <p>This is the full vocabulary list for the lesson.</p>
+
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>词语</th>
+                  <th>Pinyin</th>
+                  <th>POS</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">民间</td><td>mínjiān</td><td>N</td><td>folk, non-governmental</td></tr>
+                <tr><td>2</td><td class="hanzi">口头</td><td>kǒutóu</td><td>Adj</td><td>oral, verbal</td></tr>
+                <tr><td>3</td><td class="hanzi">传承</td><td>chuánchéng</td><td>V</td><td>to pass on</td></tr>
+                <tr><td>4</td><td class="hanzi">戏剧</td><td>xìjù</td><td>N</td><td>drama, play, theater</td></tr>
+                <tr><td>5</td><td class="hanzi">作品</td><td>zuòpǐn</td><td>N</td><td>works of art</td></tr>
+                <tr><td>6</td><td class="hanzi">拍</td><td>pāi</td><td>V</td><td>to film, to shoot (a picture), to pat</td></tr>
+                <tr><td>7</td><td class="hanzi">作曲家</td><td>zuòqǔjiā</td><td>N</td><td>composer</td></tr>
+                <tr><td>8</td><td class="hanzi">小提琴</td><td>xiǎotíqín</td><td>N</td><td>violin, fiddle</td></tr>
+                <tr><td>9</td><td class="hanzi">家喻户晓</td><td>jiāyù-hùxiǎo</td><td>IE</td><td>known to every household</td></tr>
+                <tr><td>10</td><td class="hanzi">员外</td><td>yuánwài</td><td>N</td><td>ministry councilor (old usage)</td></tr>
+                <tr><td>11</td><td class="hanzi">富足</td><td>fùzú</td><td>Adj</td><td>rich, plentiful</td></tr>
+                <tr><td>12</td><td class="hanzi">唯一</td><td>wéiyī</td><td>Adj</td><td>only, sole</td></tr>
+                <tr><td>13</td><td class="hanzi">才学</td><td>cáixué</td><td>N</td><td>talent and learning, scholarship</td></tr>
+                <tr><td>14</td><td class="hanzi">名师</td><td>míngshī</td><td>N</td><td>famous master, great teacher</td></tr>
+                <tr><td>15</td><td class="hanzi">允许</td><td>yǔnxǔ</td><td>V</td><td>to permit, to allow</td></tr>
+                <tr><td>16</td><td class="hanzi">勉强</td><td>miǎnqiǎng</td><td>Adj/V</td><td>reluctant, barely enough; to force</td></tr>
+                <tr><td>17</td><td class="hanzi">博学多才</td><td>bóxué duōcái</td><td>IE</td><td>erudite and multi-talented</td></tr>
+                <tr><td>18</td><td class="hanzi">优秀</td><td>yōuxiù</td><td>Adj</td><td>outstanding, excellent</td></tr>
+                <tr><td>19</td><td class="hanzi">无巧不成书</td><td>wú qiǎo bù chéng shū</td><td>IE</td><td>without coincidences there would be no stories</td></tr>
+                <tr><td>20</td><td class="hanzi">一见如故</td><td>yíjiàn-rúgù</td><td>IE</td><td>to feel like old friends at first sight</td></tr>
+                <tr><td>21</td><td class="hanzi">结拜</td><td>jiébài</td><td>V</td><td>to swear to become sworn brothers or sisters</td></tr>
+                <tr><td>22</td><td class="hanzi">形影不离</td><td>xíngyǐng-bùlí</td><td>IE</td><td>inseparable (as form and shadow)</td></tr>
+                <tr><td>23</td><td class="hanzi">双胞胎</td><td>shuāngbāotāi</td><td>N</td><td>twins</td></tr>
+                <tr><td>24</td><td class="hanzi">做媒</td><td>zuòméi</td><td>VO</td><td>to act as go-between</td></tr>
+                <tr><td>25</td><td class="hanzi">答应</td><td>dāying</td><td>V</td><td>to agree, to promise, to respond</td></tr>
+                <tr><td>26</td><td class="hanzi">太守</td><td>tàishǒu</td><td>N</td><td>prefecture chief in feudal China</td></tr>
+                <tr><td>27</td><td class="hanzi">多才多艺</td><td>duōcái-duōyì</td><td>IE</td><td>multi-talented</td></tr>
+                <tr><td>28</td><td class="hanzi">门当户对</td><td>méndāng-hùduì</td><td>IE</td><td>well-matched in social and economic status</td></tr>
+                <tr><td>29</td><td class="hanzi">坚决</td><td>jiānjué</td><td>Adj</td><td>resolute, firm, determined</td></tr>
+                <tr><td>30</td><td class="hanzi">由</td><td>yóu</td><td>Prep</td><td>by</td></tr>
+                <tr><td>31</td><td class="hanzi">有钱有势</td><td>yǒu qián yǒu shì</td><td>IE</td><td>rich and powerful</td></tr>
+                <tr><td>32</td><td class="hanzi">家境</td><td>jiājìng</td><td>N</td><td>family financial situation</td></tr>
+                <tr><td>33</td><td class="hanzi">妥协</td><td>tuǒxié</td><td>V</td><td>to compromise</td></tr>
+                <tr><td>34</td><td class="hanzi">埋头</td><td>máitóu</td><td>VO</td><td>to immerse oneself in</td></tr>
+                <tr><td>35</td><td class="hanzi">学业</td><td>xuéyè</td><td>N</td><td>school work</td></tr>
+                <tr><td>36</td><td class="hanzi">动身</td><td>dòngshēn</td><td>VO</td><td>to leave, to go on a journey</td></tr>
+                <tr><td>37</td><td class="hanzi">喜出望外</td><td>xǐchūwàngwài</td><td>IE</td><td>overjoyed at unexpected good news</td></tr>
+                <tr><td>38</td><td class="hanzi">许配</td><td>xǔpèi</td><td>V</td><td>to betroth a girl</td></tr>
+                <tr><td>39</td><td class="hanzi">发誓</td><td>fāshì</td><td>VO</td><td>to vow, to swear</td></tr>
+                <tr><td>40</td><td class="hanzi">无意中</td><td>wúyì zhōng</td><td>Adv</td><td>accidentally, unintentionally</td></tr>
+                <tr><td>41</td><td class="hanzi">锁</td><td>suǒ</td><td>V</td><td>to lock up, to lock</td></tr>
+                <tr><td>42</td><td class="hanzi">过度</td><td>guòdù</td><td>Adj</td><td>excessive, over-, going too far</td></tr>
+                <tr><td>43</td><td class="hanzi">悲痛欲绝</td><td>bēitòng yù jué</td><td>IE</td><td>extremely grieved</td></tr>
+                <tr><td>44</td><td class="hanzi">花轿</td><td>huājiào</td><td>N</td><td>marriage sedan</td></tr>
+                <tr><td>45</td><td class="hanzi">坟墓</td><td>fénmù</td><td>N</td><td>sepulcher, tomb</td></tr>
+                <tr><td>46</td><td class="hanzi">狂风大作</td><td>kuángfēng dà zuò</td><td>IE</td><td>fierce gale sprang up</td></tr>
+                <tr><td>47</td><td class="hanzi">裂开</td><td>lièkāi</td><td>VC</td><td>to split open</td></tr>
+                <tr><td>48</td><td class="hanzi">合上</td><td>héshang</td><td>VC</td><td>to close (box, book, mouth, etc.)</td></tr>
+                <tr><td>49</td><td class="hanzi">彩虹</td><td>cǎihóng</td><td>N</td><td>rainbow</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Proper nouns</p>
+          <h2>Key names in Lesson 4.1</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>专名</th>
+                  <th>Pinyin</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">梁山伯</td><td>Liáng Shānbó</td><td>name of a person</td></tr>
+                <tr><td>2</td><td class="hanzi">祝英台</td><td>Zhù Yīngtái</td><td>name of a person</td></tr>
+                <tr><td>3</td><td class="hanzi">班昭</td><td>Bān Zhāo</td><td>Ban Zhao (45–117), first female Chinese historian</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="hero-actions">
+          <a class="btn btn-secondary" href="word-explorer.html#unit4">Back to Word Explorer</a>
+          <a class="btn btn-primary" href="lesson-4-2-word.html">Next lesson</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="strokeHintModal" class="stroke-modal" aria-hidden="true">
+    <div class="stroke-modal-panel">
+      <div class="stroke-modal-top">
+        <div>
+          <h3 id="strokeModalTitle" class="stroke-modal-title">Stroke Hint</h3>
+          <p id="strokeModalSubtitle" class="stroke-modal-subtitle"></p>
+        </div>
+        <button id="closeStrokeModal" class="stroke-close-btn" type="button">×</button>
+      </div>
+
+      <div class="stroke-modal-actions">
+        <button id="replayStrokeBtn" class="small-btn" type="button">Replay</button>
+        <button id="closeStrokeModalBtn2" class="small-btn secondary" type="button">Close</button>
+      </div>
+
+      <div id="strokeAnimGrid" class="stroke-anim-grid"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Advanced Chinese for Humanities AI</p>
+      <p>Lesson 4.1 Word Explorer</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.0/dist/hanzi-writer.min.js"></script>
+  <script>
+    const WORKER_URL = "https://quiet-field-a529.xc2375.workers.dev";
+
+    const resultBox = document.getElementById("resultBox");
+    const studentQuestionInput = document.getElementById("studentQuestionInput");
+    const askAiBtn = document.getElementById("askAiBtn");
+    const fillExampleBtn = document.getElementById("fillExampleBtn");
+    const clearResultBtn = document.getElementById("clearResultBtn");
+
+    function setLoading() {
+      resultBox.innerHTML = '<span class="loading">Thinking…</span>';
+    }
+
+    function setError(message) {
+      resultBox.innerHTML = `<span class="error-text">${message}</span>`;
+    }
+
+    function setResult(text) {
+      resultBox.textContent = text;
+    }
+
+    function checkPatternQuestion(questionName, correctAnswer, correctFeedback) {
+      const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+
+      if (!selected) {
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = "Please choose an answer first.";
+        return;
+      }
+
+      if (selected.value === correctAnswer) {
+        feedbackBox.className = "mcq-feedback show correct";
+        feedbackBox.textContent = correctFeedback;
+      } else {
+        let message = "";
+
+        if (questionName === "q1") {
+          message = "Not quite. The best move here is to connect 口-containing characters to speech, response, naming, or opening/closing actions when that meaning bridge is useful.";
+        } else if (questionName === "q2") {
+          message = "Not quite. 上下结构 matters because it strengthens students’ visual memory for how characters are built.";
+        } else if (questionName === "q3") {
+          message = "Not quite. 坟墓 is the clearest 土字底 anchor here, especially through 墓.";
+        } else if (questionName === "q4") {
+          message = "Not quite. The best way here is to build a speech-act network: permit, agree, promise, vow, oral speech.";
+        }
+
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = message;
+      }
+    }
+
+    function resetPatternQuestion(questionName) {
+      document.querySelectorAll(`input[name="${questionName}"]`).forEach(input => input.checked = false);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+      feedbackBox.className = "mcq-feedback";
+      feedbackBox.textContent = "";
+    }
+
+    async function askStudentWordHelp(questionText) {
+      try {
+        setLoading();
+
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            course: "humanities2",
+            lesson: "4-1",
+            task: "student_word_help",
+            question: questionText,
+            context: "Lesson 4.1 discusses Liang Shanbo and Zhu Yingtai, folk legend, love, arranged marriage, school, talent, social status, and visible pattern learning through 口 components, top-bottom structure, 土-bottom examples, 王-like lower endings, and speech-act words."
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed.");
+        }
+
+        const resultText = data.result || "No response returned.";
+        setResult(resultText);
+      } catch (error) {
+        setError(error.message || "Something went wrong.");
+      }
+    }
+
+    askAiBtn.addEventListener("click", async () => {
+      const question = studentQuestionInput.value.trim();
+      if (!question) {
+        setError("Please enter a question first.");
+        return;
+      }
+      await askStudentWordHelp(question);
+    });
+
+    fillExampleBtn.addEventListener("click", () => {
+      studentQuestionInput.value = "How should I teach 允许, 答应, and 发誓 together in Lesson 4.1?";
+    });
+
+    clearResultBtn.addEventListener("click", () => {
+      resultBox.textContent = "Ask a question to get started.";
+    });
+
+    const chipWraps = document.querySelectorAll(".concept-chip-wrap");
+
+    chipWraps.forEach((wrap) => {
+      const chip = wrap.querySelector(".concept-chip");
+      const tooltip = wrap.querySelector(".concept-tooltip");
+
+      chip.addEventListener("mouseenter", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.add("show");
+        }
+      });
+
+      chip.addEventListener("mouseleave", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.remove("show");
+        }
+      });
+
+      chip.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+          e.stopPropagation();
+          document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+            if (tip !== tooltip) tip.classList.remove("show");
+          });
+          tooltip.classList.toggle("show");
+        } else {
+          studentQuestionInput.value = `What does ${chip.textContent.trim()} mean in Lesson 4.1?`;
+          window.location.hash = "ai-tools";
+        }
+      });
+
+      tooltip.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+        tip.classList.remove("show");
+      });
+    });
+
+    /* Hanzi Writing Practice for Lesson 4.1 */
+    const hanziPracticeData = [
+      { answer: "民间", pinyin: "mínjiān", english: "folk, non-governmental" },
+      { answer: "口头", pinyin: "kǒutóu", english: "oral, verbal" },
+      { answer: "传承", pinyin: "chuánchéng", english: "to pass on" },
+      { answer: "戏剧", pinyin: "xìjù", english: "drama, theater" },
+      { answer: "答应", pinyin: "dāying", english: "to agree, to promise" },
+      { answer: "门当户对", pinyin: "méndāng-hùduì", english: "well-matched in status" },
+      { answer: "妥协", pinyin: "tuǒxié", english: "to compromise" },
+      { answer: "许配", pinyin: "xǔpèi", english: "to betroth a girl" },
+      { answer: "坟墓", pinyin: "fénmù", english: "tomb" },
+      { answer: "彩虹", pinyin: "cǎihóng", english: "rainbow" }
+    ];
+
+    const hanziPracticeGrid = document.getElementById("hanziPracticeGrid");
+    const strokeHintModal = document.getElementById("strokeHintModal");
+    const strokeAnimGrid = document.getElementById("strokeAnimGrid");
+    const strokeModalTitle = document.getElementById("strokeModalTitle");
+    const strokeModalSubtitle = document.getElementById("strokeModalSubtitle");
+    const closeStrokeModal = document.getElementById("closeStrokeModal");
+    const closeStrokeModalBtn2 = document.getElementById("closeStrokeModalBtn2");
+    const replayStrokeBtn = document.getElementById("replayStrokeBtn");
+
+    let currentStrokeWord = null;
+    let currentStrokeWriters = [];
+
+    function normalizeHanziAnswer(text) {
+      return text.replace(/\s+/g, "").trim();
+    }
+
+    function renderHanziPractice() {
+      if (!hanziPracticeGrid) return;
+
+      hanziPracticeGrid.innerHTML = hanziPracticeData.map((item, index) => `
+        <div class="hanzi-practice-card" data-index="${index}">
+          <div class="practice-top">
+            <div class="practice-num">${index + 1}</div>
+            <div>
+              <div class="practice-pinyin">${item.pinyin}</div>
+              <div class="practice-english">${item.english}</div>
+            </div>
+          </div>
+
+          <input
+            class="practice-input"
+            type="text"
+            placeholder="Type the hanzi here / 在这里写汉字"
+            data-answer="${item.answer}"
+          />
+
+          <div class="practice-actions">
+            <button class="small-btn check-practice-btn" type="button">Check</button>
+            <button class="small-btn secondary hint-practice-btn" type="button">Hint</button>
+          </div>
+
+          <div class="practice-feedback"></div>
+        </div>
+      `).join("");
+    }
+
+    function setPracticeFeedback(card, ok, message) {
+      const feedback = card.querySelector(".practice-feedback");
+      feedback.className = ok
+        ? "practice-feedback show correct"
+        : "practice-feedback show incorrect";
+      feedback.textContent = message;
+    }
+
+    function clearPracticeFeedback(card) {
+      const feedback = card.querySelector(".practice-feedback");
+      feedback.className = "practice-feedback";
+      feedback.textContent = "";
+    }
+
+    function loadHanziData(char) {
+      return fetch(`https://cdn.jsdelivr.net/npm/hanzi-writer-data/${encodeURIComponent(char)}.json`)
+        .then((res) => {
+          if (!res.ok) throw new Error("Character data not found");
+          return res.json();
+        });
+    }
+
+    function createStrokeWriter(targetId, char, delay = 0) {
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      target.innerHTML = "";
+
+      if (!window.HanziWriter) {
+        target.textContent = char;
+        return;
+      }
+
+      const writer = HanziWriter.create(target, char, {
+        width: 128,
+        height: 128,
+        padding: 8,
+        showOutline: true,
+        showCharacter: false,
+        strokeAnimationSpeed: 1.05,
+        delayBetweenStrokes: 160,
+        outlineColor: "#d8c3ab",
+        strokeColor: "#1f2937",
+        radicalColor: "#c2410c",
+        charDataLoader: loadHanziData
+      });
+
+      currentStrokeWriters.push(writer);
+
+      setTimeout(() => {
+        writer.animateCharacter();
+      }, delay);
+    }
+
+    function buildStrokeWriters(word) {
+      currentStrokeWriters = [];
+      strokeAnimGrid.innerHTML = [...word].map((char, index) => `
+        <div class="stroke-char-card">
+          <div class="stroke-char-label">${char}</div>
+          <div class="stroke-writer-box" id="stroke-writer-${index}"></div>
+        </div>
+      `).join("");
+
+      [...word].forEach((char, index) => {
+        createStrokeWriter(`stroke-writer-${index}`, char, index * 350);
+      });
+    }
+
+    function openStrokeModal(item) {
+      currentStrokeWord = item;
+      strokeModalTitle.textContent = `Hint: ${item.answer}`;
+      strokeModalSubtitle.textContent = `${item.pinyin} • ${item.english}`;
+      strokeHintModal.classList.add("show");
+      strokeHintModal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+      buildStrokeWriters(item.answer);
+    }
+
+    function closeStrokeHintModal() {
+      strokeHintModal.classList.remove("show");
+      strokeHintModal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("modal-open");
+      strokeAnimGrid.innerHTML = "";
+      currentStrokeWord = null;
+      currentStrokeWriters = [];
+    }
+
+    function replayStrokeAnimations() {
+      if (!currentStrokeWriters.length) return;
+      currentStrokeWriters.forEach((writer, index) => {
+        setTimeout(() => {
+          writer.animateCharacter();
+        }, index * 350);
+      });
+    }
+
+    if (hanziPracticeGrid) {
+      hanziPracticeGrid.addEventListener("click", (e) => {
+        const card = e.target.closest(".hanzi-practice-card");
+        if (!card) return;
+
+        const index = Number(card.dataset.index);
+        const item = hanziPracticeData[index];
+        const input = card.querySelector(".practice-input");
+        const userAnswer = normalizeHanziAnswer(input.value);
+        const correctAnswer = normalizeHanziAnswer(item.answer);
+
+        if (e.target.classList.contains("check-practice-btn")) {
+          if (!userAnswer) {
+            setPracticeFeedback(card, false, "Please type the hanzi first.");
+            return;
+          }
+
+          if (userAnswer === correctAnswer) {
+            setPracticeFeedback(card, true, "Correct! 写得对。");
+          } else {
+            setPracticeFeedback(
+              card,
+              false,
+              `Not quite.\nYour answer: ${input.value || "—"}\nCorrect answer: ${item.answer}`
+            );
+          }
+        }
+
+        if (e.target.classList.contains("hint-practice-btn")) {
+          openStrokeModal(item);
+        }
+      });
+
+      hanziPracticeGrid.addEventListener("input", (e) => {
+        const card = e.target.closest(".hanzi-practice-card");
+        if (!card) return;
+        if (e.target.classList.contains("practice-input")) {
+          clearPracticeFeedback(card);
+        }
+      });
+
+      hanziPracticeGrid.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && e.target.classList.contains("practice-input")) {
+          e.preventDefault();
+          const card = e.target.closest(".hanzi-practice-card");
+          if (!card) return;
+          const btn = card.querySelector(".check-practice-btn");
+          if (btn) btn.click();
+        }
+      });
+    }
+
+    if (closeStrokeModal) {
+      closeStrokeModal.addEventListener("click", closeStrokeHintModal);
+    }
+
+    if (closeStrokeModalBtn2) {
+      closeStrokeModalBtn2.addEventListener("click", closeStrokeHintModal);
+    }
+
+    if (replayStrokeBtn) {
+      replayStrokeBtn.addEventListener("click", replayStrokeAnimations);
+    }
+
+    if (strokeHintModal) {
+      strokeHintModal.addEventListener("click", (e) => {
+        if (e.target === strokeHintModal) {
+          closeStrokeHintModal();
+        }
+      });
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && strokeHintModal && strokeHintModal.classList.contains("show")) {
+        closeStrokeHintModal();
+      }
+    });
+
+    renderHanziPractice();
+  </script>
+</body>
+</html>
