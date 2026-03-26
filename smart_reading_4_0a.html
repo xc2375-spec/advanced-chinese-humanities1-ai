@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Reading 4.0 – 中国女性的社会地位</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Noto Serif SC", "Source Han Serif CN", Georgia, serif;
+      background: #faf8fd; color: #1e1228; line-height: 2; font-size: 18px;
+    }
+    .page-header {
+      background: linear-gradient(135deg, #4a2a6a 0%, #6b4c8a 100%);
+      color: #fff; padding: 24px 32px 20px;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .page-header .back-link {
+      text-decoration: none; color: rgba(255,255,255,0.85);
+      font-size: 13px; font-family: sans-serif;
+      display: flex; align-items: center; gap: 5px; white-space: nowrap;
+    }
+    .page-header .back-link:hover { color: #fff; }
+    .page-header .badge {
+      background: rgba(255,255,255,0.22); border-radius: 6px;
+      padding: 4px 12px; font-size: 13px; letter-spacing: 1px;
+      font-family: sans-serif; white-space: nowrap;
+    }
+    .page-header h1 { font-size: 20px; flex: 1; }
+
+    .sub-nav {
+      background: #f5f0fb; border-bottom: 2px solid #d5c4ec;
+      padding: 10px 32px; display: flex; gap: 10px; flex-wrap: wrap; font-family: sans-serif;
+    }
+    .sub-nav a {
+      text-decoration: none; font-size: 13px; padding: 5px 14px;
+      border-radius: 999px; border: 1px solid #c4aee0; color: #4a2a6a; transition: background 0.15s;
+    }
+    .sub-nav a:hover, .sub-nav a.active { background: #6b4c8a; color: #fff; border-color: #6b4c8a; }
+
+    .audio-section {
+      background: #f5f0fb; border-bottom: 1px solid #d5c4ec;
+      padding: 12px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .audio-label {
+      font-size: 14px; color: #5a3e78; font-family: sans-serif;
+      white-space: nowrap; display: flex; align-items: center; gap: 6px;
+    }
+    .audio-placeholder {
+      flex: 1; background: #ede8f7; border: 2px dashed #b8a0d8;
+      border-radius: 8px; padding: 8px 16px; font-size: 13px;
+      color: #7a5a9a; font-family: sans-serif; text-align: center;
+    }
+
+    .reading-wrap { max-width: 820px; margin: 0 auto; padding: 36px 32px 20px; }
+    .reading-title {
+      text-align: center; font-size: 26px; font-weight: 700;
+      letter-spacing: 2px; margin-bottom: 6px; color: #3a1a5a;
+    }
+    .reading-subtitle {
+      text-align: center; font-size: 13px; color: #8a6aaa;
+      font-family: sans-serif; margin-bottom: 30px; letter-spacing: 1px;
+    }
+    .reading-body p { text-indent: 2em; margin-bottom: 20px; }
+
+    .vocab {
+      color: #6b1a9a; font-weight: bold; cursor: pointer;
+      position: relative; border-bottom: 1px dotted #6b1a9a; display: inline;
+    }
+    .vocab-tip {
+      display: none; position: absolute; bottom: calc(100% + 8px);
+      left: 50%; transform: translateX(-50%);
+      background: #1e1228; color: #faf8fd; border-radius: 8px;
+      padding: 8px 13px; white-space: nowrap; z-index: 100;
+      font-size: 14px; font-family: sans-serif; line-height: 1.5;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35); pointer-events: none;
+    }
+    .vocab-tip::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%); border: 6px solid transparent;
+      border-top-color: #1e1228;
+    }
+    .vocab-tip .tip-pinyin { color: #c8a0f0; font-style: italic; display: block; font-size: 13px; }
+    .vocab-tip .tip-en { display: block; font-size: 13px; margin-top: 2px; }
+    @media (hover: hover) and (pointer: fine) { .vocab:hover .vocab-tip { display: block; } }
+    .vocab.tip-active .vocab-tip { display: block; }
+    .vocab.flip-down .vocab-tip { bottom: auto; top: calc(100% + 8px); }
+    .vocab.flip-down .vocab-tip::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: #1e1228; }
+
+    .section-divider { border: none; border-top: 2px solid #d5c4ec; margin: 36px 0 28px; }
+
+    .questions-section { max-width: 820px; margin: 0 auto; padding: 0 32px 48px; }
+    .questions-header {
+      font-size: 18px; font-weight: 700; color: #3a1a5a;
+      margin-bottom: 24px; font-family: sans-serif; display: flex; align-items: center; gap: 10px;
+    }
+    .question-card {
+      background: #fff; border: 1px solid #d5c4ec; border-radius: 12px;
+      padding: 22px 24px; margin-bottom: 22px; box-shadow: 0 2px 8px rgba(80,40,120,0.07);
+    }
+    .question-text {
+      font-size: 16px; font-weight: 600; margin-bottom: 14px;
+      color: #1e1228; line-height: 1.7; font-family: sans-serif;
+    }
+    .question-num {
+      display: inline-block; background: #6b4c8a; color: #fff;
+      border-radius: 50%; width: 26px; height: 26px; line-height: 26px;
+      text-align: center; font-size: 14px; margin-right: 8px;
+    }
+    .options-list { list-style: none; }
+    .options-list li { margin-bottom: 8px; }
+    .option-btn {
+      width: 100%; text-align: left; background: #faf8fd;
+      border: 2px solid #d5c4ec; border-radius: 8px; padding: 10px 16px;
+      font-size: 15px; cursor: pointer; transition: background 0.15s, border-color 0.15s;
+      color: #1e1228; font-family: sans-serif; line-height: 1.6;
+    }
+    .option-btn:hover:not(:disabled) { background: #ede8f7; border-color: #b090d0; }
+    .option-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+    .option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+    .option-btn.reveal-correct { background: #d4edda; border-color: #28a745; color: #155724; opacity: 0.75; }
+    .option-btn:disabled { cursor: default; }
+    .feedback {
+      margin-top: 12px; padding: 10px 14px; border-radius: 8px;
+      font-size: 14px; font-family: sans-serif; display: none; line-height: 1.6;
+    }
+    .feedback.show { display: block; }
+    .feedback.fb-correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .feedback.fb-wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    .results-bar {
+      margin-top: 32px; display: none; background: #fff;
+      border: 1px solid #d5c4ec; border-radius: 12px;
+      padding: 20px 24px; text-align: center; font-family: sans-serif;
+    }
+    .results-bar.show { display: block; }
+    .results-score { font-size: 32px; font-weight: 700; color: #6b4c8a; }
+    .results-label { font-size: 15px; color: #4a2a6a; margin-top: 4px; }
+    .retry-btn {
+      margin-top: 14px; background: #6b4c8a; color: #fff; border: none;
+      border-radius: 8px; padding: 10px 28px; font-size: 15px;
+      cursor: pointer; font-family: sans-serif;
+    }
+    .retry-btn:hover { background: #4a2a6a; }
+
+    .nav-links-wrap {
+      max-width: 820px; margin: 0 auto; padding: 12px 32px 48px;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-family: sans-serif;
+    }
+    .nav-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none; background: #6b4c8a; color: #fff;
+      padding: 10px 22px; border-radius: 8px; font-size: 14px;
+      font-weight: 600; transition: background 0.15s;
+    }
+    .nav-link:hover { background: #4a2a6a; }
+    .nav-link.secondary { background: #fff; color: #6b4c8a; border: 2px solid #6b4c8a; }
+    .nav-link.secondary:hover { background: #f3eefb; }
+
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+      .reading-wrap, .questions-section, .nav-links-wrap { padding-left: 16px; padding-right: 16px; }
+      .page-header, .audio-section, .sub-nav { padding-left: 16px; padding-right: 16px; }
+      .reading-title { font-size: 22px; }
+      .option-btn { font-size: 14px; padding: 9px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <a class="back-link" href="smart-reading.html">← 智慧阅读</a>
+  <div class="badge">课文 4.0</div>
+  <h1>女性・婚姻・社会 — Smart Reading</h1>
+</header>
+
+<nav class="sub-nav">
+  <a href="smart_reading_4_0.html" class="active">📖 课文：中国女性的社会地位</a>
+  <a href="smart_reading_4_0b.html">📖 扩展阅读：丑石</a>
+</nav>
+
+<div class="audio-section">
+  <div class="audio-label">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    </svg>
+    朗读音频
+  </div>
+  <div class="audio-placeholder">
+    🎙️ 音频文件待上传 &nbsp;|&nbsp; <small>请将音频命名为 <code>audio/reading_4_0.mp3</code></small>
+  </div>
+</div>
+
+<div class="reading-wrap">
+  <h2 class="reading-title">中国女性的社会地位</h2>
+  <p class="reading-subtitle">第四单元 · 开篇 · 女性・婚姻・社会</p>
+
+  <div class="reading-body">
+
+    <p>
+      中国历史上<vocab-w data-pinyin="qíshì fùnǚ" data-en="to discriminate against women">歧视妇女</vocab-w>、压迫妇女的现象很多。但并不是从一开始就是这样，妇女地位越来越低主要是从宋朝开始的。
+    </p>
+
+    <p>
+      宋朝以前，中国的妇女还是非常<vocab-w data-pinyin="kāifàng" data-en="open; open-minded">开放</vocab-w>的。比方说，汉朝末年的<vocab-w data-pinyin="Cài Wénjī" data-en="Cai Wenji, a poet of the late Han Dynasty">蔡文姬</vocab-w>虽然已经在匈奴结婚，而且生了两个孩子，但回到汉朝的土地以后，她又一次<vocab-w data-pinyin="chūjià" data-en="(of a woman) to get married; to marry">出嫁</vocab-w>。唐朝的公主嫁过三次的有三位，嫁过两次的有二十七位。可以说，宋朝以前，再嫁并不是什么<vocab-w data-pinyin="jiànbudé rén" data-en="shameful; not fit to be seen">见不得人</vocab-w>的事，社会不要求女人<vocab-w data-pinyin="cóng yī ér zhōng" data-en="to be faithful to one husband till death">从一而终</vocab-w>，对<vocab-w data-pinyin="zhēnnǚ" data-en="chaste woman; widow who does not remarry">贞女</vocab-w>也不太<vocab-w data-pinyin="zàihu" data-en="to care about; to mind">在乎</vocab-w>。唐朝以前，妇女不但有再嫁的自由，而且可以参加各种各样的公共活动。
+    </p>
+
+    <p>
+      你也许听说过中国妇女有<vocab-w data-pinyin="chánzú" data-en="to bind feet; foot-binding">缠足</vocab-w>的习惯，其实这种现象是从宋朝才开始流行起来的，此后中国女性的地位变得越来越低。在宋朝和以后的几百年中，女孩子如果不缠足，有一双大脚，就会被人<vocab-w data-pinyin="chǐxiào" data-en="to mock; to ridicule; to sneer at">耻笑</vocab-w>，<vocab-w data-pinyin="shènzhì" data-en="even; so much so that">甚至</vocab-w>找不到<vocab-w data-pinyin="pójia" data-en="husband's family; in-laws' home">婆家</vocab-w>。有一双小脚的女孩子才被认为是美的，所以在女孩还很小的时候，大人就开始给她们缠足，不让脚自然地生长。缠足以后，就像穿上了<vocab-w data-pinyin="gāogēnxié" data-en="high-heeled shoes">高跟鞋</vocab-w>一样，完全<vocab-w data-pinyin="gǎibiàn" data-en="to change; to alter">改变</vocab-w>了女孩子走路的样子。女孩子再也不能出去参加各种活动了，她们被<vocab-w data-pinyin="jìngù" data-en="to confine; to imprison; to restrict">禁锢</vocab-w>在家里，无法了解、关心外面的世界，成了男性的<vocab-w data-pinyin="núlì" data-en="slave">奴隶</vocab-w>。
+    </p>
+
+    <p>
+      1919年5月4日，中国发生了著名的"五四"运动。这以后，缠足现象才慢慢<vocab-w data-pinyin="xiāoshī" data-en="to disappear; to vanish">消失</vocab-w>。"五四"运动给中国社会带来了很多新的<vocab-w data-pinyin="fēngqì" data-en="social atmosphere; common practice">风气</vocab-w>，但家庭中的<vocab-w data-pinyin="fūquán" data-en="husband's authority; patriarchal power">夫权</vocab-w>观念、女性必须"<vocab-w data-pinyin="sāncóng sìdé" data-en="the three obediences and four virtues (traditional Confucian code for women)">三从四德</vocab-w>"的文化延续了下来，几十年中一直没有太大的变化。做妻子的要听丈夫的话，做女儿的要听父母的话，做<vocab-w data-pinyin="xífù" data-en="daughter-in-law; wife">媳妇</vocab-w>的要听<vocab-w data-pinyin="gōngpó" data-en="husband's parents; parents-in-law">公婆</vocab-w>的话，许多女性的家庭<vocab-w data-pinyin="quányì" data-en="rights and interests; rights and benefits">权益</vocab-w>受到<vocab-w data-pinyin="qīnfàn" data-en="to infringe on; to violate">侵犯</vocab-w>。更<vocab-w data-pinyin="zāogāo" data-en="terrible; too bad">糟糕</vocab-w>的是，家庭中侵犯女性权益的人常常也是女性——如婆婆、<vocab-w data-pinyin="hòumǔ" data-en="stepmother">后母</vocab-w>。"多年的媳妇熬成婆"，婆婆们经常用一种不健康的<vocab-w data-pinyin="xīntài" data-en="mindset; mentality">心态</vocab-w>，重复自己的婆婆当年用过的办法，有时候甚至更严重地侵犯媳妇的权益和自由。后母<vocab-w data-pinyin="nüèdài" data-en="to mistreat; to abuse">虐待</vocab-w>女儿的情况也经常发生。<vocab-w data-pinyin="jíshǐ" data-en="even though; even if">即使</vocab-w>在家中没有受到婆婆或后母的虐待，女性也得受到父亲和公公的压迫。
+    </p>
+
+    <p>
+      1949年以后，中国妇女的地位得到了很大的<vocab-w data-pinyin="tígāo" data-en="to raise; to improve; to enhance">提高</vocab-w>。她们开始在政治、经济、文化、教育等各个方面<vocab-w data-pinyin="xiǎngyǒu" data-en="to enjoy (rights, privileges)">享有</vocab-w>与男性<vocab-w data-pinyin="píngděng" data-en="equal; equality">平等</vocab-w>的<vocab-w data-pinyin="quánlì" data-en="right; privilege">权利</vocab-w>。她们不但有了<vocab-w data-pinyin="hūnyīn" data-en="marriage; matrimony">婚姻</vocab-w>自由，也跟男性一样有了<vocab-w data-pinyin="xuǎnjǔ" data-en="to elect; to vote">选举</vocab-w>权和被选举权。到七十年代末，中国有30%的政府官员是女性，这是中国几千年历史上从来没有过的现象。大多数女性走出家门，跟丈夫一样出去工作。这不但增加了家庭的收入，提高了生活水平，也改变了女性在社会和家庭中的地位。至此，中国基本上实现了男女平等。
+    </p>
+
+    <p>
+      上个世纪八十年代前后，中国实行的改革开放政策使中国的经济得到了飞速发展。这期间，尤其是本世纪初以来，中国人的生活发生了<vocab-w data-pinyin="fāntiān fùdì" data-en="earth-shaking; world-changing">翻天覆地</vocab-w>的变化。过去的二十年间，中国为推进<vocab-w data-pinyin="xìngbié" data-en="gender; sex">性别</vocab-w>平等与妇女发展，制定了不少保护妇女权益的政策和法律。今天，接受高等教育的年轻女性越来越多，她们在毕业之后基本上都选择了进入<vocab-w data-pinyin="zhíchǎng" data-en="workplace; the job market">职场</vocab-w>。据调查，2013年，中国女性就业人数为三亿四千多万，是就业总人数的45%；15岁以上女性文盲<vocab-w data-pinyin="lǜ" data-en="rate; ratio; frequency">率</vocab-w>为6.7%，比1995年下降了17.4个百分点。另外，在个人收入方面，近些年中国女性的工资也明显提高，<vocab-w data-pinyin="shīyè" data-en="to lose one's job; unemployment">失业</vocab-w>率连年下降。
+    </p>
+
+    <p>
+      以上成就值得肯定，但我们也要认识到，要从根本上实现男女性别平等，我们还有很大的努力空间。<vocab-w data-pinyin="mùqián" data-en="at present; currently">目前</vocab-w>，男性的平均收入仍然远高于女性。根据2011年全球性别<vocab-w data-pinyin="chājù" data-en="gap; disparity; difference">差距</vocab-w>报告，中国的男女收入<vocab-w data-pinyin="bǐlǜ" data-en="ratio; rate; proportion">比率</vocab-w>为1: 0.65，这与世界发达国家相比还有很大的差别。另外，女性中"干得好不如嫁得好"的观念重新<vocab-w data-pinyin="táitóu" data-en="to raise one's head; to gain ground; to resurface">抬头</vocab-w>，有些地方"<vocab-w data-pinyin="bāo èrnǎi" data-en="to keep a mistress; to financially support a second wife">包二奶</vocab-w>"的现象<vocab-w data-pinyin="pǔbiàn" data-en="widespread; common; universal">普遍</vocab-w>，妇女的地位甚至有走<vocab-w data-pinyin="xiàpōlù" data-en="downhill; decline; going downward">下坡路</vocab-w>的危险。
+    </p>
+
+    <p>
+      总之，过去的几十年中，中国在保护妇女、提高妇女地位问题上做出了很多努力。但作为世界上人口最多的发展中国家，受经济发展水平和传统文化的影响，中国妇女的地位问题还<vocab-w data-pinyin="miànlín" data-en="to face; to be confronted with">面临</vocab-w>很多新的<vocab-w data-pinyin="tiǎozhàn" data-en="challenge; to challenge">挑战</vocab-w>。因此，要实现女性跟男性的<vocab-w data-pinyin="zhēnzhèng" data-en="true; genuine; real">真正</vocab-w>平等，除了政府的政策及相应的法律之外，还需要女性提高自身的<vocab-w data-pinyin="sùzhì" data-en="quality; inner character">素质</vocab-w>，努力创造一个自由、平等、无性别歧视的社会环境。我们期待着中国女性在不久的将来<vocab-w data-pinyin="yōngyǒu" data-en="to have; to possess; to own">拥有</vocab-w>一个更<vocab-w data-pinyin="guǎngkuò" data-en="vast; wide; broad">广阔</vocab-w>的天空。
+    </p>
+
+  </div>
+</div>
+
+<hr class="section-divider" style="max-width:820px;margin:0 auto 28px;">
+
+<div class="questions-section">
+  <div class="questions-header"><span>📖</span> 阅读理解</div>
+
+  <div class="question-card" id="q1">
+    <div class="question-text"><span class="question-num">1</span>宋朝以前，中国妇女的地位是怎样的？下面哪项描述最符合文章？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="1" data-idx="0">A. 妇女完全没有自由，必须待在家里</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="1">B. 妇女地位很低，缠足现象已经非常普遍</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="2">C. 妇女相对开放，可以再嫁，可以参与公共活动</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="3">D. 妇女的地位与男性完全平等，没有任何歧视</button></li>
+    </ul>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <div class="question-card" id="q2">
+    <div class="question-text"><span class="question-num">2</span>缠足给女孩子的生活带来了什么后果？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="2" data-idx="0">A. 让她们更容易找到婆家，受到社会尊重</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="1">B. 使她们无法出门参与活动，被禁锢在家，成了男性的奴隶</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="2">C. 让她们学会了更多家务技能</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="3">D. 使她们获得了更高的社会地位</button></li>
+    </ul>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <div class="question-card" id="q3">
+    <div class="question-text"><span class="question-num">3</span>文章说"更糟糕的是，家庭中侵犯女性权益的人常常也是女性"。这指的是什么现象？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="3" data-idx="0">A. 女性经常互相竞争，争夺工作机会</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="1">B. 婆婆和后母用不健康的心态对待媳妇或女儿，重复了自己曾经受到的压迫</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="2">C. 女性在职场中不愿意帮助其他女性</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="3">D. 女性之间经常发生经济纠纷</button></li>
+    </ul>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <div class="question-card" id="q4">
+    <div class="question-text"><span class="question-num">4</span>1949年以后，中国妇女地位得到提高的表现有哪些？下面哪项文章没有提到？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="4" data-idx="0">A. 享有与男性平等的权利，包括选举权</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="1">B. 走出家门，与丈夫一样出去工作</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="2">C. 中国有30%的政府官员是女性</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="3">D. 女性的平均收入已经超过了男性</button></li>
+    </ul>
+    <div class="feedback" id="fb4"></div>
+  </div>
+
+  <div class="question-card" id="q5">
+    <div class="question-text"><span class="question-num">5</span>根据文章最后几段，中国女性地位目前仍然面临哪些问题？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="5" data-idx="0">A. 中国已经完全实现了男女平等，没有任何问题</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="1">B. 男性收入仍远高于女性，"干得好不如嫁得好"观念重新抬头，妇女地位有下坡路的危险</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="2">C. 缠足现象在一些农村地区卷土重来</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="3">D. 女性受教育机会越来越少，文盲率不断上升</button></li>
+    </ul>
+    <div class="feedback" id="fb5"></div>
+  </div>
+
+  <div class="results-bar" id="results-bar">
+    <div class="results-score" id="results-score"></div>
+    <div class="results-label" id="results-label"></div>
+    <button class="retry-btn" onclick="resetQuiz()">重新作答</button>
+  </div>
+</div>
+
+<div class="nav-links-wrap">
+  <a class="nav-link secondary" href="smart-reading.html">← 返回目录</a>
+  <a class="nav-link" href="smart_reading_4_0b.html">扩展阅读：丑石 →</a>
+</div>
+
+<script>
+(function buildVocab() {
+  document.querySelectorAll('vocab-w').forEach(el => {
+    const span = document.createElement('span');
+    span.className = 'vocab';
+    span.innerHTML = `${el.textContent}<span class="vocab-tip"><span class="tip-pinyin">${el.dataset.pinyin||''}</span><span class="tip-en">${el.dataset.en||''}</span></span>`;
+    el.replaceWith(span);
+  });
+})();
+
+let activeVocab = null;
+document.addEventListener('touchstart', function(e) {
+  const v = e.target.closest('.vocab');
+  if (v) {
+    e.preventDefault();
+    v.classList[v.getBoundingClientRect().top < 80 ? 'add' : 'remove']('flip-down');
+    if (activeVocab && activeVocab !== v) activeVocab.classList.remove('tip-active');
+    v.classList.toggle('tip-active');
+    activeVocab = v.classList.contains('tip-active') ? v : null;
+  } else {
+    if (activeVocab) { activeVocab.classList.remove('tip-active'); activeVocab = null; }
+  }
+}, { passive: false });
+
+const ANSWERS = { 1: 2, 2: 1, 3: 1, 4: 3, 5: 1 };
+const FEEDBACK = {
+  1: {
+    correct: '✅ 正确！文中说宋朝以前"再嫁并不是什么见不得人的事"，妇女"可以参加各种各样的公共活动"，说明当时相对开放。',
+    wrong: '❌ 再想想。文章第二段描述了宋朝以前妇女的生活状况，请仔细阅读该段。'
+  },
+  2: {
+    correct: '✅ 正确！文中说缠足后"女孩子再也不能出去参加各种活动了，她们被禁锢在家里……成了男性的奴隶"。',
+    wrong: '❌ 再想想。文章第三段详细描述了缠足对女孩子生活的影响。'
+  },
+  3: {
+    correct: '✅ 正确！文中说"婆婆们经常用一种不健康的心态，重复自己的婆婆当年用过的办法"，后母也虐待女儿，这是被压迫者反过来压迫他人的现象。',
+    wrong: '❌ 再想想。文章第四段解释了这句话的具体含义，说的是婆婆和后母的行为。'
+  },
+  4: {
+    correct: '✅ 正确！文章说男性收入"仍然远高于女性"，从未说女性收入超过男性，这一项文章没有提到。',
+    wrong: '❌ 再想想。文章第五段列举了1949年后妇女地位提高的几点表现，仔细看哪一项文章没有提及。'
+  },
+  5: {
+    correct: '✅ 正确！文章说"男性的平均收入仍然远高于女性"，"干得好不如嫁得好"的观念重新抬头，"包二奶"现象普遍，妇女地位有走下坡路的危险。',
+    wrong: '❌ 再想想。文章最后两段讨论了中国女性地位目前仍然存在的问题。'
+  }
+};
+
+const answered = {};
+let totalAnswered = 0;
+const TOTAL_Q = 5;
+
+document.querySelectorAll('.option-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const q = parseInt(this.dataset.q);
+    const idx = parseInt(this.dataset.idx);
+    if (answered[q]) return;
+    answered[q] = true; totalAnswered++;
+    const correct = ANSWERS[q];
+    const allBtns = document.querySelectorAll(`.option-btn[data-q="${q}"]`);
+    allBtns.forEach(b => b.disabled = true);
+    const fb = document.getElementById('fb' + q);
+    if (idx === correct) {
+      this.classList.add('correct');
+      fb.textContent = FEEDBACK[q].correct;
+      fb.className = 'feedback show fb-correct';
+    } else {
+      this.classList.add('wrong');
+      allBtns[correct].classList.add('reveal-correct');
+      fb.textContent = FEEDBACK[q].wrong;
+      fb.className = 'feedback show fb-wrong';
+    }
+    if (totalAnswered === TOTAL_Q) showResults();
+  });
+});
+
+function showResults() {
+  const score = Object.keys(answered).filter(q =>
+    [...document.querySelectorAll(`.option-btn[data-q="${q}"]`)].some(b => b.classList.contains('correct'))
+  ).length;
+  document.getElementById('results-score').textContent = `${score} / ${TOTAL_Q}`;
+  const msgs = ['📚 继续努力！建议再读一遍文章。','📚 继续努力！','🙂 还不错！再回顾一下答错的题。','👍 很好！掌握得相当不错。','🎉 非常好！','🎉 完美！全部答对！'];
+  document.getElementById('results-label').textContent = msgs[score] || '';
+  const bar = document.getElementById('results-bar');
+  bar.classList.add('show');
+  bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function resetQuiz() {
+  Object.keys(answered).forEach(k => delete answered[k]);
+  totalAnswered = 0;
+  document.querySelectorAll('.option-btn').forEach(b => { b.disabled = false; b.className = 'option-btn'; });
+  document.querySelectorAll('.feedback').forEach(f => { f.className = 'feedback'; f.textContent = ''; });
+  document.getElementById('results-bar').classList.remove('show');
+}
+</script>
+</body>
+</html>
