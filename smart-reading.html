@@ -17,20 +17,45 @@ header h1{font-size:20px;font-weight:700;color:#2c2c2c;flex:1;text-align:center}
 .intro p{color:#666;font-size:15px}
 .unit-section{margin-bottom:40px}
 .unit-label{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;padding:6px 14px;border-radius:4px;display:inline-block}
+
+/* Unit 1 — red */
 .unit1 .unit-label{background:#fdecea;color:#c0392b}
+.unit1 .card::before{background:#c0392b}
+.unit1 .card-num{color:#c0392b}
+.unit1 .card:hover{box-shadow:0 6px 20px rgba(192,57,43,.13)}
+
+/* Unit 2 — green */
 .unit2 .unit-label{background:#e8f5e9;color:#2e7d32}
+.unit2 .card::before{background:#2e7d32}
+.unit2 .card-num{color:#2e7d32}
+.unit2 .card:hover{box-shadow:0 6px 20px rgba(46,125,50,.13)}
+
+/* Unit 3 — terracotta */
+.unit3 .unit-label{background:#fdf0ec;color:#b5451b}
+.unit3 .card::before{background:#b5451b}
+.unit3 .card-num{color:#b5451b}
+.unit3 .card:hover{box-shadow:0 6px 20px rgba(181,69,27,.13)}
+
+/* Unit 4 — violet */
+.unit4 .unit-label{background:#f3eefb;color:#6b4c8a}
+.unit4 .card::before{background:#6b4c8a}
+.unit4 .card-num{color:#6b4c8a}
+.unit4 .card:hover{box-shadow:0 6px 20px rgba(107,76,138,.13)}
+
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
 .card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.07);padding:22px 20px;text-decoration:none;color:#2c2c2c;transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
 .card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:12px 0 0 12px}
-.unit1 .card::before{background:#c0392b}
-.unit2 .card::before{background:#2e7d32}
 .card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
-.card-num{font-size:12px;font-weight:700;letter-spacing:.06em;opacity:.55}
-.unit1 .card-num{color:#c0392b}
-.unit2 .card-num{color:#2e7d32}
+.card-num{font-size:12px;font-weight:700;letter-spacing:.06em;opacity:.75}
 .card-title{font-size:17px;font-weight:700;line-height:1.35}
 .card-sub{font-size:13px;color:#888;margin-top:2px}
+.card-note{font-size:11.5px;color:#aaa;margin-top:1px}
 .card-arrow{margin-top:auto;padding-top:10px;font-size:18px;opacity:.35}
+
+/* sub-group label for 3.4 */
+.sub-group{margin-top:18px}
+.sub-group-label{font-size:12px;font-weight:700;color:#999;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;padding-left:2px}
+
 @media(max-width:480px){.cards{grid-template-columns:1fr}.intro h2{font-size:22px}}
 </style>
 </head>
@@ -106,6 +131,95 @@ header h1{font-size:20px;font-weight:700;color:#2c2c2c;flex:1;text-align:center}
       </a>
     </div>
   </div>
+
+  <!-- Unit 3 -->
+  <div class="unit-section unit3">
+    <span class="unit-label">Unit 3 · 第三单元 · 艺术人生</span>
+    <div class="cards">
+      <a class="card" href="smart_reading_3_0.html">
+        <span class="card-num">3.0 · 开篇</span>
+        <span class="card-title">琴棋书画</span>
+        <span class="card-sub">The Four Arts</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_3_1.html">
+        <span class="card-num">3.1 · 第一课</span>
+        <span class="card-title">王羲之换鹅</span>
+        <span class="card-sub">Wang Xizhi Trades Geese</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_3_2.html">
+        <span class="card-num">3.2 · 第二课</span>
+        <span class="card-title">曹植的《七步诗》</span>
+        <span class="card-sub">Cao Zhi's Seven-Step Poem</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_3_3.html">
+        <span class="card-num">3.3 · 第三课</span>
+        <span class="card-title">曹雪芹和《红楼梦》</span>
+        <span class="card-sub">Cao Xueqin and Dream of the Red Chamber</span>
+        <span class="card-arrow">→</span>
+      </a>
+    </div>
+
+    <div class="sub-group">
+      <div class="sub-group-label">3.4 · 第四课 · 成语故事二则</div>
+      <div class="cards">
+        <a class="card" href="smart_reading_3_4a.html">
+          <span class="card-num">3.4 （一）</span>
+          <span class="card-title">天衣无缝</span>
+          <span class="card-sub">Seamless Heavenly Garment</span>
+          <span class="card-note">成语故事 Chengyu Story</span>
+          <span class="card-arrow">→</span>
+        </a>
+        <a class="card" href="smart_reading_3_4b.html">
+          <span class="card-num">3.4 （二）</span>
+          <span class="card-title">胸有成竹</span>
+          <span class="card-sub">Having a Plan in Mind</span>
+          <span class="card-note">成语故事 Chengyu Story</span>
+          <span class="card-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unit 4 -->
+  <div class="unit-section unit4">
+    <span class="unit-label">Unit 4 · 第四单元 · 女性・婚姻・社会</span>
+    <div class="cards">
+      <a class="card" href="smart_reading_4_0.html">
+        <span class="card-num">4.0 · 开篇</span>
+        <span class="card-title">中国女性的社会地位</span>
+        <span class="card-sub">The Social Status of Chinese Women</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_4_1.html">
+        <span class="card-num">4.1 · 第一课</span>
+        <span class="card-title">梁山伯与祝英台</span>
+        <span class="card-sub">The Butterfly Lovers</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_4_2.html">
+        <span class="card-num">4.2 · 第二课</span>
+        <span class="card-title">武则天</span>
+        <span class="card-sub">Empress Wu Zetian</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_4_3.html">
+        <span class="card-num">4.3 · 第三课</span>
+        <span class="card-title">女人</span>
+        <span class="card-sub">Women</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="smart_reading_4_4.html">
+        <span class="card-num">4.4 · 第四课</span>
+        <span class="card-title">中国女性的困惑</span>
+        <span class="card-sub">The Dilemma of Chinese Working Women</span>
+        <span class="card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
 </div>
 </body>
 </html>
