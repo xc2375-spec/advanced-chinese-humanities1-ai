@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Reading 3.0 – 琴棋书画</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Noto Serif SC", "Source Han Serif CN", Georgia, serif;
+      background: #fdf8f0;
+      color: #2c1a0e;
+      line-height: 2;
+      font-size: 18px;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      background: linear-gradient(135deg, #8b3a1a 0%, #b5451b 100%);
+      color: #fff;
+      padding: 24px 32px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .page-header .back-link {
+      text-decoration: none;
+      color: rgba(255,255,255,0.85);
+      font-size: 13px;
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .page-header .back-link:hover { color: #fff; }
+    .page-header .badge {
+      background: rgba(255,255,255,0.25);
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 13px;
+      letter-spacing: 1px;
+      font-family: sans-serif;
+      white-space: nowrap;
+    }
+    .page-header h1 {
+      font-size: 20px;
+      flex: 1;
+    }
+
+    /* ── Sub-nav ── */
+    .sub-nav {
+      background: #fff7ee;
+      border-bottom: 2px solid #e8d5b0;
+      padding: 10px 32px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-family: sans-serif;
+    }
+    .sub-nav a {
+      text-decoration: none;
+      font-size: 13px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      border: 1px solid #d8c4a0;
+      color: #6b3a1a;
+      transition: background 0.15s;
+    }
+    .sub-nav a:hover, .sub-nav a.active {
+      background: #b5451b;
+      color: #fff;
+      border-color: #b5451b;
+    }
+
+    /* ── Audio player ── */
+    .audio-section {
+      background: #fff7ee;
+      border-bottom: 1px solid #e8d5b0;
+      padding: 12px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .audio-label {
+      font-size: 14px;
+      color: #8b5e3c;
+      font-family: sans-serif;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .audio-placeholder {
+      flex: 1;
+      background: #f0e8d8;
+      border: 2px dashed #c8a97a;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: #9c7a56;
+      font-family: sans-serif;
+      text-align: center;
+    }
+
+    /* ── Reading container ── */
+    .reading-wrap {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 36px 32px 20px;
+    }
+
+    .reading-title {
+      text-align: center;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      margin-bottom: 6px;
+      color: #5a1e10;
+    }
+    .reading-subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #9c7a56;
+      font-family: sans-serif;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+
+    .reading-body p {
+      text-indent: 2em;
+      margin-bottom: 20px;
+    }
+
+    /* ── Vocabulary tooltip ── */
+    .vocab {
+      color: #b5180e;
+      font-weight: bold;
+      cursor: pointer;
+      position: relative;
+      border-bottom: 1px dotted #b5180e;
+      display: inline;
+    }
+    .vocab-tip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2c1a0e;
+      color: #fdf8f0;
+      border-radius: 8px;
+      padding: 8px 13px;
+      white-space: nowrap;
+      z-index: 100;
+      font-size: 14px;
+      font-family: sans-serif;
+      line-height: 1.5;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+      pointer-events: none;
+    }
+    .vocab-tip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: #2c1a0e;
+    }
+    .vocab-tip .tip-pinyin { color: #f0c080; font-style: italic; display: block; font-size: 13px; }
+    .vocab-tip .tip-en { display: block; font-size: 13px; margin-top: 2px; }
+
+    @media (hover: hover) and (pointer: fine) {
+      .vocab:hover .vocab-tip { display: block; }
+    }
+    .vocab.tip-active .vocab-tip { display: block; }
+    .vocab.flip-down .vocab-tip {
+      bottom: auto;
+      top: calc(100% + 8px);
+    }
+    .vocab.flip-down .vocab-tip::after {
+      top: auto;
+      bottom: 100%;
+      border-top-color: transparent;
+      border-bottom-color: #2c1a0e;
+    }
+
+    /* ── Divider ── */
+    .section-divider {
+      border: none;
+      border-top: 2px solid #e0c896;
+      margin: 36px 0 28px;
+    }
+
+    /* ── Questions section ── */
+    .questions-section {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 32px 48px;
+    }
+    .questions-header {
+      font-size: 18px;
+      font-weight: 700;
+      color: #5a1e10;
+      margin-bottom: 24px;
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .question-card {
+      background: #fff;
+      border: 1px solid #e0c896;
+      border-radius: 12px;
+      padding: 22px 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .question-text {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 14px;
+      color: #2c1a0e;
+      line-height: 1.7;
+      font-family: sans-serif;
+    }
+    .question-num {
+      display: inline-block;
+      background: #b5451b;
+      color: #fff;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      line-height: 26px;
+      text-align: center;
+      font-size: 14px;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    .options-list { list-style: none; }
+    .options-list li { margin-bottom: 8px; }
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      background: #fdf8f0;
+      border: 2px solid #e0c896;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      color: #2c1a0e;
+      font-family: sans-serif;
+      line-height: 1.6;
+    }
+    .option-btn:hover:not(:disabled) { background: #f5e6c8; border-color: #c0a060; }
+    .option-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+    .option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+    .option-btn.reveal-correct { background: #d4edda; border-color: #28a745; color: #155724; opacity: 0.75; }
+    .option-btn:disabled { cursor: default; }
+
+    .feedback {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: sans-serif;
+      display: none;
+      line-height: 1.6;
+    }
+    .feedback.show { display: block; }
+    .feedback.fb-correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .feedback.fb-wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    .results-bar {
+      margin-top: 32px;
+      display: none;
+      background: #fff;
+      border: 1px solid #e0c896;
+      border-radius: 12px;
+      padding: 20px 24px;
+      text-align: center;
+      font-family: sans-serif;
+    }
+    .results-bar.show { display: block; }
+    .results-score { font-size: 32px; font-weight: 700; color: #b5451b; }
+    .results-label { font-size: 15px; color: #5a3e28; margin-top: 4px; }
+    .retry-btn {
+      margin-top: 14px;
+      background: #b5451b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 28px;
+      font-size: 15px;
+      cursor: pointer;
+      font-family: sans-serif;
+    }
+    .retry-btn:hover { background: #8b3a1a; }
+
+    /* ── Next article link ── */
+    .next-link-wrap {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 12px 32px 48px;
+      text-align: right;
+      font-family: sans-serif;
+    }
+    .next-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      background: #b5451b;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+    .next-link:hover { background: #8b3a1a; }
+
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+      .reading-wrap, .questions-section, .next-link-wrap { padding-left: 16px; padding-right: 16px; }
+      .page-header { padding: 16px; }
+      .audio-section, .sub-nav { padding-left: 16px; padding-right: 16px; }
+      .reading-title { font-size: 22px; }
+      .option-btn { font-size: 14px; padding: 9px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <a class="back-link" href="smart-reading.html">← 智慧阅读</a>
+  <div class="badge">课文 3.0</div>
+  <h1>艺术人生 — Smart Reading</h1>
+</header>
+
+<nav class="sub-nav">
+  <a href="smart_reading_3_0.html" class="active">📖 课文：琴棋书画</a>
+  <a href="smart_reading_3_0b.html">📖 扩展阅读：我与地坛</a>
+</nav>
+
+<div class="audio-section">
+  <div class="audio-label">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    </svg>
+    朗读音频
+  </div>
+  <div class="audio-placeholder">
+    🎙️ 音频文件待上传 &nbsp;|&nbsp; <small>请将音频命名为 <code>audio/reading_3_0.mp3</code></small>
+  </div>
+</div>
+
+<!-- ── Reading Text ── -->
+<div class="reading-wrap">
+  <h2 class="reading-title">琴棋书画</h2>
+  <p class="reading-subtitle">第三单元 · 开篇 · 艺术人生</p>
+
+  <div class="reading-body">
+
+    <p>
+      琴棋书画，又叫"四艺"，是中国古代<vocab-w data-pinyin="wénrén" data-en="scholar; literati; man of letters">文人</vocab-w>所要<vocab-w data-pinyin="zhǎngwò" data-en="to master; to grasp; to have a good command of">掌握</vocab-w>的四门<vocab-w data-pinyin="yìshù" data-en="art; the arts">艺术</vocab-w>。早在唐朝，人们就把"琴棋书画"<vocab-w data-pinyin="bìngchēng" data-en="to be called together; to be grouped together">并称</vocab-w>。但"四艺"的<vocab-w data-pinyin="gàiniàn" data-en="concept; notion; idea">概念</vocab-w>出现得较晚，大约是在明末清初。
+    </p>
+
+    <p>
+      琴棋书画中的琴，说的是古琴。古琴是中国最古老的<vocab-w data-pinyin="yuèqì zhī yī" data-en="one of the musical instruments">乐器之一</vocab-w>，被叫作"国乐之父"。古时候的读书人把它看作<vocab-w data-pinyin="gāoyǎ" data-en="elegant; refined; tasteful">高雅</vocab-w>的代表。<vocab-w data-pinyin="tánzòu" data-en="to play (a stringed instrument)">弹奏</vocab-w>古琴的时候，人们一般会<vocab-w data-pinyin="diǎn" data-en="to light (incense)">点</vocab-w>上香，让心情平静下来。《三国演义》中的<vocab-w data-pinyin="Zhūgě Liàng" data-en="Zhuge Liang (strategist of the Three Kingdoms period)">诸葛亮</vocab-w>被敌人的军队<vocab-w data-pinyin="wéi" data-en="to surround; to encircle">围</vocab-w>在城里的时候，就坐在空城的<vocab-w data-pinyin="chéngtóu" data-en="top of a city wall; battlements">城头</vocab-w>上弹古琴。从他的琴声中可以听出他<vocab-w data-pinyin="xīn rú zhǐ shuǐ" data-en="(idiom) heart as still as still water; completely calm">心如止水</vocab-w>，一点儿也不<vocab-w data-pinyin="jīnghuāng" data-en="to panic; to be alarmed">惊慌</vocab-w>，结果<vocab-w data-pinyin="xià tuì" data-en="to frighten away; to drive back">吓退</vocab-w>了敌人的大军。
+    </p>
+
+    <p>
+      琴棋书画中的棋，说的是<vocab-w data-pinyin="wéiqí" data-en="Go (the board game)">围棋</vocab-w>。围棋是两个人的<vocab-w data-pinyin="yóuxì" data-en="game; play">游戏</vocab-w>，用的是黑白两种颜色的<vocab-w data-pinyin="qízǐ" data-en="chess pieces; game pieces">棋子</vocab-w>。围棋出现得很早，据说大约在公元前6世纪中国就有围棋了。两个人<vocab-w data-pinyin="xià qí" data-en="to play chess / Go">下棋</vocab-w>，<vocab-w data-pinyin="biǎomiàn shang" data-en="on the surface; superficially">表面上</vocab-w>看只是<vocab-w data-pinyin="bǎifàng" data-en="to place; to lay out">摆放</vocab-w>黑白棋子，其实却是个人<vocab-w data-pinyin="xīnzhì" data-en="intelligence; mental capacity; wisdom">心智</vocab-w>、<vocab-w data-pinyin="dǎnshí" data-en="boldness; courage; guts">胆识</vocab-w>、<vocab-w data-pinyin="nài lì" data-en="endurance; staying power">耐力</vocab-w>的比赛，它<vocab-w data-pinyin="bāohán" data-en="to contain; to embody; to include">包含</vocab-w>了宇宙的很多道理，因此让人<vocab-w data-pinyin="rùmí" data-en="to be fascinated; to be captivated">入迷</vocab-w>。
+    </p>
+
+    <p>
+      琴棋书画中的书，是中国传统的书法。书法是中国<vocab-w data-pinyin="tèyǒu" data-en="unique to; peculiar to; characteristic of">特有</vocab-w>的一种传统艺术，它从工具到笔法都有一定的<vocab-w data-pinyin="jiāngjiu" data-en="exacting standards; to be particular about">讲究</vocab-w>。笔、<vocab-w data-pinyin="mò" data-en="ink (for Chinese calligraphy)">墨</vocab-w>、纸、<vocab-w data-pinyin="yàn" data-en="ink stone; inkstone">砚</vocab-w>的品种，<vocab-w data-pinyin="xià bǐ" data-en="to start writing; to put pen to paper">下笔</vocab-w>、<vocab-w data-pinyin="tí bǐ" data-en="to lift the brush; to raise the pen">提笔</vocab-w>的方法和个人的性格等都跟书法的好坏有很大的关系。一直以来，书法都有它自己的艺术美感。经常练习书法，不仅可以<vocab-w data-pinyin="péiyǎng shěnměi" data-en="to cultivate aesthetic sensibility">培养审美</vocab-w>能力，同时也能<vocab-w data-pinyin="jìng xīn yǎng xìng" data-en="to calm the mind and cultivate the character">静心养性</vocab-w>，使人<vocab-w data-pinyin="jiànkāng cháng shòu" data-en="healthy and long-lived">健康长寿</vocab-w>。不少有名的书法家，大多是九十岁以上的<vocab-w data-pinyin="gāolíng zhě" data-en="elderly person; person of advanced age">高龄者</vocab-w>，还有不少百岁老人。
+    </p>
+
+    <p>
+      琴棋书画中的画，说的是中国的<vocab-w data-pinyin="huìhuà" data-en="painting; drawing">绘画</vocab-w>，一种在<vocab-w data-pinyin="èrwéi" data-en="two-dimensional">二维</vocab-w>的<vocab-w data-pinyin="píngmiàn" data-en="flat surface; plane">平面</vocab-w>上<vocab-w data-pinyin="línmó" data-en="to copy (a model); to imitate (a painting)">临摹</vocab-w>自然的艺术。在中世纪的欧洲，人们常把绘画称作"猴子的艺术"，因为猴子喜欢<vocab-w data-pinyin="mófǎng" data-en="to imitate; to mimic; to copy">模仿</vocab-w>人类<vocab-w data-pinyin="huódòng" data-en="activity; action">活动</vocab-w>，而绘画是模仿<vocab-w data-pinyin="chǎngjǐng" data-en="scene; sight; landscape">场景</vocab-w>。中国画主要是用<vocab-w data-pinyin="ruǎn bǐ" data-en="soft brush; brush pen">软笔</vocab-w>或<vocab-w data-pinyin="shǒuzhǐ" data-en="finger">手指</vocab-w>，用颜色和墨在纸上作出的画。中国画<vocab-w data-pinyin="chóngshàng" data-en="to revere; to hold in high esteem; to advocate">崇尚</vocab-w>自然、生动、<vocab-w data-pinyin="pínghéng" data-en="balance; equilibrium">平衡</vocab-w>、<vocab-w data-pinyin="héxié" data-en="harmony; harmonious">和谐</vocab-w>，这是中国文化的<vocab-w data-pinyin="jīngsuǐ" data-en="essence; quintessence">精髓</vocab-w>。
+    </p>
+
+    <p>
+      从琴棋书画中，我们可以看到中国五千年文化的<vocab-w data-pinyin="diǎndiǎn dīdī" data-en="bits and pieces; traces (of culture)">点点滴滴</vocab-w>。这四种<vocab-w data-pinyin="jìyì" data-en="skill; craft; technique">技艺</vocab-w>是古代读书人<vocab-w data-pinyin="xiūshēn" data-en="to cultivate one's moral character; self-cultivation">修身</vocab-w>所必须掌握的。现在我们常用它来<vocab-w data-pinyin="biǎoshì" data-en="to express; to indicate; to show">表示</vocab-w>一个人的文化<vocab-w data-pinyin="sùyǎng" data-en="(cultural) quality; cultivation; refinement">素养</vocab-w>。如果你说一个人"琴棋书画样样精通"，就是在<vocab-w data-pinyin="kuā" data-en="to praise; to compliment">夸</vocab-w>这个人文化素养高。
+    </p>
+
+  </div>
+</div>
+
+<hr class="section-divider" style="max-width:820px;margin:0 auto 28px;">
+
+<!-- ── Comprehension Questions ── -->
+<div class="questions-section">
+  <div class="questions-header">
+    <span>📖</span> 阅读理解
+  </div>
+
+  <!-- Q1 -->
+  <div class="question-card" id="q1">
+    <div class="question-text">
+      <span class="question-num">1</span>
+      "琴棋书画"中的"琴"指的是什么？它在古代读书人眼中代表什么？
+    </div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="1" data-idx="0">A. 指的是钢琴，是西方文化的代表</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="1">B. 指的是古琴，代表高雅的品味与修养</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="2">C. 指的是二胡，是民间音乐的代表</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="3">D. 指的是琵琶，在宴会上用来娱乐宾客</button></li>
+    </ul>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-card" id="q2">
+    <div class="question-text">
+      <span class="question-num">2</span>
+      文中说围棋"表面上看只是摆放黑白棋子"，那围棋实际上是什么的比赛？
+    </div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="2" data-idx="0">A. 运气和速度的比赛</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="1">B. 记忆力和体力的比赛</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="2">C. 个人心智、胆识与耐力的比赛</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="3">D. 财富和社会地位的比赛</button></li>
+    </ul>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-card" id="q3">
+    <div class="question-text">
+      <span class="question-num">3</span>
+      根据文章，经常练习书法有哪些好处？
+    </div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="3" data-idx="0">A. 可以让人变得有钱，提高社会地位</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="1">B. 可以培养审美能力，静心养性，有助于健康长寿</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="2">C. 可以提高英语写作水平</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="3">D. 只对年轻人有好处，对老年人没有效果</button></li>
+    </ul>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-card" id="q4">
+    <div class="question-text">
+      <span class="question-num">4</span>
+      如果说一个人"琴棋书画样样精通"，是什么意思？
+    </div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="4" data-idx="0">A. 批评这个人只会玩，不认真工作</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="1">B. 说明这个人是专业的音乐家</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="2">C. 夸这个人文化素养很高</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="3">D. 表示这个人对艺术很感兴趣但还没学好</button></li>
+    </ul>
+    <div class="feedback" id="fb4"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-card" id="q5">
+    <div class="question-text">
+      <span class="question-num">5</span>
+      中国画的特点是什么？下面哪个选项最能概括文章的描述？
+    </div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="5" data-idx="0">A. 追求复杂、精细的画面，越繁琐越好</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="1">B. 崇尚自然、生动、平衡与和谐，体现中国文化的精髓</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="2">C. 主要用油画颜料在画布上创作</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="3">D. 受欧洲中世纪绘画的影响最大</button></li>
+    </ul>
+    <div class="feedback" id="fb5"></div>
+  </div>
+
+  <div class="results-bar" id="results-bar">
+    <div class="results-score" id="results-score"></div>
+    <div class="results-label" id="results-label"></div>
+    <button class="retry-btn" onclick="resetQuiz()">重新作答</button>
+  </div>
+</div>
+
+<div class="next-link-wrap">
+  <a class="next-link" href="smart_reading_3_0b.html">扩展阅读：我与地坛 →</a>
+</div>
+
+<script>
+(function buildVocab() {
+  document.querySelectorAll('vocab-w').forEach(el => {
+    const pinyin = el.dataset.pinyin || '';
+    const en = el.dataset.en || '';
+    const text = el.textContent;
+    const span = document.createElement('span');
+    span.className = 'vocab';
+    span.innerHTML = `${text}<span class="vocab-tip"><span class="tip-pinyin">${pinyin}</span><span class="tip-en">${en}</span></span>`;
+    el.replaceWith(span);
+  });
+})();
+
+let activeVocab = null;
+document.addEventListener('touchstart', function(e) {
+  const vocabEl = e.target.closest('.vocab');
+  if (vocabEl) {
+    e.preventDefault();
+    const rect = vocabEl.getBoundingClientRect();
+    if (rect.top < 80) vocabEl.classList.add('flip-down');
+    else vocabEl.classList.remove('flip-down');
+    if (activeVocab && activeVocab !== vocabEl) activeVocab.classList.remove('tip-active');
+    vocabEl.classList.toggle('tip-active');
+    activeVocab = vocabEl.classList.contains('tip-active') ? vocabEl : null;
+  } else {
+    if (activeVocab) { activeVocab.classList.remove('tip-active'); activeVocab = null; }
+  }
+}, { passive: false });
+
+const ANSWERS = { 1: 1, 2: 2, 3: 1, 4: 2, 5: 1 };
+const FEEDBACK = {
+  1: {
+    correct: '✅ 正确！文中说"琴棋书画中的琴，说的是古琴"，"古时候的读书人把它看作高雅的代表"。',
+    wrong:   '❌ 再想想。文章第二段明确说明了"琴"指的是什么，以及它在古代读书人眼中的地位。'
+  },
+  2: {
+    correct: '✅ 正确！原文说围棋"其实却是个人心智、胆识、耐力的比赛，它包含了宇宙的很多道理"。',
+    wrong:   '❌ 再想想。文章第三段解释了围棋表面之下真正比的是什么。'
+  },
+  3: {
+    correct: '✅ 正确！文中说经常练习书法"不仅可以培养审美能力，同时也能静心养性，使人健康长寿"。',
+    wrong:   '❌ 再想想。文章第四段专门讲了练习书法的几个好处，请再读一遍。'
+  },
+  4: {
+    correct: '✅ 正确！文章最后说"如果你说一个人'琴棋书画样样精通'，就是在夸这个人文化素养高"。',
+    wrong:   '❌ 再想想。文章最后一段直接解释了这句话的含义。'
+  },
+  5: {
+    correct: '✅ 正确！文中说"中国画崇尚自然、生动、平衡、和谐，这是中国文化的精髓"。',
+    wrong:   '❌ 再想想。文章第五段描述了中国画的特点，注意那几个关键词。'
+  }
+};
+
+const answered = {};
+let totalAnswered = 0;
+const TOTAL_Q = 5;
+
+document.querySelectorAll('.option-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const q = parseInt(this.dataset.q);
+    const idx = parseInt(this.dataset.idx);
+    if (answered[q]) return;
+    answered[q] = true;
+    totalAnswered++;
+    const correct = ANSWERS[q];
+    const fb = document.getElementById('fb' + q);
+    const allBtns = document.querySelectorAll(`.option-btn[data-q="${q}"]`);
+    allBtns.forEach(b => { b.disabled = true; });
+    if (idx === correct) {
+      this.classList.add('correct');
+      fb.textContent = FEEDBACK[q].correct;
+      fb.className = 'feedback show fb-correct';
+    } else {
+      this.classList.add('wrong');
+      allBtns[correct].classList.add('reveal-correct');
+      fb.textContent = FEEDBACK[q].wrong;
+      fb.className = 'feedback show fb-wrong';
+    }
+    if (totalAnswered === TOTAL_Q) showResults();
+  });
+});
+
+function showResults() {
+  const score = Object.keys(answered).filter(q => {
+    return [...document.querySelectorAll(`.option-btn[data-q="${q}"]`)].some(b => b.classList.contains('correct'));
+  }).length;
+  document.getElementById('results-score').textContent = `${score} / ${TOTAL_Q}`;
+  const msgs = ['📚 继续努力！建议多读几遍文章。', '📚 继续努力！建议多读几遍文章。', '🙂 还不错！建议再回顾一下答错的题。', '👍 很好！你掌握得相当不错。', '🎉 非常好！', '🎉 完美！全部答对！'];
+  document.getElementById('results-label').textContent = msgs[score] || '';
+  const bar = document.getElementById('results-bar');
+  bar.classList.add('show');
+  bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function resetQuiz() {
+  Object.keys(answered).forEach(k => delete answered[k]);
+  totalAnswered = 0;
+  document.querySelectorAll('.option-btn').forEach(btn => { btn.disabled = false; btn.className = 'option-btn'; });
+  document.querySelectorAll('.feedback').forEach(f => { f.className = 'feedback'; f.textContent = ''; });
+  document.getElementById('results-bar').classList.remove('show');
+}
+</script>
+</body>
+</html>
