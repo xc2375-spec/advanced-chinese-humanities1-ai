@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 4.2 Word Explorer | Advanced Chinese for Humanities AI</title>
+  <meta
+    name="description"
+    content="Lesson 4.2 Word Explorer for Advanced Chinese for Humanities: 武则天 vocabulary system, radicals, character patterns, guided AI support, and hanzi writing practice."
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .lesson-hero {
+      padding-top: 2.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .lesson-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1rem 0 0;
+    }
+
+    .breadcrumb {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .group-grid,
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .group-card h3,
+    .pattern-card h3,
+    .tool-card h3,
+    .result-card h3,
+    .vocab-card h3,
+    .name-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      font-size: 1.08rem;
+      color: var(--primary-dark);
+    }
+
+    .group-card p,
+    .pattern-card p,
+    .tool-card p,
+    .result-card p,
+    .vocab-card p,
+    .name-card p {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .concept-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+    }
+
+    .concept-chip-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .concept-chip,
+    .name-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: #f6ecdf;
+      color: var(--primary-dark);
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: 1px solid #e2d0b8;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .concept-chip:hover,
+    .name-chip:hover {
+      background: #f1e2cd;
+      transform: translateY(-1px);
+    }
+
+    .concept-tooltip {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.45rem);
+      min-width: 210px;
+      max-width: 270px;
+      background: #fffdf9;
+      border: 1px solid #decbb2;
+      border-radius: 14px;
+      box-shadow: 0 12px 26px rgba(80, 56, 32, 0.12);
+      padding: 0.75rem 0.85rem;
+      z-index: 30;
+      display: none;
+    }
+
+    .concept-tooltip.show {
+      display: block;
+    }
+
+    .tooltip-word {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-pinyin {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-english {
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-bottom: 0.22rem;
+      line-height: 1.4;
+    }
+
+    .tooltip-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .char-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .char-badge {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      border: 1px solid #e7d7c2;
+      min-width: 88px;
+    }
+
+    .char-badge strong {
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .char-badge span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.24;
+    }
+
+    .memory-tip {
+      margin-top: 0.8rem;
+      padding: 0.85rem 0.95rem;
+      border-radius: 12px;
+      background: #f8f1e7;
+      color: var(--text);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .mcq-box {
+      margin-top: 1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid #eadfce;
+    }
+
+    .mcq-question {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.7rem;
+      line-height: 1.5;
+    }
+
+    .mcq-options {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .mcq-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 10px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+    }
+
+    .mcq-actions {
+      margin-top: 0.85rem;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: none;
+      min-height: 38px;
+      padding: 0 0.95rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .small-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .small-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .small-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .mcq-feedback {
+      margin-top: 0.9rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      line-height: 1.6;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    .mcq-feedback.show {
+      display: block;
+    }
+
+    .mcq-feedback.correct {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .mcq-feedback.incorrect {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
+    .tools-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 1.25rem;
+      margin-top: 1.2rem;
+    }
+
+    .tool-card label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--primary-dark);
+      font-size: 0.95rem;
+    }
+
+    .tool-card textarea,
+    .tool-card input {
+      width: 100%;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid #d9c7b1;
+      border-radius: 12px;
+      background: #fffdf9;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .tool-card textarea {
+      min-height: 170px;
+      resize: vertical;
+    }
+
+    .tool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .tool-btn {
+      border: none;
+      min-height: 44px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .tool-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .tool-btn.secondary {
+      background: white;
+      color: var(--primary-dark);
+      border: 1px solid #d8c3ab;
+    }
+
+    .tool-btn.secondary:hover {
+      background: #fbf6f0;
+    }
+
+    .result-card {
+      min-height: 400px;
+    }
+
+    .result-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .result-box {
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fffdf9;
+      border: 1px solid #e7dac7;
+      border-radius: 14px;
+      padding: 1rem;
+      min-height: 270px;
+    }
+
+    .loading {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .error-text {
+      color: #a33a2b;
+      font-weight: 700;
+    }
+
+    .helper-list {
+      margin: 0.85rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+    }
+
+    .helper-list li + li {
+      margin-top: 0.35rem;
+    }
+
+    .vocab-table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    table.vocab-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .vocab-table th,
+    .vocab-table td {
+      padding: 0.78rem 0.85rem;
+      border-bottom: 1px solid #eadfce;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.95rem;
+    }
+
+    .vocab-table th {
+      background: #f7efe3;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .vocab-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .vocab-table tr:hover {
+      background: #fcf8f2;
+    }
+
+    .hanzi {
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    /* ===== Hanzi Writing Practice ===== */
+    .hanzi-practice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .hanzi-practice-card {
+      background: #fffdf9;
+      border: 1px solid #eadfce;
+      border-radius: 16px;
+      padding: 1rem;
+    }
+
+    .practice-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .practice-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: #f4e7d6;
+      color: var(--primary-dark);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .practice-pinyin {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.15rem;
+    }
+
+    .practice-english {
+      font-size: 0.93rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .practice-input {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid #d9c7b1;
+      border-radius: 12px;
+      background: #fff;
+      padding: 0.7rem 0.85rem;
+      font: inherit;
+      font-size: 1.05rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    .practice-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .practice-feedback {
+      display: none;
+      margin-top: 0.8rem;
+      padding: 0.8rem 0.9rem;
+      border-radius: 12px;
+      line-height: 1.6;
+      border: 1px solid #eadfce;
+      background: #fffdf9;
+      white-space: pre-wrap;
+    }
+
+    .practice-feedback.show {
+      display: block;
+    }
+
+    .practice-feedback.correct {
+      border-color: #cdddc6;
+      background: #f7fbf5;
+    }
+
+    .practice-feedback.incorrect {
+      border-color: #e4c8c1;
+      background: #fff8f6;
+    }
+
+    /* ===== Stroke Hint Modal ===== */
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    .stroke-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(45, 36, 28, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 9999;
+    }
+
+    .stroke-modal.show {
+      display: flex;
+    }
+
+    .stroke-modal-panel {
+      width: min(820px, 96vw);
+      max-height: 88vh;
+      overflow: auto;
+      background: #fffdf9;
+      border: 1px solid #e2d3c2;
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(42, 30, 20, 0.18);
+      padding: 1.1rem 1.1rem 1.2rem;
+    }
+
+    .stroke-modal-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stroke-modal-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 0;
+    }
+
+    .stroke-modal-subtitle {
+      color: var(--muted);
+      margin: 0.2rem 0 0;
+      line-height: 1.5;
+    }
+
+    .stroke-close-btn {
+      border: none;
+      background: #f4e7d6;
+      color: var(--primary-dark);
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .stroke-modal-actions {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin: 0.8rem 0 1rem;
+    }
+
+    .stroke-anim-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .stroke-char-card {
+      background: #fcf8f2;
+      border: 1px solid #eadfce;
+      border-radius: 16px;
+      padding: 0.85rem;
+      min-width: 150px;
+    }
+
+    .stroke-char-label {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .stroke-writer-box {
+      width: 128px;
+      height: 128px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #e3d5c5;
+      border-radius: 14px;
+    }
+
+    @media (max-width: 960px) {
+      .group-grid,
+      .pattern-grid,
+      .tools-layout,
+      .hanzi-practice-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .concept-tooltip {
+        max-width: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-badge">ACH AI</div>
+        <div>
+          <h1 class="site-title">Advanced Chinese for Humanities</h1>
+          <p class="site-subtitle">人文天下：高级汉语教程·上 / 下</p>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="word-explorer.html">Word Explorer</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#ai-tools">AI Box</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <div class="container">
+        <div class="breadcrumb">Home → Word Explorer → Unit 4 → Lesson 4.2</div>
+        <p class="eyebrow">Lesson 4.2</p>
+        <h2 class="page-title">武则天</h2>
+        <p class="page-intro">
+          This lesson focuses on China's only female emperor, Wu Zetian (624–705), exploring her political
+          achievements, historical controversies, and legacy. Learn the new words through character
+          patterns: 虫字旁, 含有寸的部件, 隹部件, and the characters 于／予／矛.
+        </p>
+
+        <div class="lesson-meta">
+          <span class="tag">Unit 4: 女性・婚姻・社会</span>
+          <span class="tag">Theme: Power, Rulership, Legacy</span>
+          <span class="tag">Module: Word Explorer</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Concept Net</p>
+          <h2>Hover or tap to preview key words</h2>
+        </div>
+
+        <div class="group-grid">
+          <div class="card group-card">
+            <h3>A. 统治与权力</h3>
+            <p>These words help students discuss Wu Zetian's rule, governance, and political power.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap"><button class="concept-chip">皇后</button><span class="concept-tooltip"><div class="tooltip-word">皇后</div><div class="tooltip-pinyin">huánghòu</div><div class="tooltip-english">empress, imperial consort</div><div class="tooltip-note">the starting title Wu Zetian held before becoming emperor</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">统治</button><span class="concept-tooltip"><div class="tooltip-word">统治</div><div class="tooltip-pinyin">tǒngzhì</div><div class="tooltip-english">to rule (a country), to govern</div><div class="tooltip-note">central verb for describing political power over a state</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">掌管</button><span class="concept-tooltip"><div class="tooltip-word">掌管</div><div class="tooltip-pinyin">zhǎngguǎn</div><div class="tooltip-english">to control, to be in charge of</div><div class="tooltip-note">used for managing state affairs and official duties</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">治理</button><span class="concept-tooltip"><div class="tooltip-word">治理</div><div class="tooltip-pinyin">zhìlǐ</div><div class="tooltip-english">to govern, to administer, to manage</div><div class="tooltip-note">often used in official or formal political contexts</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">参与</button><span class="concept-tooltip"><div class="tooltip-word">参与</div><div class="tooltip-pinyin">cānyù</div><div class="tooltip-english">to participate (in sth.)</div><div class="tooltip-note">key word for discussing Wu's entry into political life</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">长达</button><span class="concept-tooltip"><div class="tooltip-word">长达</div><div class="tooltip-pinyin">chángdá</div><div class="tooltip-english">to extend as long as, to lengthen out to</div><div class="tooltip-note">used to describe the remarkable span of her reign</div></span></span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>B. 人才选拔与评价</h3>
+            <p>These words help students discuss Wu Zetian's approach to talent, reform, and historical judgment.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap"><button class="concept-chip">人才</button><span class="concept-tooltip"><div class="tooltip-word">人才</div><div class="tooltip-pinyin">réncái</div><div class="tooltip-english">talented person</div><div class="tooltip-note">Wu Zetian was known for aggressively recruiting talent regardless of background</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">选拔</button><span class="concept-tooltip"><div class="tooltip-word">选拔</div><div class="tooltip-pinyin">xuǎnbá</div><div class="tooltip-english">to select</div><div class="tooltip-note">closely tied to the imperial examination system</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">科举</button><span class="concept-tooltip"><div class="tooltip-word">科举</div><div class="tooltip-pinyin">kējǔ</div><div class="tooltip-english">imperial examinations</div><div class="tooltip-note">Wu Zetian expanded the imperial examination system to broaden access</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">改善</button><span class="concept-tooltip"><div class="tooltip-word">改善</div><div class="tooltip-pinyin">gǎishàn</div><div class="tooltip-english">to make better, to improve</div><div class="tooltip-note">used to describe reforms she introduced during her reign</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">评价</button><span class="concept-tooltip"><div class="tooltip-word">评价</div><div class="tooltip-pinyin">píngjià</div><div class="tooltip-english">to evaluate, to assess; evaluation</div><div class="tooltip-note">key for discussing historians' differing views of Wu Zetian</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">正面</button><span class="concept-tooltip"><div class="tooltip-word">正面</div><div class="tooltip-pinyin">zhèngmiàn</div><div class="tooltip-english">positive</div><div class="tooltip-note">contrasts with negative portrayals from Confucian historians</div></span></span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>C. 历史争议与性格</h3>
+            <p>These words help students discuss the controversies, accusations, and character judgments surrounding Wu Zetian.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap"><button class="concept-chip">容忍</button><span class="concept-tooltip"><div class="tooltip-word">容忍</div><div class="tooltip-pinyin">róngrěn</div><div class="tooltip-english">to put up with, to tolerate</div><div class="tooltip-note">useful for discussing how Wu responded—or didn't—to opposition</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">痛恨</button><span class="concept-tooltip"><div class="tooltip-word">痛恨</div><div class="tooltip-pinyin">tònghèn</div><div class="tooltip-english">to detest, to loathe</div><div class="tooltip-note">reflects the strong emotional language in historical debates about her</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">可信</button><span class="concept-tooltip"><div class="tooltip-word">可信</div><div class="tooltip-pinyin">kěxìn</div><div class="tooltip-english">trustworthy, credible</div><div class="tooltip-note">central to discussions of source reliability in Tang history</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">瞎编</button><span class="concept-tooltip"><div class="tooltip-word">瞎编</div><div class="tooltip-pinyin">xiā biān</div><div class="tooltip-english">to fabricate (a story)</div><div class="tooltip-note">used informally to question the accuracy of historical accounts</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">野史</button><span class="concept-tooltip"><div class="tooltip-word">野史</div><div class="tooltip-pinyin">yěshǐ</div><div class="tooltip-english">unofficial history</div><div class="tooltip-note">contrasts with official dynastic histories; often more sensational</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">荒淫</button><span class="concept-tooltip"><div class="tooltip-word">荒淫</div><span class="tooltip-pinyin">huāngyín</span><div class="tooltip-english">licentious, debauched</div><div class="tooltip-note">a charge made against Wu Zetian by critics; worth analyzing critically</div></span></span>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <h3>D. 治国之道与智慧</h3>
+            <p>These words help students discuss Wu Zetian's leadership style, wisdom, and legacy as ruler.</p>
+
+            <div class="concept-list">
+              <span class="concept-chip-wrap"><button class="concept-chip">明君</button><span class="concept-tooltip"><div class="tooltip-word">明君</div><div class="tooltip-pinyin">míngjūn</div><div class="tooltip-english">wise ruler, sagacious emperor</div><div class="tooltip-note">a classical standard against which Wu Zetian is often measured</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">给予</button><span class="concept-tooltip"><div class="tooltip-word">给予</div><div class="tooltip-pinyin">jǐyǔ</div><div class="tooltip-english">to accord, to give</div><div class="tooltip-note">used when discussing how Wu Zetian gave recognition or power to officials</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">善于</button><span class="concept-tooltip"><div class="tooltip-word">善于</div><div class="tooltip-pinyin">shànyú</div><div class="tooltip-english">to be good at (doing sth.), to be adept at</div><div class="tooltip-note">key for discussing her political skills and leadership strengths</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">智慧</button><span class="concept-tooltip"><div class="tooltip-word">智慧</div><div class="tooltip-pinyin">zhìhuì</div><div class="tooltip-english">wisdom, intelligence</div><div class="tooltip-note">often cited as explaining her long success despite being female in a patriarchal system</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">功德</button><span class="concept-tooltip"><div class="tooltip-word">功德</div><div class="tooltip-pinyin">gōngdé</div><div class="tooltip-english">merits and virtues</div><div class="tooltip-note">Buddhist term also used in political evaluation to weigh a ruler's contributions</div></span></span>
+              <span class="concept-chip-wrap"><button class="concept-chip">敢作敢为</button><span class="concept-tooltip"><div class="tooltip-word">敢作敢为</div><div class="tooltip-pinyin">gǎnzuògǎnwéi</div><div class="tooltip-english">to act with courage and determination</div><div class="tooltip-note">an idiom capturing Wu Zetian's decisive and bold leadership style</div></span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card name-card" style="margin-top: 1rem;">
+          <h3>Key names in this lesson</h3>
+          <div class="concept-list">
+            <span class="name-chip">武则天</span>
+            <span class="name-chip">毛泽东</span>
+            <span class="name-chip">宋庆龄</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="patterns" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Focus on Patterns</p>
+          <h2>Learn through radicals, semantic fields, and character families</h2>
+        </div>
+
+        <div class="pattern-grid">
+          <div class="card pattern-card">
+            <h3>1. 虫字旁：飞蛾与生命力</h3>
+            <p>
+              This lesson features <strong>飞蛾</strong>, giving students an entry into <strong>虫字旁</strong>.
+              This radical appears in many words related to insects and small creatures, and carries a sense of
+              fragility, instinct, or natural drive—apt for discussing the moth-to-flame metaphor in the text.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>蛾</strong><span>é</span><span>moth</span></div>
+              <div class="char-badge"><strong>飞蛾</strong><span>fēi'é</span><span>moth</span></div>
+              <div class="char-badge"><strong>虫</strong><span>chóng</span><span>insect</span></div>
+              <div class="char-badge"><strong>蝴蝶</strong><span>húdié</span><span>butterfly</span></div>
+              <div class="char-badge"><strong>蜜蜂</strong><span>mìfēng</span><span>bee</span></div>
+              <div class="char-badge"><strong>蚂蚁</strong><span>mǎyǐ</span><span>ant</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> 虫字旁 is a visual clue for insects and small creatures.
+              In this lesson, <strong>飞蛾</strong> (moth) appears in the idiom <strong>自取灭亡</strong> context—a moth rushing toward flame—
+              making this radical especially memorable and thematically rich.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">In Lesson 4.2, which word best anchors the teaching of 虫字旁?</div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q1" value="A" /> A. 飞蛾</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="B" /> B. 宫殿</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="C" /> C. 智慧</label>
+                <label class="mcq-option"><input type="radio" name="q1" value="D" /> D. 评价</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q1','A',`Correct. 飞蛾 (moth) is the anchor word for 虫字旁 in Lesson 4.2. Its appearance in a metaphor about reckless courage makes it thematically vivid and easy to remember.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q1')">Reset</button>
+              </div>
+              <div id="feedback-q1" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>2. 含有寸的部件：衬量与法度</h3>
+            <p>
+              Several words in this lesson contain the component <strong>寸</strong>, which originally measured
+              a small unit of length and carries connotations of precision, measurement, and control.
+              It appears in words related to managing, holding, and guiding.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>寸</strong><span>cùn</span><span>unit / tiny</span></div>
+              <div class="char-badge"><strong>持</strong><span>chí</span><span>to hold / maintain</span></div>
+              <div class="char-badge"><strong>对</strong><span>duì</span><span>correct / toward</span></div>
+              <div class="char-badge"><strong>寻</strong><span>xún</span><span>to seek</span></div>
+              <div class="char-badge"><strong>导</strong><span>dǎo</span><span>to guide</span></div>
+              <div class="char-badge"><strong>尊</strong><span>zūn</span><span>to respect</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> 寸 is a subtle but recurring component. In this lesson, <strong>持</strong>
+              (to hold, to maintain) is the most useful anchor. Teach students to look for 寸 in words about
+              controlling, measuring, or keeping—ideas very relevant to Wu Zetian's story.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">Which lesson word best illustrates the 寸 component and its meaning of holding or maintaining?</div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q2" value="A" /> A. 持</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="B" /> B. 荒淫</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="C" /> C. 石碑</label>
+                <label class="mcq-option"><input type="radio" name="q2" value="D" /> D. 野史</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q2','A',`Correct. 持 (to hold, to maintain) is the key lesson word containing 寸 as a component. It reflects the idea of control and sustained effort, fitting for discussion of Wu Zetian's long reign.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q2')">Reset</button>
+              </div>
+              <div id="feedback-q2" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>3. 隹部件：鸟形字与传达</h3>
+            <p>
+              The component <strong>隹</strong> (short-tailed bird) appears in several characters in this lesson.
+              It carries a visual sense of birds and flight, and often shows up in words about communication,
+              transmission, or passage—perfect for discussing Wu Zetian's far-reaching influence.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>隹</strong><span>zhuī</span><span>short-tailed bird</span></div>
+              <div class="char-badge"><strong>雁</strong><span>yàn</span><span>wild goose</span></div>
+              <div class="char-badge"><strong>难</strong><span>nán</span><span>difficult</span></div>
+              <div class="char-badge"><strong>确</strong><span>què</span><span>definite / sure</span></div>
+              <div class="char-badge"><strong>谁</strong><span>shuí</span><span>who</span></div>
+              <div class="char-badge"><strong>推</strong><span>tuī</span><span>to push</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> 隹 is an ancient bird pictograph. In this lesson, <strong>雁</strong>
+              (wild goose) is the most visually striking anchor. The idiom <strong>树碑立传</strong> relates to leaving
+              a lasting mark—like a goose leaving traces. Use 难 and 确 to extend the pattern into more
+              common everyday words.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">Which of the following words in Lesson 4.2 contains the 隹 component?</div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q3" value="A" /> A. 雁</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="B" /> B. 宫殿</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="C" /> C. 科举</label>
+                <label class="mcq-option"><input type="radio" name="q3" value="D" /> D. 皇后</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q3','A',`Correct. 雁 (wild goose) contains 隹, the short-tailed bird component. It is the most direct example in this lesson, and serves as a memorable visual anchor for the broader 隹 character family.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q3')">Reset</button>
+              </div>
+              <div id="feedback-q3" class="mcq-feedback"></div>
+            </div>
+          </div>
+
+          <div class="card pattern-card">
+            <h3>4. 于／予／矛：形近字辨析</h3>
+            <p>
+              This lesson features <strong>善于、给予</strong> and the idiom <strong>敢作敢为</strong>, making it
+              an ideal opportunity to distinguish the look-alike characters <strong>于、予、矛</strong>.
+              Students often confuse these; careful visual comparison here is very valuable.
+            </p>
+
+            <div class="char-cluster">
+              <div class="char-badge"><strong>于</strong><span>yú</span><span>in / at / to (prep.)</span></div>
+              <div class="char-badge"><strong>善于</strong><span>shànyú</span><span>to be adept at</span></div>
+              <div class="char-badge"><strong>予</strong><span>yǔ</span><span>to give / I (classical)</span></div>
+              <div class="char-badge"><strong>给予</strong><span>jǐyǔ</span><span>to give / to accord</span></div>
+              <div class="char-badge"><strong>矛</strong><span>máo</span><span>spear / contradiction</span></div>
+              <div class="char-badge"><strong>矛盾</strong><span>máodùn</span><span>contradiction</span></div>
+            </div>
+
+            <div class="memory-tip">
+              <strong>Memory tip:</strong> 于 has a top horizontal stroke and is a preposition meaning "in/at/to."
+              予 has a downward hook and means "to give." 矛 is a spear shape with a dot at the top—it means spear
+              and appears in 矛盾. Use <strong>善于 / 给予 / 矛盾</strong> as the three anchors for this visual trio.
+            </div>
+
+            <div class="mcq-box">
+              <div class="mcq-question">Which pair correctly matches the character to its meaning?</div>
+              <div class="mcq-options">
+                <label class="mcq-option"><input type="radio" name="q4" value="A" /> A. 予 = to give; 于 = preposition (in/at/to)</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="B" /> B. 矛 = to give; 于 = spear</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="C" /> C. 于 = to give; 矛 = preposition</label>
+                <label class="mcq-option"><input type="radio" name="q4" value="D" /> D. 予 = spear; 矛 = preposition</label>
+              </div>
+              <div class="mcq-actions">
+                <button class="small-btn" onclick="checkPatternQuestion('q4','A',`Correct. 予 means to give (as in 给予), 于 is a preposition meaning in/at/to (as in 善于), and 矛 means spear and appears in 矛盾 (contradiction). These three look similar but have distinct forms and functions.`)">Check Answer</button>
+                <button class="small-btn secondary" onclick="resetPatternQuestion('q4')">Reset</button>
+              </div>
+              <div id="feedback-q4" class="mcq-feedback"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="write-hanzi" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Write the Hanzi</p>
+          <h2>Read the pinyin and English, then write the Chinese characters</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <p>
+            Type the hanzi based on the pinyin and English meaning.
+            Click <strong>Hint</strong> to open a pop-up with stroke-order animation.
+          </p>
+
+          <div id="hanziPracticeGrid" class="hanzi-practice-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-tools" class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">AI Question Box</p>
+          <h2>Ask about meaning, usage, radicals, or concept groups</h2>
+        </div>
+
+        <div class="tools-layout">
+          <div class="card tool-card">
+            <h3>Ask AI about this lesson</h3>
+            <p>
+              You can ask about vocabulary, Wu Zetian's political legacy,
+              radicals, or the difference between similar characters like 于／予／矛.
+            </p>
+
+            <label for="studentQuestionInput">Your question</label>
+            <textarea id="studentQuestionInput" placeholder="Examples:
+How does 虫字旁 help me remember 飞蛾 in this lesson?
+What is the difference between 于, 予, and 矛?
+Why is 持 a good anchor for the 寸 component?
+How does 雁 connect to the 隹 character family?"></textarea>
+
+            <div class="tool-actions">
+              <button class="tool-btn" id="askAiBtn">Ask AI</button>
+              <button class="tool-btn secondary" id="fillExampleBtn">Use Example Question</button>
+            </div>
+
+            <ul class="helper-list">
+              <li>Ask one clear question at a time.</li>
+              <li>Use Chinese words when possible.</li>
+              <li>Try asking about radicals, semantic fields, or historical context.</li>
+            </ul>
+          </div>
+
+          <div class="card result-card">
+            <h3>AI response</h3>
+            <div class="result-meta">
+              <span class="tag">Course: humanities2</span>
+              <span class="tag">Lesson: 4-2</span>
+              <span class="tag" id="currentTaskTag">Task: student question</span>
+            </div>
+
+            <div id="resultBox" class="result-box">Ask a question to get started.</div>
+
+            <div class="tool-actions" style="margin-top: 1rem;">
+              <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vocabulary" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Vocabulary list</p>
+          <h2>Lesson 4.2 New Words</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <p>This is the full vocabulary list for the lesson.</p>
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr><th>#</th><th>词语</th><th>Pinyin</th><th>POS</th><th>English</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">皇后</td><td>huánghòu</td><td>N</td><td>empress, imperial consort</td></tr>
+                <tr><td>2</td><td class="hanzi">治理</td><td>zhìlǐ</td><td>V</td><td>to govern, to administer, to manage</td></tr>
+                <tr><td>3</td><td class="hanzi">掌管</td><td>zhǎngguǎn</td><td>V</td><td>to control, to be in charge of</td></tr>
+                <tr><td>4</td><td class="hanzi">参与</td><td>cānyù</td><td>V</td><td>to participate (in sth.)</td></tr>
+                <tr><td>5</td><td class="hanzi">统治</td><td>tǒngzhì</td><td>V</td><td>to rule (a country), to govern</td></tr>
+                <tr><td>6</td><td class="hanzi">长达</td><td>chángdá</td><td>V</td><td>to extend as long as, to lengthen out to</td></tr>
+                <tr><td>7</td><td class="hanzi">安定</td><td>āndìng</td><td>Adj/V</td><td>stable, calm and orderly; to stabilize</td></tr>
+                <tr><td>8</td><td class="hanzi">强盛</td><td>qiángshèng</td><td>Adj</td><td>rich and powerful</td></tr>
+                <tr><td>9</td><td class="hanzi">人才</td><td>réncái</td><td>N</td><td>talented person</td></tr>
+                <tr><td>10</td><td class="hanzi">选拔</td><td>xuǎnbá</td><td>V</td><td>to select</td></tr>
+                <tr><td>11</td><td class="hanzi">科举</td><td>kējǔ</td><td>N</td><td>imperial examinations</td></tr>
+                <tr><td>12</td><td class="hanzi">改善</td><td>gǎishàn</td><td>V</td><td>to make better, to improve</td></tr>
+                <tr><td>13</td><td class="hanzi">评价</td><td>píngjià</td><td>V/N</td><td>to evaluate, to assess; evaluation</td></tr>
+                <tr><td>14</td><td class="hanzi">正面</td><td>zhèngmiàn</td><td>Adj</td><td>positive</td></tr>
+                <tr><td>15</td><td class="hanzi">理学</td><td>lǐxué</td><td>N</td><td>Neo-Confucian Rationalistic School (from Song to mid-Qing times)</td></tr>
+                <tr><td>16</td><td class="hanzi">容忍</td><td>róngrěn</td><td>V</td><td>to put up with, to tolerate</td></tr>
+                <tr><td>17</td><td class="hanzi">痛恨</td><td>tònghèn</td><td>V</td><td>to detest, to loathe</td></tr>
+                <tr><td>18</td><td class="hanzi">一塌糊涂</td><td>yītāhútú</td><td>IE</td><td>in an awful condition, in a complete mess</td></tr>
+                <tr><td>19</td><td class="hanzi">可信</td><td>kěxìn</td><td>Adj</td><td>trustworthy, credible</td></tr>
+                <tr><td>20</td><td class="hanzi">瞎编</td><td>xiā biān</td><td>VP</td><td>to fabricate (a story)</td></tr>
+                <tr><td>21</td><td class="hanzi">了不起</td><td>liǎobuqǐ</td><td>Adj</td><td>amazing, terrific, extraordinary</td></tr>
+                <tr><td>22</td><td class="hanzi">野史</td><td>yěshǐ</td><td>N</td><td>unofficial history</td></tr>
+                <tr><td>23</td><td class="hanzi">荒淫</td><td>huāngyín</td><td>Adj</td><td>licentious, debauched</td></tr>
+                <tr><td>24</td><td class="hanzi">商榷</td><td>shāngquè</td><td>V</td><td>to discuss, to bring up various ideas for discussion</td></tr>
+                <tr><td>25</td><td class="hanzi">确实</td><td>quèshí</td><td>Adv</td><td>indeed, really</td></tr>
+                <tr><td>26</td><td class="hanzi">容人</td><td>róngrén</td><td>VO</td><td>to tolerate others</td></tr>
+                <tr><td>27</td><td class="hanzi">识人</td><td>shírén</td><td>VO</td><td>to discern character/talent in people</td></tr>
+                <tr><td>28</td><td class="hanzi">提拔</td><td>tíbá</td><td>V</td><td>to promote to a higher job, to give a promotion</td></tr>
+                <tr><td>29</td><td class="hanzi">硬着头皮</td><td>yìngzhe tóupí</td><td>VP</td><td>(lit. to toughen one's scalp) to brace oneself, to force oneself to do sth. against one's will</td></tr>
+                <tr><td>30</td><td class="hanzi">宫殿</td><td>gōngdiàn</td><td>N</td><td>palace</td></tr>
+                <tr><td>31</td><td class="hanzi">飞蛾</td><td>fēi'é</td><td>N</td><td>moth</td></tr>
+                <tr><td>32</td><td class="hanzi">扑</td><td>pū</td><td>V</td><td>to throw oneself at, to rush at</td></tr>
+                <tr><td>33</td><td class="hanzi">自取灭亡</td><td>zìqǔmièwáng</td><td>IE</td><td>to court disaster, to dig one's own grave</td></tr>
+                <tr><td>34</td><td class="hanzi">本性难移</td><td>běnxìng nán yí</td><td>IE</td><td>it is hard to change one's essential nature</td></tr>
+                <tr><td>35</td><td class="hanzi">厚禄</td><td>hòulù</td><td>N</td><td>handsome salary, high government pay</td></tr>
+                <tr><td>36</td><td class="hanzi">源源不断</td><td>yuányuánbúduàn</td><td>IE</td><td>a steady flow, continually</td></tr>
+                <tr><td>37</td><td class="hanzi">持</td><td>chí</td><td>V</td><td>to hold, to maintain</td></tr>
+                <tr><td>38</td><td class="hanzi">智慧</td><td>zhìhuì</td><td>N</td><td>wisdom, intelligence</td></tr>
+                <tr><td>39</td><td class="hanzi">敢作敢为</td><td>gǎnzuògǎnwéi</td><td>IE</td><td>to act with courage and determination</td></tr>
+                <tr><td>40</td><td class="hanzi">女士</td><td>nǚshì</td><td>N</td><td>lady, madam</td></tr>
+                <tr><td>41</td><td class="hanzi">给予</td><td>jǐyǔ</td><td>V</td><td>to accord, to give</td></tr>
+                <tr><td>42</td><td class="hanzi">善于</td><td>shànyú</td><td>V</td><td>to be good at (doing sth.), to be adept at</td></tr>
+                <tr><td>43</td><td class="hanzi">失误</td><td>shīwù</td><td>N/V</td><td>lapse, mistake; to make a mistake</td></tr>
+                <tr><td>44</td><td class="hanzi">否定</td><td>fǒudìng</td><td>V</td><td>to negate, to deny, to reject</td></tr>
+                <tr><td>45</td><td class="hanzi">承认</td><td>chéngrèn</td><td>V</td><td>to admit, to recognize, to acknowledge</td></tr>
+                <tr><td>46</td><td class="hanzi">明君</td><td>míngjūn</td><td>N</td><td>wise ruler, sagacious emperor</td></tr>
+                <tr><td>47</td><td class="hanzi">石碑</td><td>shíbēi</td><td>N</td><td>stele, stone tablet (for inscription)</td></tr>
+                <tr><td>48</td><td class="hanzi">刻</td><td>kè</td><td>V</td><td>to engrave, to carve</td></tr>
+                <tr><td>49</td><td class="hanzi">雁</td><td>yàn</td><td>N</td><td>wild goose</td></tr>
+                <tr><td>50</td><td class="hanzi">树碑立传</td><td>shùbēi lìzhuàn</td><td>IE</td><td>(lit. to erect a stele and write a biography) to monumentalize, to sing the praises of</td></tr>
+                <tr><td>51</td><td class="hanzi">确定</td><td>quèdìng</td><td>Adj/V</td><td>definite, sure; to ensure, to determine, to ascertain, to confirm</td></tr>
+                <tr><td>52</td><td class="hanzi">功德</td><td>gōngdé</td><td>N</td><td>merits and virtues</td></tr>
+                <tr><td>53</td><td class="hanzi">辱骂</td><td>rǔmà</td><td>V</td><td>to insult, to revile</td></tr>
+                <tr><td>54</td><td class="hanzi">功过</td><td>gōngguò</td><td>N</td><td>merits and demerits, contributions and errors</td></tr>
+                <tr><td>55</td><td class="hanzi">本意</td><td>běnyì</td><td>N</td><td>original intention, real intention</td></tr>
+                <tr><td>56</td><td class="hanzi">考证</td><td>kǎozhèng</td><td>V</td><td>to do textual research</td></tr>
+                <tr><td>57</td><td class="hanzi">感慨</td><td>gǎnkǎi</td><td>N</td><td>lament, with a tinge of emotion or regret</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Proper nouns</p>
+          <h2>Key names in Lesson 4.2</h2>
+        </div>
+
+        <div class="card vocab-card">
+          <div class="vocab-table-wrap">
+            <table class="vocab-table">
+              <thead>
+                <tr><th>#</th><th>专名</th><th>Pinyin</th><th>English</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td class="hanzi">武则天</td><td>Wǔ Zétiān</td><td>Wu Zetian (624–705), an empress of Tang Dynasty</td></tr>
+                <tr><td>2</td><td class="hanzi">毛泽东</td><td>Máo Zédōng</td><td>Mao Zedong (1893–1976), Chinese leader</td></tr>
+                <tr><td>3</td><td class="hanzi">宋庆龄</td><td>Sòng Qìnglíng</td><td>Song Qingling (1893–1981), wife of Sun Yat-sen (孙中山)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="hero-actions">
+          <a class="btn btn-secondary" href="lesson-4-1-word.html">Previous lesson</a>
+          <a class="btn btn-primary" href="lesson-4-3-word.html">Next lesson</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="strokeHintModal" class="stroke-modal" aria-hidden="true">
+    <div class="stroke-modal-panel">
+      <div class="stroke-modal-top">
+        <div>
+          <h3 id="strokeModalTitle" class="stroke-modal-title">Stroke Hint</h3>
+          <p id="strokeModalSubtitle" class="stroke-modal-subtitle"></p>
+        </div>
+        <button id="closeStrokeModal" class="stroke-close-btn" type="button">×</button>
+      </div>
+
+      <div class="stroke-modal-actions">
+        <button id="replayStrokeBtn" class="small-btn" type="button">Replay</button>
+        <button id="closeStrokeModalBtn2" class="small-btn secondary" type="button">Close</button>
+      </div>
+
+      <div id="strokeAnimGrid" class="stroke-anim-grid"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Advanced Chinese for Humanities AI</p>
+      <p>Lesson 4.2 Word Explorer</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.0/dist/hanzi-writer.min.js"></script>
+  <script>
+    const WORKER_URL = "https://quiet-field-a529.xc2375.workers.dev";
+
+    const resultBox = document.getElementById("resultBox");
+    const studentQuestionInput = document.getElementById("studentQuestionInput");
+    const askAiBtn = document.getElementById("askAiBtn");
+    const fillExampleBtn = document.getElementById("fillExampleBtn");
+    const clearResultBtn = document.getElementById("clearResultBtn");
+
+    function setLoading() {
+      resultBox.innerHTML = '<span class="loading">Thinking…</span>';
+    }
+
+    function setError(message) {
+      resultBox.innerHTML = `<span class="error-text">${message}</span>`;
+    }
+
+    function setResult(text) {
+      resultBox.textContent = text;
+    }
+
+    function checkPatternQuestion(questionName, correctAnswer, correctFeedback) {
+      const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+
+      if (!selected) {
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = "Please choose an answer first.";
+        return;
+      }
+
+      if (selected.value === correctAnswer) {
+        feedbackBox.className = "mcq-feedback show correct";
+        feedbackBox.textContent = correctFeedback;
+      } else {
+        let message = "";
+
+        if (questionName === "q1") {
+          message = "Not quite. 飞蛾 (moth) is the lesson anchor for 虫字旁. Its appearance in a metaphor about reckless courage makes it especially memorable.";
+        } else if (questionName === "q2") {
+          message = "Not quite. 持 (to hold, to maintain) is the key word containing 寸 in this lesson. Look for the 寸 component on the right side of the character.";
+        } else if (questionName === "q3") {
+          message = "Not quite. 雁 (wild goose) contains 隹. The 隹 component represents a short-tailed bird and appears in many common characters.";
+        } else if (questionName === "q4") {
+          message = "Not quite. 予 means to give (as in 给予), 于 is a preposition meaning in/at/to (as in 善于), and 矛 means spear (as in 矛盾). These three are visually similar but functionally distinct.";
+        }
+
+        feedbackBox.className = "mcq-feedback show incorrect";
+        feedbackBox.textContent = message;
+      }
+    }
+
+    function resetPatternQuestion(questionName) {
+      document.querySelectorAll(`input[name="${questionName}"]`).forEach(input => input.checked = false);
+      const feedbackBox = document.getElementById(`feedback-${questionName}`);
+      feedbackBox.className = "mcq-feedback";
+      feedbackBox.textContent = "";
+    }
+
+    async function askStudentWordHelp(questionText) {
+      try {
+        setLoading();
+
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            course: "humanities2",
+            lesson: "4-2",
+            task: "student_word_help",
+            question: questionText,
+            context: "Lesson 4.2 focuses on Wu Zetian (武则天), China's only female emperor of the Tang Dynasty. Topics include her political achievements, governance, selection of talented officials through the imperial examination system, historical controversies, and assessments of her legacy. Character patterns in this lesson include: 虫字旁 (anchored by 飞蛾), 寸 component (anchored by 持), 隹 component (anchored by 雁 and 确), and the visually similar trio 于／予／矛 (illustrated by 善于, 给予, and 矛盾)."
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed.");
+        }
+
+        const resultText = data.result || "No response returned.";
+        setResult(resultText);
+      } catch (error) {
+        setError(error.message || "Something went wrong.");
+      }
+    }
+
+    askAiBtn.addEventListener("click", async () => {
+      const question = studentQuestionInput.value.trim();
+      if (!question) {
+        setError("Please enter a question first.");
+        return;
+      }
+      await askStudentWordHelp(question);
+    });
+
+    fillExampleBtn.addEventListener("click", () => {
+      studentQuestionInput.value = "What is the difference between 于, 予, and 矛 in Lesson 4.2?";
+    });
+
+    clearResultBtn.addEventListener("click", () => {
+      resultBox.textContent = "Ask a question to get started.";
+    });
+
+    const chipWraps = document.querySelectorAll(".concept-chip-wrap");
+
+    chipWraps.forEach((wrap) => {
+      const chip = wrap.querySelector(".concept-chip");
+      const tooltip = wrap.querySelector(".concept-tooltip");
+
+      chip.addEventListener("mouseenter", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.add("show");
+        }
+      });
+
+      chip.addEventListener("mouseleave", () => {
+        if (window.innerWidth > 768) {
+          tooltip.classList.remove("show");
+        }
+      });
+
+      chip.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+          e.stopPropagation();
+          document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+            if (tip !== tooltip) tip.classList.remove("show");
+          });
+          tooltip.classList.toggle("show");
+        } else {
+          studentQuestionInput.value = `What does ${chip.textContent.trim()} mean in Lesson 4.2?`;
+          window.location.hash = "ai-tools";
+        }
+      });
+
+      tooltip.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".concept-tooltip.show").forEach((tip) => {
+        tip.classList.remove("show");
+      });
+    });
+
+    /* ===== Hanzi Writing Practice ===== */
+    const hanziPracticeData = [
+      { answer: "皇后", pinyin: "huánghòu", english: "empress, imperial consort" },
+      { answer: "统治", pinyin: "tǒngzhì", english: "to rule, to govern" },
+      { answer: "科举", pinyin: "kējǔ", english: "imperial examinations" },
+      { answer: "评价", pinyin: "píngjià", english: "to evaluate; evaluation" },
+      { answer: "飞蛾", pinyin: "fēi'é", english: "moth" },
+      { answer: "宫殿", pinyin: "gōngdiàn", english: "palace" },
+      { answer: "智慧", pinyin: "zhìhuì", english: "wisdom, intelligence" },
+      { answer: "给予", pinyin: "jǐyǔ", english: "to give, to accord" },
+      { answer: "善于", pinyin: "shànyú", english: "to be good at, to be adept at" },
+      { answer: "功德", pinyin: "gōngdé", english: "merits and virtues" }
+    ];
+
+    const hanziPracticeGrid = document.getElementById("hanziPracticeGrid");
+    const strokeHintModal = document.getElementById("strokeHintModal");
+    const strokeAnimGrid = document.getElementById("strokeAnimGrid");
+    const strokeModalTitle = document.getElementById("strokeModalTitle");
+    const strokeModalSubtitle = document.getElementById("strokeModalSubtitle");
+    const closeStrokeModal = document.getElementById("closeStrokeModal");
+    const closeStrokeModalBtn2 = document.getElementById("closeStrokeModalBtn2");
+    const replayStrokeBtn = document.getElementById("replayStrokeBtn");
+
+    let currentStrokeWord = null;
+    let currentStrokeWriters = [];
+
+    function normalizeHanziAnswer(text) {
+      return text.replace(/\s+/g, "").trim();
+    }
+
+    function renderHanziPractice() {
+      if (!hanziPracticeGrid) return;
+
+      hanziPracticeGrid.innerHTML = hanziPracticeData.map((item, index) => `
+        <div class="hanzi-practice-card" data-index="${index}">
+          <div class="practice-top">
+            <div class="practice-num">${index + 1}</div>
+            <div>
+              <div class="practice-pinyin">${item.pinyin}</div>
+              <div class="practice-english">${item.english}</div>
+            </div>
+          </div>
+
+          <input class="practice-input" type="text" placeholder="Type the hanzi here / 在这里写汉字" data-answer="${item.answer}" />
+
+          <div class="practice-actions">
+            <button class="small-btn check-practice-btn" type="button">Check</button>
+            <button class="small-btn secondary hint-practice-btn" type="button">Hint</button>
+          </div>
+
+          <div class="practice-feedback"></div>
+        </div>
+      `).join("");
+    }
+
+    function setPracticeFeedback(card, ok, message) {
+      const feedback = card.querySelector(".practice-feedback");
+      feedback.className = ok ? "practice-feedback show correct" : "practice-feedback show incorrect";
+      feedback.textContent = message;
+    }
+
+    function clearPracticeFeedback(card) {
+      const feedback = card.querySelector(".practice-feedback");
+      feedback.className = "practice-feedback";
+      feedback.textContent = "";
+    }
+
+    function loadHanziData(char) {
+      return fetch(`https://cdn.jsdelivr.net/npm/hanzi-writer-data/${encodeURIComponent(char)}.json`).then((res) => {
+        if (!res.ok) throw new Error("Character data not found");
+        return res.json();
+      });
+    }
+
+    function createStrokeWriter(targetId, char, delay = 0) {
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      target.innerHTML = "";
+
+      if (!window.HanziWriter) {
+        target.textContent = char;
+        return;
+      }
+
+      const writer = HanziWriter.create(target, char, {
+        width: 128,
+        height: 128,
+        padding: 8,
+        showOutline: true,
+        showCharacter: false,
+        strokeAnimationSpeed: 1.05,
+        delayBetweenStrokes: 160,
+        outlineColor: "#d8c3ab",
+        strokeColor: "#1f2937",
+        radicalColor: "#c2410c",
+        charDataLoader: loadHanziData
+      });
+
+      currentStrokeWriters.push(writer);
+
+      setTimeout(() => {
+        writer.animateCharacter();
+      }, delay);
+    }
+
+    function buildStrokeWriters(word) {
+      currentStrokeWriters = [];
+      strokeAnimGrid.innerHTML = [...word].map((char, index) => `
+        <div class="stroke-char-card">
+          <div class="stroke-char-label">${char}</div>
+          <div class="stroke-writer-box" id="stroke-writer-${index}"></div>
+        </div>
+      `).join("");
+
+      [...word].forEach((char, index) => {
+        createStrokeWriter(`stroke-writer-${index}`, char, index * 350);
+      });
+    }
+
+    function openStrokeModal(item) {
+      currentStrokeWord = item;
+      strokeModalTitle.textContent = `Hint: ${item.answer}`;
+      strokeModalSubtitle.textContent = `${item.pinyin} • ${item.english}`;
+      strokeHintModal.classList.add("show");
+      strokeHintModal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+      buildStrokeWriters(item.answer);
+    }
+
+    function closeStrokeHintModal() {
+      strokeHintModal.classList.remove("show");
+      strokeHintModal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("modal-open");
+      strokeAnimGrid.innerHTML = "";
+      currentStrokeWord = null;
+      currentStrokeWriters = [];
+    }
+
+    function replayStrokeAnimations() {
+      if (!currentStrokeWriters.length) return;
+      currentStrokeWriters.forEach((writer, index) => {
+        setTimeout(() => {
+          writer.animateCharacter();
+        }, index * 350);
+      });
+    }
+
+    if (hanziPracticeGrid) {
+      hanziPracticeGrid.addEventListener("click", (e) => {
+        const card = e.target.closest(".hanzi-practice-card");
+        if (!card) return;
+
+        const index = Number(card.dataset.index);
+        const item = hanziPracticeData[index];
+        const input = card.querySelector(".practice-input");
+        const userAnswer = normalizeHanziAnswer(input.value);
+        const correctAnswer = normalizeHanziAnswer(item.answer);
+
+        if (e.target.classList.contains("check-practice-btn")) {
+          if (!userAnswer) {
+            setPracticeFeedback(card, false, "Please type the hanzi first.");
+            return;
+          }
+
+          if (userAnswer === correctAnswer) {
+            setPracticeFeedback(card, true, "Correct! 写得对。");
+          } else {
+            setPracticeFeedback(card, false, `Not quite.\nYour answer: ${input.value || "—"}\nCorrect answer: ${item.answer}`);
+          }
+        }
+
+        if (e.target.classList.contains("hint-practice-btn")) {
+          openStrokeModal(item);
+        }
+      });
+
+      hanziPracticeGrid.addEventListener("input", (e) => {
+        const card = e.target.closest(".hanzi-practice-card");
+        if (!card) return;
+        if (e.target.classList.contains("practice-input")) {
+          clearPracticeFeedback(card);
+        }
+      });
+
+      hanziPracticeGrid.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && e.target.classList.contains("practice-input")) {
+          e.preventDefault();
+          const card = e.target.closest(".hanzi-practice-card");
+          if (!card) return;
+          const btn = card.querySelector(".check-practice-btn");
+          if (btn) btn.click();
+        }
+      });
+    }
+
+    if (closeStrokeModal) {
+      closeStrokeModal.addEventListener("click", closeStrokeHintModal);
+    }
+    if (closeStrokeModalBtn2) {
+      closeStrokeModalBtn2.addEventListener("click", closeStrokeHintModal);
+    }
+    if (replayStrokeBtn) {
+      replayStrokeBtn.addEventListener("click", replayStrokeAnimations);
+    }
+    if (strokeHintModal) {
+      strokeHintModal.addEventListener("click", (e) => {
+        if (e.target === strokeHintModal) {
+          closeStrokeHintModal();
+        }
+      });
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && strokeHintModal && strokeHintModal.classList.contains("show")) {
+        closeStrokeHintModal();
+      }
+    });
+
+    renderHanziPractice();
+  </script>
+</body>
+</html>
