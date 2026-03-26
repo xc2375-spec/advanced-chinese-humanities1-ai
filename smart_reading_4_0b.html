@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Reading 4.0 扩展阅读 – 丑石</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Noto Serif SC", "Source Han Serif CN", Georgia, serif;
+      background: #faf8fd; color: #1e1228; line-height: 2; font-size: 18px;
+    }
+    .page-header {
+      background: linear-gradient(135deg, #4a2a6a 0%, #6b4c8a 100%);
+      color: #fff; padding: 24px 32px 20px;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .page-header .back-link {
+      text-decoration: none; color: rgba(255,255,255,0.85);
+      font-size: 13px; font-family: sans-serif;
+      display: flex; align-items: center; gap: 5px; white-space: nowrap;
+    }
+    .page-header .back-link:hover { color: #fff; }
+    .page-header .badge {
+      background: rgba(255,255,255,0.22); border-radius: 6px;
+      padding: 4px 12px; font-size: 13px; letter-spacing: 1px;
+      font-family: sans-serif; white-space: nowrap;
+    }
+    .page-header h1 { font-size: 20px; flex: 1; }
+
+    .sub-nav {
+      background: #f5f0fb; border-bottom: 2px solid #d5c4ec;
+      padding: 10px 32px; display: flex; gap: 10px; flex-wrap: wrap; font-family: sans-serif;
+    }
+    .sub-nav a {
+      text-decoration: none; font-size: 13px; padding: 5px 14px;
+      border-radius: 999px; border: 1px solid #c4aee0; color: #4a2a6a; transition: background 0.15s;
+    }
+    .sub-nav a:hover, .sub-nav a.active { background: #6b4c8a; color: #fff; border-color: #6b4c8a; }
+
+    .audio-section {
+      background: #f5f0fb; border-bottom: 1px solid #d5c4ec;
+      padding: 12px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .audio-label {
+      font-size: 14px; color: #5a3e78; font-family: sans-serif;
+      white-space: nowrap; display: flex; align-items: center; gap: 6px;
+    }
+    .audio-placeholder {
+      flex: 1; background: #ede8f7; border: 2px dashed #b8a0d8;
+      border-radius: 8px; padding: 8px 16px; font-size: 13px;
+      color: #7a5a9a; font-family: sans-serif; text-align: center;
+    }
+
+    .reading-wrap { max-width: 820px; margin: 0 auto; padding: 36px 32px 20px; }
+    .reading-title {
+      text-align: center; font-size: 26px; font-weight: 700;
+      letter-spacing: 4px; margin-bottom: 6px; color: #3a1a5a;
+    }
+    .reading-subtitle {
+      text-align: center; font-size: 13px; color: #8a6aaa;
+      font-family: sans-serif; margin-bottom: 30px; letter-spacing: 1px;
+    }
+    .reading-body p { text-indent: 2em; margin-bottom: 20px; }
+    .reading-body .dialogue { text-indent: 2em; margin-bottom: 10px; }
+
+    .vocab {
+      color: #6b1a9a; font-weight: bold; cursor: pointer;
+      position: relative; border-bottom: 1px dotted #6b1a9a; display: inline;
+    }
+    .vocab-tip {
+      display: none; position: absolute; bottom: calc(100% + 8px);
+      left: 50%; transform: translateX(-50%);
+      background: #1e1228; color: #faf8fd; border-radius: 8px;
+      padding: 8px 13px; white-space: nowrap; z-index: 100;
+      font-size: 14px; font-family: sans-serif; line-height: 1.5;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35); pointer-events: none;
+    }
+    .vocab-tip::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%); border: 6px solid transparent;
+      border-top-color: #1e1228;
+    }
+    .vocab-tip .tip-pinyin { color: #c8a0f0; font-style: italic; display: block; font-size: 13px; }
+    .vocab-tip .tip-en { display: block; font-size: 13px; margin-top: 2px; }
+    @media (hover: hover) and (pointer: fine) { .vocab:hover .vocab-tip { display: block; } }
+    .vocab.tip-active .vocab-tip { display: block; }
+    .vocab.flip-down .vocab-tip { bottom: auto; top: calc(100% + 8px); }
+    .vocab.flip-down .vocab-tip::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: #1e1228; }
+
+    .section-divider { border: none; border-top: 2px solid #d5c4ec; margin: 36px 0 28px; }
+
+    .questions-section { max-width: 820px; margin: 0 auto; padding: 0 32px 48px; }
+    .questions-header {
+      font-size: 18px; font-weight: 700; color: #3a1a5a;
+      margin-bottom: 24px; font-family: sans-serif; display: flex; align-items: center; gap: 10px;
+    }
+    .question-card {
+      background: #fff; border: 1px solid #d5c4ec; border-radius: 12px;
+      padding: 22px 24px; margin-bottom: 22px; box-shadow: 0 2px 8px rgba(80,40,120,0.07);
+    }
+    .question-text {
+      font-size: 16px; font-weight: 600; margin-bottom: 14px;
+      color: #1e1228; line-height: 1.7; font-family: sans-serif;
+    }
+    .question-num {
+      display: inline-block; background: #6b4c8a; color: #fff;
+      border-radius: 50%; width: 26px; height: 26px; line-height: 26px;
+      text-align: center; font-size: 14px; margin-right: 8px;
+    }
+    .options-list { list-style: none; }
+    .options-list li { margin-bottom: 8px; }
+    .option-btn {
+      width: 100%; text-align: left; background: #faf8fd;
+      border: 2px solid #d5c4ec; border-radius: 8px; padding: 10px 16px;
+      font-size: 15px; cursor: pointer; transition: background 0.15s, border-color 0.15s;
+      color: #1e1228; font-family: sans-serif; line-height: 1.6;
+    }
+    .option-btn:hover:not(:disabled) { background: #ede8f7; border-color: #b090d0; }
+    .option-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+    .option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+    .option-btn.reveal-correct { background: #d4edda; border-color: #28a745; color: #155724; opacity: 0.75; }
+    .option-btn:disabled { cursor: default; }
+    .feedback {
+      margin-top: 12px; padding: 10px 14px; border-radius: 8px;
+      font-size: 14px; font-family: sans-serif; display: none; line-height: 1.6;
+    }
+    .feedback.show { display: block; }
+    .feedback.fb-correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .feedback.fb-wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    .results-bar {
+      margin-top: 32px; display: none; background: #fff;
+      border: 1px solid #d5c4ec; border-radius: 12px;
+      padding: 20px 24px; text-align: center; font-family: sans-serif;
+    }
+    .results-bar.show { display: block; }
+    .results-score { font-size: 32px; font-weight: 700; color: #6b4c8a; }
+    .results-label { font-size: 15px; color: #4a2a6a; margin-top: 4px; }
+    .retry-btn {
+      margin-top: 14px; background: #6b4c8a; color: #fff; border: none;
+      border-radius: 8px; padding: 10px 28px; font-size: 15px;
+      cursor: pointer; font-family: sans-serif;
+    }
+    .retry-btn:hover { background: #4a2a6a; }
+
+    .nav-links-wrap {
+      max-width: 820px; margin: 0 auto; padding: 12px 32px 48px;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-family: sans-serif;
+    }
+    .nav-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none; background: #6b4c8a; color: #fff;
+      padding: 10px 22px; border-radius: 8px; font-size: 14px;
+      font-weight: 600; transition: background 0.15s;
+    }
+    .nav-link:hover { background: #4a2a6a; }
+    .nav-link.secondary { background: #fff; color: #6b4c8a; border: 2px solid #6b4c8a; }
+    .nav-link.secondary:hover { background: #f3eefb; }
+
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+      .reading-wrap, .questions-section, .nav-links-wrap { padding-left: 16px; padding-right: 16px; }
+      .page-header, .audio-section, .sub-nav { padding-left: 16px; padding-right: 16px; }
+      .reading-title { font-size: 22px; }
+      .option-btn { font-size: 14px; padding: 9px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <a class="back-link" href="smart-reading.html">← 智慧阅读</a>
+  <div class="badge">扩展阅读 4.0</div>
+  <h1>女性・婚姻・社会 — Smart Reading</h1>
+</header>
+
+<nav class="sub-nav">
+  <a href="smart_reading_4_0.html">📖 课文：中国女性的社会地位</a>
+  <a href="smart_reading_4_0b.html" class="active">📖 扩展阅读：丑石</a>
+</nav>
+
+<div class="audio-section">
+  <div class="audio-label">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    </svg>
+    朗读音频
+  </div>
+  <div class="audio-placeholder">
+    🎙️ 音频文件待上传 &nbsp;|&nbsp; <small>请将音频命名为 <code>audio/reading_4_0b.mp3</code></small>
+  </div>
+</div>
+
+<div class="reading-wrap">
+  <h2 class="reading-title">丑　石</h2>
+  <p class="reading-subtitle">扩展阅读 · 第四单元开篇 · 根据贾平凹《丑石》改写</p>
+
+  <div class="reading-body">
+
+    <p>
+      我常常<vocab-w data-pinyin="yíhàn" data-en="to regret; to feel sorry; regretful">遗憾</vocab-w>我家门前的那块丑石：它<vocab-w data-pinyin="hēiyōuyōu" data-en="dark; pitch-black">黑黝黝</vocab-w>地躺在那里，跟一头牛似的；谁也不知道它是什么时候来到这里的，谁也不去<vocab-w data-pinyin="lǐhuì" data-en="to take notice of; to pay attention to">理会</vocab-w>它。只有到了<vocab-w data-pinyin="màishōu" data-en="wheat harvest; harvesting wheat">麦收</vocab-w>季节，门前<vocab-w data-pinyin="tān" data-en="to spread out; to lay out">摊</vocab-w>了麦子，<vocab-w data-pinyin="nǎinai" data-en="grandmother; grandma">奶奶</vocab-w>总是说："这块丑石，多<vocab-w data-pinyin="dǎishǒu dǎijiǎo" data-en="to be in the way; to obstruct">碍手碍脚</vocab-w>啊，什么时候把它搬走吧。"
+    </p>
+
+    <p>
+      于是，<vocab-w data-pinyin="bófù" data-en="father's elder brother; uncle">伯父</vocab-w>家<vocab-w data-pinyin="gài" data-en="to build; to construct">盖</vocab-w>房，想用它<vocab-w data-pinyin="lèi" data-en="to build by piling up bricks or stones">垒</vocab-w>墙，但它极不<vocab-w data-pinyin="guīzé" data-en="regular; orderly; well-formed">规则</vocab-w>，没<vocab-w data-pinyin="léngjiǎo" data-en="edges and corners; sharp angles">棱角</vocab-w>儿，也没平面儿；把它砸开吧，又<vocab-w data-pinyin="lǎnde" data-en="to be disinclined to; not to feel like">懒得</vocab-w>花那么大的力气，因为<vocab-w data-pinyin="hétān" data-en="riverbank; riverside">河滩</vocab-w>并不很远，随便去找一块回来，哪一块也比它强。房子盖好了，垒<vocab-w data-pinyin="táijiē" data-en="steps leading up to a house">台阶</vocab-w>时，伯父也没有看上它。有一年，来了一个<vocab-w data-pinyin="shíjiàng" data-en="stonemason">石匠</vocab-w>，为我家洗一台石磨，奶奶又说："用这块丑石吧，<vocab-w data-pinyin="shěngde" data-en="so as to avoid; to save the trouble of">省得</vocab-w>从远处搬动。"石匠看了看，摇着头，说它不够<vocab-w data-pinyin="cūcāo" data-en="rough; coarse; crude">粗糙</vocab-w>，也没有用处。
+    </p>
+
+    <p>
+      它不像玉那样的<vocab-w data-pinyin="xìnì" data-en="fine and smooth; delicate and exquisite">细腻</vocab-w>，可以在上面<vocab-w data-pinyin="diāokè" data-en="to carve; to engrave">雕花刻</vocab-w>字，也不像大青石那样的<vocab-w data-pinyin="guānghuá" data-en="smooth; sleek">光滑</vocab-w>，可以用来洗衣服；它静静地躺在那里，门前的<vocab-w data-pinyin="shùyīn" data-en="shade of a tree">树荫</vocab-w>没有<vocab-w data-pinyin="zhēdǎng" data-en="to shelter; to shield; to block">遮挡</vocab-w>它，花儿也不在它身上生长。周围只有<vocab-w data-pinyin="huāngcǎo" data-en="weeds; wild grass">荒草</vocab-w>，慢慢地，它居然长出了绿<vocab-w data-pinyin="tái" data-en="moss; lichen">苔</vocab-w>、黑<vocab-w data-pinyin="bān" data-en="spot; speck; patch">斑</vocab-w>。我们这些孩子，也<vocab-w data-pinyin="tǎoyàn" data-en="to dislike; to be fed up with">讨厌</vocab-w>起它来，曾经一起要搬走它，但力气不够；虽然大家骂它、<vocab-w data-pinyin="xiánqì" data-en="to dislike and avoid; to look down on">嫌弃</vocab-w>它，但也<vocab-w data-pinyin="wúkěnàihé" data-en="to have no alternative; helpless">无可奈何</vocab-w>，只好随它留在那里了。
+    </p>
+
+    <p>
+      <vocab-w data-pinyin="shāoshao" data-en="slightly; a little bit">稍稍</vocab-w>能安慰我们的，是在那石上有一个不大不小的<vocab-w data-pinyin="āokēng" data-en="concave depression; hollow; pit">凹坑</vocab-w>，雨天就<vocab-w data-pinyin="chéng" data-en="to fill; to ladle; to contain">盛</vocab-w>满了水。常常雨过三天了，地上已经干了，那凹坑里还有水，小鸡就去那里喝水。<vocab-w data-pinyin="měidāng" data-en="whenever; every time">每当</vocab-w>到了十五的晚上，我们<vocab-w data-pinyin="pàn" data-en="to hope for; to look forward to">盼</vocab-w>满月出来，就爬到丑石上，望着天边，奶奶总是要骂的，害怕我们摔下来。<vocab-w data-pinyin="guǒrán" data-en="as expected; sure enough; indeed">果然</vocab-w>有一次我摔了下来，摔破了<vocab-w data-pinyin="xīgài" data-en="knee">膝盖</vocab-w>。
+    </p>
+
+    <p>
+      人人都骂它是丑石，它真是丑得不能再丑的丑石了。
+    </p>
+
+    <p>
+      终于有一天，村子里来了一个天文学家。他从我家门前路过，突然发现了这块石头，眼睛马上就直了。他再也没有离开，在这儿住了下来；以后又来了好多人，说这是一块<vocab-w data-pinyin="yǔnshí" data-en="meteorite">陨石</vocab-w>，从天上落下来已经有二三百年了，是一件<vocab-w data-pinyin="liǎobuqǐ" data-en="amazing; extraordinary; remarkable">了不起</vocab-w>的东西。不久便来了车，<vocab-w data-pinyin="xiǎoxīn yìyì" data-en="very carefully; with great caution">小心翼翼</vocab-w>地把它搬走了。
+    </p>
+
+    <p>
+      这使我们都很<vocab-w data-pinyin="jīngqí" data-en="amazed; astonished; surprised">惊奇</vocab-w>！这又怪又丑的石头，原来是天上的呢！它在天上<vocab-w data-pinyin="shǎn" data-en="to flash; to shine; to glitter">闪</vocab-w>过光，我们的祖先也许<vocab-w data-pinyin="yǎngwàng" data-en="to look up at; to gaze up toward">仰望</vocab-w>过它，它给了他们光明、<vocab-w data-pinyin="chōngjǐng" data-en="to yearn for; to look forward to">憧憬</vocab-w>；而它后来落下来了，在脏土里、荒草里，一躺就是几百年了？！
+    </p>
+
+    <p class="dialogue">奶奶说："真看不出来！它那么不一般，却怎么连墙也垒不了，台阶也垒不成呢？"</p>
+    <p class="dialogue">"它是太丑了。"天文学家说。</p>
+    <p class="dialogue">"真的，是太丑了。"</p>
+    <p class="dialogue">"可这正是它的美！"天文学家说，"它是以丑为美的。"</p>
+    <p class="dialogue">"以丑为美？"</p>
+    <p class="dialogue">"是的，丑到<vocab-w data-pinyin="jídiǎn" data-en="the extreme; the utmost degree">极点</vocab-w>，便是美到极点。正因为它不是一般的石头，当然不能去做墙、做台阶，不能去雕刻、洗衣服。它不是做这些小事情的，所以就常常受到<vocab-w data-pinyin="shísú" data-en="worldly; conventional; common">世俗</vocab-w>的<vocab-w data-pinyin="jīfèng" data-en="to ridicule; to mock; to jeer">讥讽</vocab-w>。"</p>
+
+    <p>
+      奶奶脸红了，我也脸红了。
+    </p>
+
+    <p>
+      我感到了自己的<vocab-w data-pinyin="wúzhī" data-en="ignorance; lack of knowledge">无知</vocab-w>，也感到了丑石的伟大；我甚至<vocab-w data-pinyin="yuànhèn" data-en="to resent; to have a grudge against">怨恨</vocab-w>它这么多年来<vocab-w data-pinyin="mòmò" data-en="silently; quietly; without a word">默默</vocab-w>地忍受着这一切，而我又立刻深深地感到它那种不怕被<vocab-w data-pinyin="wùjiě" data-en="to misunderstand; to misinterpret">误解</vocab-w>、<vocab-w data-pinyin="jìmò" data-en="lonely; solitary; desolate">寂寞</vocab-w>地生存的伟大。
+    </p>
+
+  </div>
+</div>
+
+<hr class="section-divider" style="max-width:820px;margin:0 auto 28px;">
+
+<div class="questions-section">
+  <div class="questions-header"><span>📖</span> 阅读理解</div>
+
+  <div class="question-card" id="q1">
+    <div class="question-text"><span class="question-num">1</span>文章开头，家里人和孩子们对丑石的态度是怎样的？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="1" data-idx="0">A. 大家都很喜欢丑石，把它当作宝贝</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="1">B. 大家嫌弃丑石，认为它又碍事又没用，想把它搬走</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="2">C. 大家对丑石漠不关心，从来不提它</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="3">D. 大家把丑石当作建筑材料，经常使用它</button></li>
+    </ul>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <div class="question-card" id="q2">
+    <div class="question-text"><span class="question-num">2</span>人们试图把丑石用于哪些用途，但都失败了？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="2" data-idx="0">A. 用来做家具和装饰品</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="1">B. 用来垒墙、垒台阶、做石磨，但都因为它形状不规则而被放弃</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="2">C. 用来种花，但花不愿意在它身上生长</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="3">D. 用来做艺术品，但雕刻师嫌它太硬</button></li>
+    </ul>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <div class="question-card" id="q3">
+    <div class="question-text"><span class="question-num">3</span>天文学家发现丑石后，人们得知了什么令人惊讶的事实？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="3" data-idx="0">A. 丑石其实是一块珍贵的玉石</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="1">B. 丑石是一块有二三百年历史的陨石，是从天上落下来的</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="2">C. 丑石下面埋藏着金子</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="3">D. 丑石是古代皇帝留下来的文物</button></li>
+    </ul>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <div class="question-card" id="q4">
+    <div class="question-text"><span class="question-num">4</span>天文学家说"丑到极点，便是美到极点"，他想表达什么意思？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="4" data-idx="0">A. 丑的东西经过改造以后可以变得美丽</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="1">B. 真正不凡的事物有自己独特的价值，不能用世俗的标准来评判</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="2">C. 外表的美丑并不重要，内心才是最重要的</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="3">D. 丑石应该被保护起来，不能让任何人触碰</button></li>
+    </ul>
+    <div class="feedback" id="fb4"></div>
+  </div>
+
+  <div class="question-card" id="q5">
+    <div class="question-text"><span class="question-num">5</span>文章结尾，"我"深深感受到丑石的伟大在于什么？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="5" data-idx="0">A. 丑石能在恶劣的环境中长出绿苔，生命力很顽强</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="1">B. 丑石默默忍受了多年的误解与嫌弃，却坚持以自己的方式寂寞地生存</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="2">C. 丑石最终被天文学家带走，实现了自己的价值</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="3">D. 丑石经历了几百年的历史，见证了无数的人和事</button></li>
+    </ul>
+    <div class="feedback" id="fb5"></div>
+  </div>
+
+  <div class="results-bar" id="results-bar">
+    <div class="results-score" id="results-score"></div>
+    <div class="results-label" id="results-label"></div>
+    <button class="retry-btn" onclick="resetQuiz()">重新作答</button>
+  </div>
+</div>
+
+<div class="nav-links-wrap">
+  <a class="nav-link secondary" href="smart_reading_4_0.html">← 课文：中国女性的社会地位</a>
+  <a class="nav-link" href="smart_reading_4_1.html">下一课：梁山伯与祝英台 →</a>
+</div>
+
+<script>
+(function buildVocab() {
+  document.querySelectorAll('vocab-w').forEach(el => {
+    const span = document.createElement('span');
+    span.className = 'vocab';
+    span.innerHTML = `${el.textContent}<span class="vocab-tip"><span class="tip-pinyin">${el.dataset.pinyin||''}</span><span class="tip-en">${el.dataset.en||''}</span></span>`;
+    el.replaceWith(span);
+  });
+})();
+
+let activeVocab = null;
+document.addEventListener('touchstart', function(e) {
+  const v = e.target.closest('.vocab');
+  if (v) {
+    e.preventDefault();
+    v.classList[v.getBoundingClientRect().top < 80 ? 'add' : 'remove']('flip-down');
+    if (activeVocab && activeVocab !== v) activeVocab.classList.remove('tip-active');
+    v.classList.toggle('tip-active');
+    activeVocab = v.classList.contains('tip-active') ? v : null;
+  } else {
+    if (activeVocab) { activeVocab.classList.remove('tip-active'); activeVocab = null; }
+  }
+}, { passive: false });
+
+const ANSWERS = { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 };
+const FEEDBACK = {
+  1: {
+    correct: '✅ 正确！文中奶奶说丑石"碍手碍脚"，孩子们"讨厌起它来，曾经一起要搬走它"，石匠也摇头说它没用——大家都嫌弃它。',
+    wrong: '❌ 再想想。文章开头几段描述了家里人和孩子们对丑石的各种反应，请综合来看。'
+  },
+  2: {
+    correct: '✅ 正确！伯父想用它垒墙，但它不规则、没棱角；垒台阶时没看上它；石匠说它不够粗糙，做不了石磨——三次尝试都失败了。',
+    wrong: '❌ 再想想。文章第二段描述了人们试图利用丑石的几次尝试，请仔细阅读。'
+  },
+  3: {
+    correct: '✅ 正确！天文学家说"这是一块陨石，从天上落下来已经有二三百年了，是一件了不起的东西"。',
+    wrong: '❌ 再想想。文章第六段记录了天文学家和后来来的人们的发现。'
+  },
+  4: {
+    correct: '✅ 正确！天文学家解释说，正因为丑石不是普通的石头，所以"不能去做墙、做台阶"——它有自己更高的价值，不应该用世俗的标准衡量，"以丑为美"是对不凡事物的另一种认识。',
+    wrong: '❌ 再想想。天文学家的这段对话是文章的核心，他解释的是为什么丑石不能用于日常用途，以及这背后的深层含义。'
+  },
+  5: {
+    correct: '✅ 正确！文章最后说"我"感到了丑石"那种不怕被误解、寂寞地生存的伟大"——它多年来默默忍受嫌弃与误解，这种坚守才是它真正的伟大之处。',
+    wrong: '❌ 再想想。文章最后一段是"我"的心理活动，请注意"误解"和"寂寞地生存"这两个关键词。'
+  }
+};
+
+const answered = {};
+let totalAnswered = 0;
+const TOTAL_Q = 5;
+
+document.querySelectorAll('.option-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const q = parseInt(this.dataset.q);
+    const idx = parseInt(this.dataset.idx);
+    if (answered[q]) return;
+    answered[q] = true; totalAnswered++;
+    const correct = ANSWERS[q];
+    const allBtns = document.querySelectorAll(`.option-btn[data-q="${q}"]`);
+    allBtns.forEach(b => b.disabled = true);
+    const fb = document.getElementById('fb' + q);
+    if (idx === correct) {
+      this.classList.add('correct');
+      fb.textContent = FEEDBACK[q].correct;
+      fb.className = 'feedback show fb-correct';
+    } else {
+      this.classList.add('wrong');
+      allBtns[correct].classList.add('reveal-correct');
+      fb.textContent = FEEDBACK[q].wrong;
+      fb.className = 'feedback show fb-wrong';
+    }
+    if (totalAnswered === TOTAL_Q) showResults();
+  });
+});
+
+function showResults() {
+  const score = Object.keys(answered).filter(q =>
+    [...document.querySelectorAll(`.option-btn[data-q="${q}"]`)].some(b => b.classList.contains('correct'))
+  ).length;
+  document.getElementById('results-score').textContent = `${score} / ${TOTAL_Q}`;
+  const msgs = ['📚 继续努力！建议多读几遍文章。','📚 继续努力！','🙂 还不错！再回顾一下答错的题。','👍 很好！掌握得相当不错。','🎉 非常好！','🎉 完美！全部答对！你对《丑石》掌握得非常好！'];
+  document.getElementById('results-label').textContent = msgs[score] || '';
+  const bar = document.getElementById('results-bar');
+  bar.classList.add('show');
+  bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function resetQuiz() {
+  Object.keys(answered).forEach(k => delete answered[k]);
+  totalAnswered = 0;
+  document.querySelectorAll('.option-btn').forEach(b => { b.disabled = false; b.className = 'option-btn'; });
+  document.querySelectorAll('.feedback').forEach(f => { f.className = 'feedback'; f.textContent = ''; });
+  document.getElementById('results-bar').classList.remove('show');
+}
+</script>
+</body>
+</html>
