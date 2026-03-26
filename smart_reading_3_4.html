@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Reading 3.4（一）– 天衣无缝</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Noto Serif SC", "Source Han Serif CN", Georgia, serif;
+      background: #fdf8f0; color: #2c1a0e; line-height: 2; font-size: 18px;
+    }
+    .page-header {
+      background: linear-gradient(135deg, #8b3a1a 0%, #b5451b 100%);
+      color: #fff; padding: 24px 32px 20px;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .page-header .back-link {
+      text-decoration: none; color: rgba(255,255,255,0.85);
+      font-size: 13px; font-family: sans-serif;
+      display: flex; align-items: center; gap: 5px; white-space: nowrap;
+    }
+    .page-header .back-link:hover { color: #fff; }
+    .page-header .badge {
+      background: rgba(255,255,255,0.25); border-radius: 6px;
+      padding: 4px 12px; font-size: 13px; letter-spacing: 1px;
+      font-family: sans-serif; white-space: nowrap;
+    }
+    .page-header h1 { font-size: 20px; flex: 1; }
+
+    .sub-nav {
+      background: #fff7ee; border-bottom: 2px solid #e8d5b0;
+      padding: 10px 32px; display: flex; gap: 10px; flex-wrap: wrap; font-family: sans-serif;
+    }
+    .sub-nav a {
+      text-decoration: none; font-size: 13px; padding: 5px 14px;
+      border-radius: 999px; border: 1px solid #d8c4a0; color: #6b3a1a; transition: background 0.15s;
+    }
+    .sub-nav a:hover, .sub-nav a.active { background: #b5451b; color: #fff; border-color: #b5451b; }
+
+    .audio-section {
+      background: #fff7ee; border-bottom: 1px solid #e8d5b0;
+      padding: 12px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .audio-label {
+      font-size: 14px; color: #8b5e3c; font-family: sans-serif;
+      white-space: nowrap; display: flex; align-items: center; gap: 6px;
+    }
+    .audio-placeholder {
+      flex: 1; background: #f0e8d8; border: 2px dashed #c8a97a;
+      border-radius: 8px; padding: 8px 16px; font-size: 13px;
+      color: #9c7a56; font-family: sans-serif; text-align: center;
+    }
+
+    .reading-wrap { max-width: 820px; margin: 0 auto; padding: 36px 32px 20px; }
+    .reading-title {
+      text-align: center; font-size: 26px; font-weight: 700;
+      letter-spacing: 3px; margin-bottom: 4px; color: #5a1e10;
+    }
+    .reading-subtitle {
+      text-align: center; font-size: 13px; color: #9c7a56;
+      font-family: sans-serif; margin-bottom: 6px; letter-spacing: 1px;
+    }
+    .idiom-box {
+      max-width: 520px; margin: 0 auto 28px;
+      background: #fff7ee; border: 1.5px solid #e2c9a0;
+      border-radius: 10px; padding: 12px 20px;
+      font-family: sans-serif; font-size: 14px; color: #6b3a1a; line-height: 1.7;
+      text-align: center;
+    }
+    .idiom-box strong { color: #b5451b; font-size: 15px; }
+
+    .reading-body p { text-indent: 2em; margin-bottom: 20px; }
+    .reading-body .dialogue { text-indent: 2em; margin-bottom: 12px; }
+
+    .vocab {
+      color: #b5180e; font-weight: bold; cursor: pointer;
+      position: relative; border-bottom: 1px dotted #b5180e; display: inline;
+    }
+    .vocab-tip {
+      display: none; position: absolute; bottom: calc(100% + 8px);
+      left: 50%; transform: translateX(-50%);
+      background: #2c1a0e; color: #fdf8f0; border-radius: 8px;
+      padding: 8px 13px; white-space: nowrap; z-index: 100;
+      font-size: 14px; font-family: sans-serif; line-height: 1.5;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35); pointer-events: none;
+    }
+    .vocab-tip::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%); border: 6px solid transparent;
+      border-top-color: #2c1a0e;
+    }
+    .vocab-tip .tip-pinyin { color: #f0c080; font-style: italic; display: block; font-size: 13px; }
+    .vocab-tip .tip-en { display: block; font-size: 13px; margin-top: 2px; }
+    @media (hover: hover) and (pointer: fine) { .vocab:hover .vocab-tip { display: block; } }
+    .vocab.tip-active .vocab-tip { display: block; }
+    .vocab.flip-down .vocab-tip { bottom: auto; top: calc(100% + 8px); }
+    .vocab.flip-down .vocab-tip::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: #2c1a0e; }
+
+    .section-divider { border: none; border-top: 2px solid #e0c896; margin: 36px 0 28px; }
+
+    .questions-section { max-width: 820px; margin: 0 auto; padding: 0 32px 48px; }
+    .questions-header {
+      font-size: 18px; font-weight: 700; color: #5a1e10;
+      margin-bottom: 24px; font-family: sans-serif; display: flex; align-items: center; gap: 10px;
+    }
+    .question-card {
+      background: #fff; border: 1px solid #e0c896; border-radius: 12px;
+      padding: 22px 24px; margin-bottom: 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .question-text {
+      font-size: 16px; font-weight: 600; margin-bottom: 14px;
+      color: #2c1a0e; line-height: 1.7; font-family: sans-serif;
+    }
+    .question-num {
+      display: inline-block; background: #b5451b; color: #fff;
+      border-radius: 50%; width: 26px; height: 26px; line-height: 26px;
+      text-align: center; font-size: 14px; margin-right: 8px; flex-shrink: 0;
+    }
+    .options-list { list-style: none; }
+    .options-list li { margin-bottom: 8px; }
+    .option-btn {
+      width: 100%; text-align: left; background: #fdf8f0;
+      border: 2px solid #e0c896; border-radius: 8px; padding: 10px 16px;
+      font-size: 15px; cursor: pointer; transition: background 0.15s, border-color 0.15s;
+      color: #2c1a0e; font-family: sans-serif; line-height: 1.6;
+    }
+    .option-btn:hover:not(:disabled) { background: #f5e6c8; border-color: #c0a060; }
+    .option-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+    .option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+    .option-btn.reveal-correct { background: #d4edda; border-color: #28a745; color: #155724; opacity: 0.75; }
+    .option-btn:disabled { cursor: default; }
+    .feedback {
+      margin-top: 12px; padding: 10px 14px; border-radius: 8px;
+      font-size: 14px; font-family: sans-serif; display: none; line-height: 1.6;
+    }
+    .feedback.show { display: block; }
+    .feedback.fb-correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .feedback.fb-wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    .results-bar {
+      margin-top: 32px; display: none; background: #fff;
+      border: 1px solid #e0c896; border-radius: 12px;
+      padding: 20px 24px; text-align: center; font-family: sans-serif;
+    }
+    .results-bar.show { display: block; }
+    .results-score { font-size: 32px; font-weight: 700; color: #b5451b; }
+    .results-label { font-size: 15px; color: #5a3e28; margin-top: 4px; }
+    .retry-btn {
+      margin-top: 14px; background: #b5451b; color: #fff; border: none;
+      border-radius: 8px; padding: 10px 28px; font-size: 15px;
+      cursor: pointer; font-family: sans-serif;
+    }
+    .retry-btn:hover { background: #8b3a1a; }
+
+    .nav-links-wrap {
+      max-width: 820px; margin: 0 auto; padding: 12px 32px 48px;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-family: sans-serif;
+    }
+    .nav-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none; background: #b5451b; color: #fff;
+      padding: 10px 22px; border-radius: 8px; font-size: 14px;
+      font-weight: 600; transition: background 0.15s;
+    }
+    .nav-link:hover { background: #8b3a1a; }
+    .nav-link.secondary { background: #fff; color: #b5451b; border: 2px solid #b5451b; }
+    .nav-link.secondary:hover { background: #fdf0ec; }
+
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+      .reading-wrap, .questions-section, .nav-links-wrap { padding-left: 16px; padding-right: 16px; }
+      .page-header, .audio-section, .sub-nav { padding-left: 16px; padding-right: 16px; }
+      .reading-title { font-size: 22px; }
+      .option-btn { font-size: 14px; padding: 9px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <a class="back-link" href="smart-reading.html">← 智慧阅读</a>
+  <div class="badge">成语故事 3.4（一）</div>
+  <h1>艺术人生 — Smart Reading</h1>
+</header>
+
+<nav class="sub-nav">
+  <a href="smart_reading_3_4a.html" class="active">📖 天衣无缝</a>
+  <a href="smart_reading_3_4b.html">📖 胸有成竹</a>
+</nav>
+
+<div class="audio-section">
+  <div class="audio-label">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    </svg>
+    朗读音频
+  </div>
+  <div class="audio-placeholder">
+    🎙️ 音频文件待上传 &nbsp;|&nbsp; <small>请将音频命名为 <code>audio/reading_3_4a.mp3</code></small>
+  </div>
+</div>
+
+<!-- ── Reading Text ── -->
+<div class="reading-wrap">
+  <h2 class="reading-title">天衣无缝</h2>
+  <p class="reading-subtitle">第三单元 · 第四课 · 成语故事（一）</p>
+
+  <div class="idiom-box">
+    <strong>天衣无缝</strong> tiānyī wú fèng<br>
+    比喻事情或文章等<strong>极为周密完美</strong>，找不出任何破绽或毛病。<br>
+    <em>Literally: heavenly garment with no seams — used to describe something flawless and perfectly executed.</em>
+  </div>
+
+  <div class="reading-body">
+
+    <p>
+      唐代的时候，有个叫<vocab-w data-pinyin="Guō Hàn" data-en="Guo Han (name of a person)">郭翰</vocab-w>的读书人，长得很帅。他不但会写诗，在绘画方面也很有<vocab-w data-pinyin="tiāncái" data-en="talent; natural gift; genius">天赋</vocab-w>，经常有人从很远的地方来买他的画儿。由于父母去世很早，郭翰从十几岁开始就一个人生活。
+    </p>
+
+    <p>
+      郭翰说话很<vocab-w data-pinyin="yōumò" data-en="humorous; witty">幽默</vocab-w>，喜欢跟人开玩笑。一个夏天的晚上，他坐在树下<vocab-w data-pinyin="chéng liáng" data-en="to enjoy the cool air; to cool off">乘凉</vocab-w>，只见明月高高地挂在夜空，天上的白云自由地<vocab-w data-pinyin="piāo" data-en="to float; to drift">飘</vocab-w>着，凉风吹来，满<vocab-w data-pinyin="yuànzi" data-en="courtyard; yard">院子</vocab-w>都是醉人的花香，让人感到心情<vocab-w data-pinyin="shūchàng" data-en="happy and relaxed; comfortable">舒畅</vocab-w>。就在这时，一位长得非常美丽的姑娘<vocab-w data-pinyin="wēixiào" data-en="to smile gently; a gentle smile">微笑</vocab-w>着站在郭翰面前。
+    </p>
+
+    <p class="dialogue">
+      郭翰很<vocab-w data-pinyin="yǒu lǐmào" data-en="polite; courteous">有礼貌</vocab-w>地问："姑娘，你叫什么名字？从哪里来？"
+    </p>
+    <p class="dialogue">
+      姑娘说："我是<vocab-w data-pinyin="Zhīnǚ" data-en="the Weaving Girl (a figure in Chinese mythology)">织女</vocab-w>，从天上来。"
+    </p>
+    <p class="dialogue">
+      郭翰问："你从天上来，能谈谈天上的事情吗？"
+    </p>
+    <p class="dialogue">
+      姑娘问："你想知道什么？"
+    </p>
+    <p class="dialogue">
+      郭翰说："我什么都想知道。"
+    </p>
+    <p class="dialogue">
+      姑娘说："这可难了，你让我从哪里说起呀？"
+    </p>
+    <p class="dialogue">
+      郭翰说："人们都说<vocab-w data-pinyin="xiānrén" data-en="immortal; celestial being; fairy">仙人</vocab-w>聪明，你就随便说说吧。"
+    </p>
+    <p class="dialogue">
+      姑娘说："天上四季如春，夏无<vocab-w data-pinyin="kùshǔ" data-en="sweltering heat; intense summer heat">酷暑</vocab-w>，冬无<vocab-w data-pinyin="yánhán" data-en="severe cold; bitter cold">严寒</vocab-w>；树木常青，花开不<vocab-w data-pinyin="xiè" data-en="to wither; to fade (of flowers)">谢</vocab-w>。林中有自由的鸟儿，水里是快乐的游鱼。没有疾病，没有战争，没有<vocab-w data-pinyin="fùshuì" data-en="taxes; levies">赋税</vocab-w>，<vocab-w data-pinyin="zǒngzhī" data-en="in short; in a word; all in all">总之</vocab-w>，<vocab-w data-pinyin="rénjiān" data-en="the human world; the mortal world">人间</vocab-w>的一切痛苦天上都没有。"
+    </p>
+    <p class="dialogue">
+      郭翰说："天上那么好，你为什么还跑到人间来呢？"
+    </p>
+    <p class="dialogue">
+      姑娘说："亏你还是个读书人。你们的前辈庄周老先生不是说过吗？'在种满<vocab-w data-pinyin="lánhuā" data-en="orchid">兰花</vocab-w>的屋子里待久了，就闻不到花的香味了'。我们在天上待久了，<vocab-w data-pinyin="nánmiǎn" data-en="unavoidable; inevitably">难免</vocab-w>有些<vocab-w data-pinyin="jìmò" data-en="lonely; lonesome; solitary">寂寞</vocab-w>，所以<vocab-w data-pinyin="ǒu'ěr" data-en="occasionally; once in a while">偶尔</vocab-w>会到人间玩玩。"
+    </p>
+    <p class="dialogue">
+      郭翰又问："听说有一种药，人吃了可以<vocab-w data-pinyin="chángshēng bùlǎo" data-en="to live forever; eternal youth">长生不老</vocab-w>，你知道哪儿有吗？"
+    </p>
+    <p class="dialogue">
+      姑娘说："这种药人间没有，天上到处都是。"
+    </p>
+    <p class="dialogue">
+      郭翰说："既然天上多得很，你应该带点儿下来，让人们尝尝多好啊。"
+    </p>
+    <p class="dialogue">
+      姑娘说："带不下来。天上的东西带到人间就失去了<vocab-w data-pinyin="língqì" data-en="spiritual energy; magical essence">灵气</vocab-w>，不然早就让秦始皇吃了。"
+    </p>
+    <p class="dialogue">
+      郭翰说："你说你从天上来，用什么证明你不是在说<vocab-w data-pinyin="huǎnghuà" data-en="lies; false words">谎话</vocab-w>呢？"
+    </p>
+
+    <p>
+      姑娘走近郭翰，让郭翰看看自己穿的衣服。郭翰仔细看完，吃惊地发现姑娘的衣服上一条缝都没有。
+    </p>
+
+    <p class="dialogue">
+      姑娘说："天上的衣服本来就不是用针线做的呀！天衣无缝，你连这个都不懂，还算什么读书人啊？我看你是个大傻瓜。"
+    </p>
+
+    <p>
+      郭翰听完，哈哈大笑，再一看，姑娘已经不见了。
+    </p>
+
+    <p>
+      后来，人们就用"天衣无缝"比喻一件东西或者事情很<vocab-w data-pinyin="zhōumì" data-en="meticulous; thorough; carefully thought out">周密</vocab-w>，找不出什么<vocab-w data-pinyin="máobìng" data-en="flaw; defect; fault">毛病</vocab-w>，没有一点儿<vocab-w data-pinyin="pòzhàn" data-en="flaw; weak point; loophole">破绽</vocab-w>。比如，"听说警察正在外面等着抓他，他感到很吃惊，因为他一直认为自己的计划天衣无缝，不会被人发现的"。又如，"虽然这是<vocab-w data-pinyin="Zhèng Shuài" data-en="Zheng Shuai (a person's name)">郑帅</vocab-w>和<vocab-w data-pinyin="Mǎ Yǒuyǒu" data-en="Ma Youyou (a person's name)">马友友</vocab-w>的第一次<vocab-w data-pinyin="hézuò" data-en="cooperation; collaboration">合作</vocab-w>，但两人的<vocab-w data-pinyin="pèihé" data-en="coordination; cooperation; to work together">配合</vocab-w>天衣无缝，非常完美"。
+    </p>
+
+  </div>
+</div>
+
+<hr class="section-divider" style="max-width:820px;margin:0 auto 28px;">
+
+<div class="questions-section">
+  <div class="questions-header"><span>📖</span> 阅读理解</div>
+
+  <!-- Q1 -->
+  <div class="question-card" id="q1">
+    <div class="question-text"><span class="question-num">1</span>郭翰是个什么样的人？下面哪个描述最符合文章的内容？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="1" data-idx="0">A. 性格内向、不爱说话的画家</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="1">B. 才华出众、幽默风趣、从小独立生活的读书人</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="2">C. 贪心自私、专门寻找长生不老药的人</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="3">D. 平凡普通、没有任何特别之处的农民</button></li>
+    </ul>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-card" id="q2">
+    <div class="question-text"><span class="question-num">2</span>织女描述天上的生活，下面哪一项不是她说的内容？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="2" data-idx="0">A. 四季如春，没有酷暑严寒</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="1">B. 树木常青，花开不谢</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="2">C. 天上的食物比人间美味一百倍</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="3">D. 没有疾病、没有战争、没有赋税</button></li>
+    </ul>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-card" id="q3">
+    <div class="question-text"><span class="question-num">3</span>织女说她偶尔来人间玩玩，是因为什么原因？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="3" data-idx="0">A. 她被天帝惩罚，不得不下凡</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="1">B. 她想来人间寻找长生不老药</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="2">C. 在天上待久了，难免有些寂寞</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="3">D. 她想学习人间的绘画技术</button></li>
+    </ul>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-card" id="q4">
+    <div class="question-text"><span class="question-num">4</span>郭翰问织女怎么证明自己是从天上来的，织女是如何证明的？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="4" data-idx="0">A. 她从空中飞了一圈，又落了下来</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="1">B. 她拿出了一包长生不老药</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="2">C. 她让郭翰看她的衣服，衣服上一条缝都没有</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="3">D. 她把郭翰带到了天上去参观</button></li>
+    </ul>
+    <div class="feedback" id="fb4"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-card" id="q5">
+    <div class="question-text"><span class="question-num">5</span>成语"天衣无缝"现在用来比喻什么？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="5" data-idx="0">A. 衣服的质量非常好，不容易破</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="1">B. 一件事或一件东西极为周密完美，找不出任何毛病或破绽</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="2">C. 一个人非常聪明，什么都懂</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="3">D. 天上的仙人来到人间生活</button></li>
+    </ul>
+    <div class="feedback" id="fb5"></div>
+  </div>
+
+  <div class="results-bar" id="results-bar">
+    <div class="results-score" id="results-score"></div>
+    <div class="results-label" id="results-label"></div>
+    <button class="retry-btn" onclick="resetQuiz()">重新作答</button>
+  </div>
+</div>
+
+<div class="nav-links-wrap">
+  <a class="nav-link secondary" href="smart_reading_3_3.html">← 上一课</a>
+  <a class="nav-link" href="smart_reading_3_4b.html">胸有成竹 →</a>
+</div>
+
+<script>
+(function buildVocab() {
+  document.querySelectorAll('vocab-w').forEach(el => {
+    const span = document.createElement('span');
+    span.className = 'vocab';
+    span.innerHTML = `${el.textContent}<span class="vocab-tip"><span class="tip-pinyin">${el.dataset.pinyin||''}</span><span class="tip-en">${el.dataset.en||''}</span></span>`;
+    el.replaceWith(span);
+  });
+})();
+
+let activeVocab = null;
+document.addEventListener('touchstart', function(e) {
+  const v = e.target.closest('.vocab');
+  if (v) {
+    e.preventDefault();
+    v.classList[v.getBoundingClientRect().top < 80 ? 'add' : 'remove']('flip-down');
+    if (activeVocab && activeVocab !== v) activeVocab.classList.remove('tip-active');
+    v.classList.toggle('tip-active');
+    activeVocab = v.classList.contains('tip-active') ? v : null;
+  } else {
+    if (activeVocab) { activeVocab.classList.remove('tip-active'); activeVocab = null; }
+  }
+}, { passive: false });
+
+const ANSWERS = { 1: 1, 2: 2, 3: 2, 4: 2, 5: 1 };
+const FEEDBACK = {
+  1: {
+    correct: '✅ 正确！文中说郭翰"不但会写诗，在绘画方面也很有天赋"，"说话很幽默，喜欢跟人开玩笑"，"从十几岁开始就一个人生活"。',
+    wrong:   '❌ 再想想。文章第一、二段描述了郭翰的才能和性格特点，请综合来看。'
+  },
+  2: {
+    correct: '✅ 正确！文中织女没有提到食物更美味。她描述的是气候、植物、动物以及没有痛苦的生活。',
+    wrong:   '❌ 再想想。请仔细阅读织女介绍天上生活的那段对话，看哪项内容她没有提到。'
+  },
+  3: {
+    correct: '✅ 正确！织女引用庄周的话说"在种满兰花的屋子里待久了，就闻不到花的香味了"，然后解释道"我们在天上待久了，难免有些寂寞"。',
+    wrong:   '❌ 再想想。织女解释来人间的原因时，引用了庄周的一句话，再看看她的完整解释。'
+  },
+  4: {
+    correct: '✅ 正确！文中说"姑娘走近郭翰，让郭翰看看自己穿的衣服……吃惊地发现姑娘的衣服上一条缝都没有"。',
+    wrong:   '❌ 再想想。织女让郭翰仔细看了什么？郭翰发现了什么令他吃惊的事？'
+  },
+  5: {
+    correct: '✅ 正确！文章结尾说"天衣无缝"比喻"一件东西或者事情很周密，找不出什么毛病，没有一点儿破绽"。',
+    wrong:   '❌ 再想想。文章最后一段直接解释了这个成语的现代用法。'
+  }
+};
+
+const answered = {};
+let totalAnswered = 0;
+const TOTAL_Q = 5;
+
+document.querySelectorAll('.option-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const q = parseInt(this.dataset.q);
+    const idx = parseInt(this.dataset.idx);
+    if (answered[q]) return;
+    answered[q] = true; totalAnswered++;
+    const correct = ANSWERS[q];
+    const allBtns = document.querySelectorAll(`.option-btn[data-q="${q}"]`);
+    allBtns.forEach(b => b.disabled = true);
+    const fb = document.getElementById('fb' + q);
+    if (idx === correct) {
+      this.classList.add('correct');
+      fb.textContent = FEEDBACK[q].correct;
+      fb.className = 'feedback show fb-correct';
+    } else {
+      this.classList.add('wrong');
+      allBtns[correct].classList.add('reveal-correct');
+      fb.textContent = FEEDBACK[q].wrong;
+      fb.className = 'feedback show fb-wrong';
+    }
+    if (totalAnswered === TOTAL_Q) showResults();
+  });
+});
+
+function showResults() {
+  const score = Object.keys(answered).filter(q =>
+    [...document.querySelectorAll(`.option-btn[data-q="${q}"]`)].some(b => b.classList.contains('correct'))
+  ).length;
+  document.getElementById('results-score').textContent = `${score} / ${TOTAL_Q}`;
+  const msgs = ['📚 继续努力！建议多读几遍。','📚 继续努力！','🙂 还不错！再回顾一下答错的题。','👍 很好！掌握得相当不错。','🎉 非常好！','🎉 完美！全部答对！'];
+  document.getElementById('results-label').textContent = msgs[score] || '';
+  const bar = document.getElementById('results-bar');
+  bar.classList.add('show');
+  bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function resetQuiz() {
+  Object.keys(answered).forEach(k => delete answered[k]);
+  totalAnswered = 0;
+  document.querySelectorAll('.option-btn').forEach(b => { b.disabled = false; b.className = 'option-btn'; });
+  document.querySelectorAll('.feedback').forEach(f => { f.className = 'feedback'; f.textContent = ''; });
+  document.getElementById('results-bar').classList.remove('show');
+}
+</script>
+</body>
+</html>
