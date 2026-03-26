@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Reading 3.4（二）– 胸有成竹</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Noto Serif SC", "Source Han Serif CN", Georgia, serif;
+      background: #fdf8f0; color: #2c1a0e; line-height: 2; font-size: 18px;
+    }
+    .page-header {
+      background: linear-gradient(135deg, #8b3a1a 0%, #b5451b 100%);
+      color: #fff; padding: 24px 32px 20px;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .page-header .back-link {
+      text-decoration: none; color: rgba(255,255,255,0.85);
+      font-size: 13px; font-family: sans-serif;
+      display: flex; align-items: center; gap: 5px; white-space: nowrap;
+    }
+    .page-header .back-link:hover { color: #fff; }
+    .page-header .badge {
+      background: rgba(255,255,255,0.25); border-radius: 6px;
+      padding: 4px 12px; font-size: 13px; letter-spacing: 1px;
+      font-family: sans-serif; white-space: nowrap;
+    }
+    .page-header h1 { font-size: 20px; flex: 1; }
+
+    .sub-nav {
+      background: #fff7ee; border-bottom: 2px solid #e8d5b0;
+      padding: 10px 32px; display: flex; gap: 10px; flex-wrap: wrap; font-family: sans-serif;
+    }
+    .sub-nav a {
+      text-decoration: none; font-size: 13px; padding: 5px 14px;
+      border-radius: 999px; border: 1px solid #d8c4a0; color: #6b3a1a; transition: background 0.15s;
+    }
+    .sub-nav a:hover, .sub-nav a.active { background: #b5451b; color: #fff; border-color: #b5451b; }
+
+    .audio-section {
+      background: #fff7ee; border-bottom: 1px solid #e8d5b0;
+      padding: 12px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .audio-label {
+      font-size: 14px; color: #8b5e3c; font-family: sans-serif;
+      white-space: nowrap; display: flex; align-items: center; gap: 6px;
+    }
+    .audio-placeholder {
+      flex: 1; background: #f0e8d8; border: 2px dashed #c8a97a;
+      border-radius: 8px; padding: 8px 16px; font-size: 13px;
+      color: #9c7a56; font-family: sans-serif; text-align: center;
+    }
+
+    .reading-wrap { max-width: 820px; margin: 0 auto; padding: 36px 32px 20px; }
+    .reading-title {
+      text-align: center; font-size: 26px; font-weight: 700;
+      letter-spacing: 3px; margin-bottom: 4px; color: #5a1e10;
+    }
+    .reading-subtitle {
+      text-align: center; font-size: 13px; color: #9c7a56;
+      font-family: sans-serif; margin-bottom: 6px; letter-spacing: 1px;
+    }
+    .idiom-box {
+      max-width: 520px; margin: 0 auto 28px;
+      background: #fff7ee; border: 1.5px solid #e2c9a0;
+      border-radius: 10px; padding: 12px 20px;
+      font-family: sans-serif; font-size: 14px; color: #6b3a1a; line-height: 1.7;
+      text-align: center;
+    }
+    .idiom-box strong { color: #b5451b; font-size: 15px; }
+
+    .reading-body p { text-indent: 2em; margin-bottom: 20px; }
+
+    .vocab {
+      color: #b5180e; font-weight: bold; cursor: pointer;
+      position: relative; border-bottom: 1px dotted #b5180e; display: inline;
+    }
+    .vocab-tip {
+      display: none; position: absolute; bottom: calc(100% + 8px);
+      left: 50%; transform: translateX(-50%);
+      background: #2c1a0e; color: #fdf8f0; border-radius: 8px;
+      padding: 8px 13px; white-space: nowrap; z-index: 100;
+      font-size: 14px; font-family: sans-serif; line-height: 1.5;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35); pointer-events: none;
+    }
+    .vocab-tip::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%); border: 6px solid transparent;
+      border-top-color: #2c1a0e;
+    }
+    .vocab-tip .tip-pinyin { color: #f0c080; font-style: italic; display: block; font-size: 13px; }
+    .vocab-tip .tip-en { display: block; font-size: 13px; margin-top: 2px; }
+    @media (hover: hover) and (pointer: fine) { .vocab:hover .vocab-tip { display: block; } }
+    .vocab.tip-active .vocab-tip { display: block; }
+    .vocab.flip-down .vocab-tip { bottom: auto; top: calc(100% + 8px); }
+    .vocab.flip-down .vocab-tip::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: #2c1a0e; }
+
+    .section-divider { border: none; border-top: 2px solid #e0c896; margin: 36px 0 28px; }
+
+    .questions-section { max-width: 820px; margin: 0 auto; padding: 0 32px 48px; }
+    .questions-header {
+      font-size: 18px; font-weight: 700; color: #5a1e10;
+      margin-bottom: 24px; font-family: sans-serif; display: flex; align-items: center; gap: 10px;
+    }
+    .question-card {
+      background: #fff; border: 1px solid #e0c896; border-radius: 12px;
+      padding: 22px 24px; margin-bottom: 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .question-text {
+      font-size: 16px; font-weight: 600; margin-bottom: 14px;
+      color: #2c1a0e; line-height: 1.7; font-family: sans-serif;
+    }
+    .question-num {
+      display: inline-block; background: #b5451b; color: #fff;
+      border-radius: 50%; width: 26px; height: 26px; line-height: 26px;
+      text-align: center; font-size: 14px; margin-right: 8px;
+    }
+    .options-list { list-style: none; }
+    .options-list li { margin-bottom: 8px; }
+    .option-btn {
+      width: 100%; text-align: left; background: #fdf8f0;
+      border: 2px solid #e0c896; border-radius: 8px; padding: 10px 16px;
+      font-size: 15px; cursor: pointer; transition: background 0.15s, border-color 0.15s;
+      color: #2c1a0e; font-family: sans-serif; line-height: 1.6;
+    }
+    .option-btn:hover:not(:disabled) { background: #f5e6c8; border-color: #c0a060; }
+    .option-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+    .option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+    .option-btn.reveal-correct { background: #d4edda; border-color: #28a745; color: #155724; opacity: 0.75; }
+    .option-btn:disabled { cursor: default; }
+    .feedback {
+      margin-top: 12px; padding: 10px 14px; border-radius: 8px;
+      font-size: 14px; font-family: sans-serif; display: none; line-height: 1.6;
+    }
+    .feedback.show { display: block; }
+    .feedback.fb-correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .feedback.fb-wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    .results-bar {
+      margin-top: 32px; display: none; background: #fff;
+      border: 1px solid #e0c896; border-radius: 12px;
+      padding: 20px 24px; text-align: center; font-family: sans-serif;
+    }
+    .results-bar.show { display: block; }
+    .results-score { font-size: 32px; font-weight: 700; color: #b5451b; }
+    .results-label { font-size: 15px; color: #5a3e28; margin-top: 4px; }
+    .retry-btn {
+      margin-top: 14px; background: #b5451b; color: #fff; border: none;
+      border-radius: 8px; padding: 10px 28px; font-size: 15px;
+      cursor: pointer; font-family: sans-serif;
+    }
+    .retry-btn:hover { background: #8b3a1a; }
+
+    .nav-links-wrap {
+      max-width: 820px; margin: 0 auto; padding: 12px 32px 48px;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-family: sans-serif;
+    }
+    .nav-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none; background: #b5451b; color: #fff;
+      padding: 10px 22px; border-radius: 8px; font-size: 14px;
+      font-weight: 600; transition: background 0.15s;
+    }
+    .nav-link:hover { background: #8b3a1a; }
+    .nav-link.secondary { background: #fff; color: #b5451b; border: 2px solid #b5451b; }
+    .nav-link.secondary:hover { background: #fdf0ec; }
+
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+      .reading-wrap, .questions-section, .nav-links-wrap { padding-left: 16px; padding-right: 16px; }
+      .page-header, .audio-section, .sub-nav { padding-left: 16px; padding-right: 16px; }
+      .reading-title { font-size: 22px; }
+      .option-btn { font-size: 14px; padding: 9px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <a class="back-link" href="smart-reading.html">← 智慧阅读</a>
+  <div class="badge">成语故事 3.4（二）</div>
+  <h1>艺术人生 — Smart Reading</h1>
+</header>
+
+<nav class="sub-nav">
+  <a href="smart_reading_3_4a.html">📖 天衣无缝</a>
+  <a href="smart_reading_3_4b.html" class="active">📖 胸有成竹</a>
+</nav>
+
+<div class="audio-section">
+  <div class="audio-label">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    </svg>
+    朗读音频
+  </div>
+  <div class="audio-placeholder">
+    🎙️ 音频文件待上传 &nbsp;|&nbsp; <small>请将音频命名为 <code>audio/reading_3_4b.mp3</code></small>
+  </div>
+</div>
+
+<!-- ── Reading Text ── -->
+<div class="reading-wrap">
+  <h2 class="reading-title">胸有成竹</h2>
+  <p class="reading-subtitle">第三单元 · 第四课 · 成语故事（二）</p>
+
+  <div class="idiom-box">
+    <strong>胸有成竹</strong> xiōng yǒu chéng zhú<br>
+    比喻做事之前已经做好了<strong>充分准备</strong>，对事情的成功有十分的<strong>把握</strong>；又比喻遇事不着急，十分沉着。<br>
+    <em>Literally: bamboo already formed in the chest — having a well-formed plan before beginning; completely confident and prepared.</em>
+  </div>
+
+  <div class="reading-body">
+
+    <p>
+      宋朝的时候有一位著名的画家，名字叫<vocab-w data-pinyin="Wén Tóng" data-en="Wen Tong (Song dynasty painter, master of bamboo painting)">文同</vocab-w>。文同画竹子画得非常好，竹子在他的笔下，就像是被<vocab-w data-pinyin="zhùrù" data-en="to inject; to infuse (life)">注入</vocab-w>了生命，<vocab-w data-pinyin="xíngtài" data-en="form; shape; appearance">形态</vocab-w>多样，<vocab-w data-pinyin="hútú rú shēng" data-en="lifelike; vivid and true to life">栩栩如生</vocab-w>。由于他画的竹子远近<vocab-w data-pinyin="wénmíng" data-en="well-known; famous; celebrated">闻名</vocab-w>，每天都有不少人到他家里来求画。
+    </p>
+
+    <p>
+      文同能把竹子画得这么好并不是<vocab-w data-pinyin="ǒurán" data-en="accidental; by chance; coincidental">偶然</vocab-w>的。据说为了能仔细观察竹子的生长，把竹子画得更生动，他在自己屋后的山上种满了竹子。不管是春夏秋冬，也不管是刮风下雨，或是天晴天阴，他都<vocab-w data-pinyin="chángnián" data-en="year after year; all year round">常年</vocab-w>不断地在竹林里<vocab-w data-pinyin="zuān" data-en="to drill into; to go deep into">钻</vocab-w>来钻去。夏天最热的时候，太阳就像一团火，<vocab-w data-pinyin="kǎo" data-en="to bake; to scorch">烤</vocab-w>得地面很<vocab-w data-pinyin="tàng" data-en="very hot; scalding">烫</vocab-w>。朋友们都在屋里聊天、下棋、喝凉茶，可是文同<vocab-w data-pinyin="zhàoyàng" data-en="as before; all the same; in the same way">照样</vocab-w>跑到竹林那里，面对着太阳，站在烤人的阳光下，<vocab-w data-pinyin="quán shén guàn zhù" data-en="to concentrate all one's attention; to be fully absorbed">全神贯注</vocab-w>地观察竹子的变化。他一会儿用手指<vocab-w data-pinyin="liàng" data-en="to measure">量</vocab-w>一量竹子有多长，一会儿又在纸上记下<vocab-w data-pinyin="yèzi" data-en="leaves">叶子</vocab-w>有多<vocab-w data-pinyin="mì" data-en="dense; thick">密</vocab-w>。没多久，<vocab-w data-pinyin="hànshuǐ" data-en="sweat; perspiration">汗水</vocab-w>就<vocab-w data-pinyin="shītòu" data-en="to soak through; to drench">湿透</vocab-w>了他的衣服，他满脸都流着汗，可还是忙着观察、记录，脸上的汗水连<vocab-w data-pinyin="cā" data-en="to wipe; to rub">擦</vocab-w>都不擦一下，就跟没事儿似的。
+    </p>
+
+    <p>
+      有一次，突然刮起了大风，接着，<vocab-w data-pinyin="diànshǎn léimíng" data-en="lightning and thunder; thunderstorm">电闪雷鸣</vocab-w>，<vocab-w data-pinyin="yǎnkàn" data-en="in a moment; soon; evidently">眼看</vocab-w>一场大雨就要到来。路上的行人都着急地往家跑，离家远的就赶紧找<vocab-w data-pinyin="duǒ yǔ" data-en="to shelter from rain; to take cover from rain">躲雨</vocab-w>的地方。可就在这个时候，坐在家里的文同，站起身来抓起一顶草帽，往头上一<vocab-w data-pinyin="kòu" data-en="to put on (a hat); to buckle onto">扣</vocab-w>，就向山上的竹林跑去。他刚跑出大门，天上就下起了<vocab-w data-pinyin="qīng pén dà yǔ" data-en="torrential rain; a downpour">倾盆大雨</vocab-w>。
+    </p>
+
+    <p>
+      文同急着要看风雨中竹子的样子，根本<vocab-w data-pinyin="gù bu shàng" data-en="to have no time to attend to; to disregard">顾不上</vocab-w>雨急路<vocab-w data-pinyin="huá" data-en="slippery">滑</vocab-w>。他摔倒了几次，又爬起来继续跑。最后文同<vocab-w data-pinyin="qì chuǎn xū xū" data-en="panting; gasping for breath">气喘吁吁</vocab-w>地跑进竹林，脸上的雨水都没顾上擦，就全神贯注地观察起竹子来了。只见竹子在风雨的<vocab-w data-pinyin="chuī dǎ" data-en="(of wind and rain) to beat against; to lash">吹打</vocab-w>下，<vocab-w data-pinyin="wān yāo" data-en="to bend at the waist; to bow">弯腰</vocab-w>点头，摇来摇去，就像一个<vocab-w data-pinyin="jiāoměi dòngrén" data-en="graceful and charming">娇媚动人</vocab-w>的舞女。文同仔细地把竹子受风雨吹打的样子记在脑子里。
+    </p>
+
+    <p>
+      由于文同对竹子进行了长时间的观察和研究，因此，在春夏秋冬四季，竹子的<vocab-w data-pinyin="xíngzhuàng" data-en="form; shape; appearance">形状</vocab-w>有什么变化，在阴晴雨雪天，竹子的颜色有什么<vocab-w data-pinyin="liǎngyàng" data-en="differences; two different kinds">两样</vocab-w>，在很强的阳光下和在<vocab-w data-pinyin="míngjìng" data-en="clear and bright; translucent">明净</vocab-w>的月光中，竹子又有哪些不同，文同都记在心中。他只要拿起笔，平时观察到的各种形态的竹子就会出现在他的眼前。所以他画竹子时，非常<vocab-w data-pinyin="chénzhuó" data-en="calm; composed; steady">沉着</vocab-w>自信，画出来的竹子也都很<vocab-w data-pinyin="nìzhēn" data-en="lifelike; true to life; realistic">逼真</vocab-w>。
+    </p>
+
+    <p>
+      那时候有个名人夸奖文同的画说："文同画竹，早已胸有成竹了。"
+    </p>
+
+    <p>
+      后来，"胸有成竹"就成了一个成语，用来比喻做事之前已经做好了<vocab-w data-pinyin="chōngfèn" data-en="full; sufficient; ample">充分</vocab-w>准备，对事情的成功有了十分的<vocab-w data-pinyin="bǎwò" data-en="certainty; assurance; confidence">把握</vocab-w>；又比喻遇事不着急，十分沉着。比如："对在明天的比赛中打败德国队，意大利的队员们似乎胸有成竹。"又如："如果我们每天都能勤学苦练，掌握好基本知识，那么考试的时候就会胸有成竹。"
+    </p>
+
+  </div>
+</div>
+
+<hr class="section-divider" style="max-width:820px;margin:0 auto 28px;">
+
+<div class="questions-section">
+  <div class="questions-header"><span>📖</span> 阅读理解</div>
+
+  <!-- Q1 -->
+  <div class="question-card" id="q1">
+    <div class="question-text"><span class="question-num">1</span>文同为了能把竹子画得更好，他采取了什么实际行动？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="1" data-idx="0">A. 他去拜访了当时最有名的画家，向他们学习技巧</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="1">B. 他在屋后山上种满了竹子，常年不断地去竹林观察研究</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="2">C. 他买了很多竹子的画，反复临摹</button></li>
+      <li><button class="option-btn" data-q="1" data-idx="3">D. 他把竹子搬到家里，在室内慢慢研究</button></li>
+    </ul>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-card" id="q2">
+    <div class="question-text"><span class="question-num">2</span>夏天最热的时候，文同的朋友们在做什么？文同在做什么？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="2" data-idx="0">A. 朋友们在竹林里休息；文同在家里画画</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="1">B. 朋友们在屋里聊天、下棋、喝凉茶；文同照样去竹林全神贯注地观察竹子</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="2">C. 朋友们和文同一起去竹林研究竹子</button></li>
+      <li><button class="option-btn" data-q="2" data-idx="3">D. 朋友们在外面避暑；文同在家里睡觉</button></li>
+    </ul>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-card" id="q3">
+    <div class="question-text"><span class="question-num">3</span>大雨来临时，文同做了什么令人意外的事情？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="3" data-idx="0">A. 他和别人一样急忙找地方躲雨</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="1">B. 他关上了窗户，在家里继续画画</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="2">C. 他戴上草帽，冒雨跑进竹林，去观察竹子在风雨中的样子</button></li>
+      <li><button class="option-btn" data-q="3" data-idx="3">D. 他叫朋友帮他去竹林记录竹子的变化</button></li>
+    </ul>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-card" id="q4">
+    <div class="question-text"><span class="question-num">4</span>为什么文同画竹子时能非常沉着自信？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="4" data-idx="0">A. 因为他天生就有绘画天赋，不需要努力</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="1">B. 因为他长时间观察研究竹子，把各种形态都记在了心中</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="2">C. 因为他使用了特别贵重的画笔和颜料</button></li>
+      <li><button class="option-btn" data-q="4" data-idx="3">D. 因为他从来不画困难的东西，只画简单的竹子</button></li>
+    </ul>
+    <div class="feedback" id="fb4"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-card" id="q5">
+    <div class="question-text"><span class="question-num">5</span>成语"胸有成竹"现在主要用来比喻什么？</div>
+    <ul class="options-list">
+      <li><button class="option-btn" data-q="5" data-idx="0">A. 一个人非常擅长画竹子</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="1">B. 做事之前已有充分准备，对成功有十分把握；遇事沉着不慌</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="2">C. 一个人心胸宽广，能包容他人</button></li>
+      <li><button class="option-btn" data-q="5" data-idx="3">D. 描述一个人体力很好，能在雨中奔跑</button></li>
+    </ul>
+    <div class="feedback" id="fb5"></div>
+  </div>
+
+  <div class="results-bar" id="results-bar">
+    <div class="results-score" id="results-score"></div>
+    <div class="results-label" id="results-label"></div>
+    <button class="retry-btn" onclick="resetQuiz()">重新作答</button>
+  </div>
+</div>
+
+<div class="nav-links-wrap">
+  <a class="nav-link secondary" href="smart_reading_3_4a.html">← 天衣无缝</a>
+  <a class="nav-link" href="smart_reading_4_0.html">第四单元开始 →</a>
+</div>
+
+<script>
+(function buildVocab() {
+  document.querySelectorAll('vocab-w').forEach(el => {
+    const span = document.createElement('span');
+    span.className = 'vocab';
+    span.innerHTML = `${el.textContent}<span class="vocab-tip"><span class="tip-pinyin">${el.dataset.pinyin||''}</span><span class="tip-en">${el.dataset.en||''}</span></span>`;
+    el.replaceWith(span);
+  });
+})();
+
+let activeVocab = null;
+document.addEventListener('touchstart', function(e) {
+  const v = e.target.closest('.vocab');
+  if (v) {
+    e.preventDefault();
+    v.classList[v.getBoundingClientRect().top < 80 ? 'add' : 'remove']('flip-down');
+    if (activeVocab && activeVocab !== v) activeVocab.classList.remove('tip-active');
+    v.classList.toggle('tip-active');
+    activeVocab = v.classList.contains('tip-active') ? v : null;
+  } else {
+    if (activeVocab) { activeVocab.classList.remove('tip-active'); activeVocab = null; }
+  }
+}, { passive: false });
+
+const ANSWERS = { 1: 1, 2: 1, 3: 2, 4: 1, 5: 1 };
+const FEEDBACK = {
+  1: {
+    correct: '✅ 正确！文中说文同"在自己屋后的山上种满了竹子"，"常年不断地在竹林里钻来钻去"观察研究。',
+    wrong:   '❌ 再想想。文章第二段描述了文同为了画好竹子所做的具体行动。'
+  },
+  2: {
+    correct: '✅ 正确！文中说"朋友们都在屋里聊天、下棋、喝凉茶，可是文同照样跑到竹林那里……全神贯注地观察竹子的变化"。',
+    wrong:   '❌ 再想想。文章第二段对比描述了朋友们和文同在夏天各自的行为。'
+  },
+  3: {
+    correct: '✅ 正确！文中说文同"站起身来抓起一顶草帽，往头上一扣，就向山上的竹林跑去"，冒着倾盆大雨去观察竹子。',
+    wrong:   '❌ 再想想。文章第三段描述了大雨来临时文同做出的令人意外的举动。'
+  },
+  4: {
+    correct: '✅ 正确！文中说"由于文同对竹子进行了长时间的观察和研究……他只要拿起笔，平时观察到的各种形态的竹子就会出现在他的眼前"，所以他非常沉着自信。',
+    wrong:   '❌ 再想想。文章第五段解释了文同能沉着自信作画的根本原因。'
+  },
+  5: {
+    correct: '✅ 正确！文章最后说"胸有成竹"用来比喻"做事之前已经做好了充分准备，对事情的成功有了十分的把握；又比喻遇事不着急，十分沉着"。',
+    wrong:   '❌ 再想想。文章最后一段直接解释了这个成语的现代含义。'
+  }
+};
+
+const answered = {};
+let totalAnswered = 0;
+const TOTAL_Q = 5;
+
+document.querySelectorAll('.option-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const q = parseInt(this.dataset.q);
+    const idx = parseInt(this.dataset.idx);
+    if (answered[q]) return;
+    answered[q] = true; totalAnswered++;
+    const correct = ANSWERS[q];
+    const allBtns = document.querySelectorAll(`.option-btn[data-q="${q}"]`);
+    allBtns.forEach(b => b.disabled = true);
+    const fb = document.getElementById('fb' + q);
+    if (idx === correct) {
+      this.classList.add('correct');
+      fb.textContent = FEEDBACK[q].correct;
+      fb.className = 'feedback show fb-correct';
+    } else {
+      this.classList.add('wrong');
+      allBtns[correct].classList.add('reveal-correct');
+      fb.textContent = FEEDBACK[q].wrong;
+      fb.className = 'feedback show fb-wrong';
+    }
+    if (totalAnswered === TOTAL_Q) showResults();
+  });
+});
+
+function showResults() {
+  const score = Object.keys(answered).filter(q =>
+    [...document.querySelectorAll(`.option-btn[data-q="${q}"]`)].some(b => b.classList.contains('correct'))
+  ).length;
+  document.getElementById('results-score').textContent = `${score} / ${TOTAL_Q}`;
+  const msgs = ['📚 继续努力！建议多读几遍。','📚 继续努力！','🙂 还不错！再回顾一下答错的题。','👍 很好！掌握得相当不错。','🎉 非常好！','🎉 完美！全部答对！你对《胸有成竹》掌握得非常好！'];
+  document.getElementById('results-label').textContent = msgs[score] || '';
+  const bar = document.getElementById('results-bar');
+  bar.classList.add('show');
+  bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function resetQuiz() {
+  Object.keys(answered).forEach(k => delete answered[k]);
+  totalAnswered = 0;
+  document.querySelectorAll('.option-btn').forEach(b => { b.disabled = false; b.className = 'option-btn'; });
+  document.querySelectorAll('.feedback').forEach(f => { f.className = 'feedback'; f.textContent = ''; });
+  document.getElementById('results-bar').classList.remove('show');
+}
+</script>
+</body>
+</html>
