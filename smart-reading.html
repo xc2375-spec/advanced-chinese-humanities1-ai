@@ -11,52 +11,98 @@ header{background:#fff;border-bottom:1px solid #e0e0e0;padding:16px 24px;display
 header a{text-decoration:none;color:#555;font-size:14px;display:flex;align-items:center;gap:6px}
 header a:hover{color:#c0392b}
 header h1{font-size:20px;font-weight:700;color:#2c2c2c;flex:1;text-align:center}
-.container{max-width:860px;margin:0 auto;padding:32px 20px}
+
+.container{max-width:900px;margin:0 auto;padding:32px 20px}
 .intro{text-align:center;margin-bottom:36px}
 .intro h2{font-size:28px;font-weight:700;margin-bottom:8px}
 .intro p{color:#666;font-size:15px}
-.unit-section{margin-bottom:40px}
-.unit-label{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;padding:6px 14px;border-radius:4px;display:inline-block}
 
-/* Unit 1 — red */
+.unit-section{margin-bottom:44px}
+.unit-label{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:20px;padding:6px 14px;border-radius:4px;display:inline-block}
+
+/* Unit colours */
 .unit1 .unit-label{background:#fdecea;color:#c0392b}
 .unit1 .card::before{background:#c0392b}
 .unit1 .card-num{color:#c0392b}
 .unit1 .card:hover{box-shadow:0 6px 20px rgba(192,57,43,.13)}
 
-/* Unit 2 — green */
 .unit2 .unit-label{background:#e8f5e9;color:#2e7d32}
 .unit2 .card::before{background:#2e7d32}
 .unit2 .card-num{color:#2e7d32}
 .unit2 .card:hover{box-shadow:0 6px 20px rgba(46,125,50,.13)}
 
-/* Unit 3 — terracotta */
 .unit3 .unit-label{background:#fdf0ec;color:#b5451b}
 .unit3 .card::before{background:#b5451b}
 .unit3 .card-num{color:#b5451b}
 .unit3 .card:hover{box-shadow:0 6px 20px rgba(181,69,27,.13)}
+.unit3 .card-type-main{background:#fdf0ec;color:#b5451b}
+.unit3 .card-type-ext{background:#fff3ee;color:#a04010;border:1px solid #f0c8b0}
 
-/* Unit 4 — violet */
 .unit4 .unit-label{background:#f3eefb;color:#6b4c8a}
 .unit4 .card::before{background:#6b4c8a}
 .unit4 .card-num{color:#6b4c8a}
 .unit4 .card:hover{box-shadow:0 6px 20px rgba(107,76,138,.13)}
+.unit4 .card-type-main{background:#f3eefb;color:#6b4c8a}
+.unit4 .card-type-ext{background:#f8f4fe;color:#5a3a7a;border:1px solid #d5c0ee}
 
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-.card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.07);padding:22px 20px;text-decoration:none;color:#2c2c2c;transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:12px 0 0 12px}
-.card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
-.card-num{font-size:12px;font-weight:700;letter-spacing:.06em;opacity:.75}
-.card-title{font-size:17px;font-weight:700;line-height:1.35}
-.card-sub{font-size:13px;color:#888;margin-top:2px}
-.card-note{font-size:11.5px;color:#aaa;margin-top:1px}
-.card-arrow{margin-top:auto;padding-top:10px;font-size:18px;opacity:.35}
+/* Simple card grid for unit 1 & 2 */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
 
-/* sub-group label for 3.4 */
-.sub-group{margin-top:18px}
-.sub-group-label{font-size:12px;font-weight:700;color:#999;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;padding-left:2px}
+/* Lesson group = label + pair of cards */
+.lesson-group{margin-bottom:22px}
+.lesson-group-label{
+  font-size:11px;font-weight:700;letter-spacing:.08em;
+  color:#aaa;text-transform:uppercase;
+  margin-bottom:8px;padding-left:2px;
+}
 
-@media(max-width:480px){.cards{grid-template-columns:1fr}.intro h2{font-size:22px}}
+/* Paired cards: always two columns */
+.card-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+.card{
+  background:#fff;border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
+  padding:18px 16px 14px;
+  text-decoration:none;color:#2c2c2c;
+  transition:transform .15s,box-shadow .15s;
+  display:flex;flex-direction:column;gap:3px;
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;
+  width:4px;height:100%;border-radius:12px 0 0 12px;
+}
+.card:hover{transform:translateY(-3px)}
+
+.card-num{font-size:10.5px;font-weight:700;letter-spacing:.05em;opacity:.65;margin-bottom:2px}
+.card-title{font-size:15px;font-weight:700;line-height:1.35}
+.card-sub{font-size:11.5px;color:#999;margin-top:1px;line-height:1.4}
+
+.card-type{
+  display:inline-block;margin-top:7px;
+  font-size:10px;font-weight:700;letter-spacing:.04em;
+  padding:2px 8px;border-radius:999px;
+  align-self:flex-start;
+}
+
+.card-arrow{margin-top:auto;padding-top:8px;font-size:15px;opacity:.28}
+
+/* 3.4 chengyu sub-section */
+.sub-group{margin-top:6px}
+.sub-group-label{
+  font-size:11px;font-weight:700;color:#bbb;
+  letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:8px;padding-left:2px;
+}
+
+@media(max-width:540px){
+  .card-pair{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr 1fr}
+  .intro h2{font-size:22px}
+}
+@media(max-width:360px){
+  .cards{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -64,13 +110,14 @@ header h1{font-size:20px;font-weight:700;color:#2c2c2c;flex:1;text-align:center}
   <a href="index.html">← 返回首页</a>
   <h1>智慧阅读 Smart Reading</h1>
 </header>
+
 <div class="container">
   <div class="intro">
     <h2>选择阅读篇目</h2>
     <p>点击任意篇目开始阅读。支持词汇悬停提示与阅读理解测验。</p>
   </div>
 
-  <!-- Unit 1 -->
+  <!-- ════════════ Unit 1 ════════════ -->
   <div class="unit-section unit1">
     <span class="unit-label">Unit 1 · 第一单元</span>
     <div class="cards">
@@ -101,7 +148,7 @@ header h1{font-size:20px;font-weight:700;color:#2c2c2c;flex:1;text-align:center}
     </div>
   </div>
 
-  <!-- Unit 2 -->
+  <!-- ════════════ Unit 2 ════════════ -->
   <div class="unit-section unit2">
     <span class="unit-label">Unit 2 · 第二单元</span>
     <div class="cards">
@@ -132,94 +179,226 @@ header h1{font-size:20px;font-weight:700;color:#2c2c2c;flex:1;text-align:center}
     </div>
   </div>
 
-  <!-- Unit 3 -->
+  <!-- ════════════ Unit 3 ════════════ -->
   <div class="unit-section unit3">
     <span class="unit-label">Unit 3 · 第三单元 · 艺术人生</span>
-    <div class="cards">
-      <a class="card" href="smart_reading_3_0.html">
-        <span class="card-num">3.0 · 开篇</span>
-        <span class="card-title">琴棋书画</span>
-        <span class="card-sub">The Four Arts</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="smart_reading_3_1.html">
-        <span class="card-num">3.1 · 第一课</span>
-        <span class="card-title">王羲之换鹅</span>
-        <span class="card-sub">Wang Xizhi Trades Geese</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="smart_reading_3_2.html">
-        <span class="card-num">3.2 · 第二课</span>
-        <span class="card-title">曹植的《七步诗》</span>
-        <span class="card-sub">Cao Zhi's Seven-Step Poem</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="smart_reading_3_3.html">
-        <span class="card-num">3.3 · 第三课</span>
-        <span class="card-title">曹雪芹和《红楼梦》</span>
-        <span class="card-sub">Cao Xueqin and Dream of the Red Chamber</span>
-        <span class="card-arrow">→</span>
-      </a>
+
+    <!-- 3.0 -->
+    <div class="lesson-group">
+      <div class="lesson-group-label">3.0 · 开篇</div>
+      <div class="card-pair">
+        <a class="card" href="smart_reading_3_0.html">
+          <span class="card-num">课文</span>
+          <span class="card-title">琴棋书画</span>
+          <span class="card-sub">The Four Arts</span>
+          <span class="card-type card-type-main">📖 课文</span>
+          <span class="card-arrow">→</span>
+        </a>
+        <a class="card" href="smart_reading_3_0b.html">
+          <span class="card-num">扩展阅读</span>
+          <span class="card-title">我与地坛</span>
+          <span class="card-sub">Me and the Temple of Earth</span>
+          <span class="card-type card-type-ext">📗 扩展阅读</span>
+          <span class="card-arrow">→</span>
+        </a>
+      </div>
     </div>
 
+    <!-- 3.1 -->
+    <div class="lesson-group">
+      <div class="lesson-group-label">3.1 · 第一课</div>
+      <div class="card-pair">
+        <a class="card" href="smart_reading_3_1.html">
+          <span class="card-num">课文</span>
+          <span class="card-title">王羲之换鹅</span>
+          <span class="card-sub">Wang Xizhi Trades Geese</span>
+          <span class="card-type card-type-main">📖 课文</span>
+          <span class="card-arrow">→</span>
+        </a>
+        <a class="card" href="smart_reading_3_1b.html">
+          <span class="card-num">扩展阅读</span>
+          <span class="card-title">成功与勇气</span>
+          <span class="card-sub">Success and Courage</span>
+          <span class="card-type card-type-ext">📗 扩展阅读</span>
+          <span class="card-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 3.2 -->
+    <div class="lesson-group">
+      <div class="lesson-group-label">3.2 · 第二课</div>
+      <div class="card-pair">
+        <a class="card" href="smart_reading_3_2.html">
+          <span class="card-num">课文</span>
+          <span class="card-title">曹植的《七步诗》</span>
+          <span class="card-sub">Cao Zhi's Seven-Step Poem</span>
+          <span class="card-type card-type-main">📖 课文</span>
+          <span class="card-arrow">→</span>
+        </a>
+        <a class="card" href="smart_reading_3_2b.html">
+          <span class="card-num">扩展阅读</span>
+          <span class="card-title">草船借箭</span>
+          <span class="card-sub">Borrowing Arrows with Straw Boats</span>
+          <span class="card-type card-type-ext">📗 扩展阅读</span>
+          <span class="card-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 3.3 -->
+    <div class="lesson-group">
+      <div class="lesson-group-label">3.3 · 第三课</div>
+      <div class="card-pair">
+        <a class="card" href="smart_reading_3_3.html">
+          <span class="card-num">课文</span>
+          <span class="card-title">曹雪芹和《红楼梦》</span>
+          <span class="card-sub">Cao Xueqin and Dream of the Red Chamber</span>
+          <span class="card-type card-type-main">📖 课文</span>
+          <span class="card-arrow">→</span>
+        </a>
+        <a class="card" href="smart_reading_3_3b.html">
+          <span class="card-num">扩展阅读</span>
+          <span class="card-title">下辈子无论爱与不爱，都不会再见</span>
+          <span class="card-sub">Never Meeting Again in the Next Life</span>
+          <span class="card-type card-type-ext">📗 扩展阅读</span>
+          <span class="card-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 3.4 成语 — two texts, no extended reading -->
     <div class="sub-group">
       <div class="sub-group-label">3.4 · 第四课 · 成语故事二则</div>
-      <div class="cards">
+      <div class="card-pair">
         <a class="card" href="smart_reading_3_4a.html">
-          <span class="card-num">3.4 （一）</span>
+          <span class="card-num">3.4（一）</span>
           <span class="card-title">天衣无缝</span>
           <span class="card-sub">Seamless Heavenly Garment</span>
-          <span class="card-note">成语故事 Chengyu Story</span>
+          <span class="card-type card-type-main">📖 成语故事</span>
           <span class="card-arrow">→</span>
         </a>
         <a class="card" href="smart_reading_3_4b.html">
-          <span class="card-num">3.4 （二）</span>
+          <span class="card-num">3.4（二）</span>
           <span class="card-title">胸有成竹</span>
           <span class="card-sub">Having a Plan in Mind</span>
-          <span class="card-note">成语故事 Chengyu Story</span>
+          <span class="card-type card-type-main">📖 成语故事</span>
           <span class="card-arrow">→</span>
         </a>
       </div>
     </div>
   </div>
 
-  <!-- Unit 4 -->
+  <!-- ════════════ Unit 4 ════════════ -->
   <div class="unit-section unit4">
     <span class="unit-label">Unit 4 · 第四单元 · 女性・婚姻・社会</span>
-    <div class="cards">
-      <a class="card" href="smart_reading_4_0.html">
-        <span class="card-num">4.0 · 开篇</span>
-        <span class="card-title">中国女性的社会地位</span>
-        <span class="card-sub">The Social Status of Chinese Women</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="smart_reading_4_1.html">
-        <span class="card-num">4.1 · 第一课</span>
-        <span class="card-title">梁山伯与祝英台</span>
-        <span class="card-sub">The Butterfly Lovers</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="smart_reading_4_2.html">
-        <span class="card-num">4.2 · 第二课</span>
-        <span class="card-title">武则天</span>
-        <span class="card-sub">Empress Wu Zetian</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="smart_reading_4_3.html">
-        <span class="card-num">4.3 · 第三课</span>
-        <span class="card-title">女人</span>
-        <span class="card-sub">Women</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="smart_reading_4_4.html">
-        <span class="card-num">4.4 · 第四课</span>
-        <span class="card-title">中国女性的困惑</span>
-        <span class="card-sub">The Dilemma of Chinese Working Women</span>
-        <span class="card-arrow">→</span>
-      </a>
-    </div>
-  </div>
 
-</div>
+    <!-- 4.0 -->
+    <div class="lesson-group">
+      <div class="lesson-group-label">4.0 · 开篇</div>
+      <div class="card-pair">
+        <a class="card" href="smart_reading_4_0.html">
+          <span class="card-num">课文</span>
+          <span class="card-title">中国女性的社会地位</span>
+          <span class="card-sub">The Social Status of Chinese Women</span>
+          <span class="card-type card-type-main">📖 课文</span>
+          <span class="card-arrow">→</span>
+        </a>
+        <a class="card" href="smart_reading_4_0b.html">
+          <span class="card-num">扩展阅读</span>
+          <span class="card-title">丑石</span>
+          <span class="card-sub">The Ugly Stone</span>
+          <span class="card-type card-type-ext">📗 扩展阅读</span>
+          <span class="card-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 4.1 -->
+    <div class="lesson-group">
+      <div class="lesson-group-label">4.1 · 第一课</div>
+      <div class="card-pair">
+        <a class="card" href="smart_reading_4_1.html">
+          <span class="card-num">课文</span>
+          <span class="card-title">梁山伯与祝英台</span>
+          <span class="card-sub">The Butterfly Lovers</span>
+          <span class="card-type card-type-main">📖 课文</span>
+          <span class="card-arrow">→</span>
+        </a>
+        <a class="card" href="smart_reading_4_1b.html">
+          <span class="card-num">扩展阅读</span>
+          <span class="card-title">月下老人的故事</span>
+          <span class="card-sub">The Story of the Old Man Under the Moon</span>
+          <span class="card-type card-type-ext">📗 扩展阅读</span>
+          <span class="card-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 4.2 -->
+    <div class="lesson-group">
+      <div class="lesson-group-label">4.2 · 第二课</div>
+      <div class="card-pair">
+        <a class="card" href="smart_reading_4_2.html">
+          <span class="card-num">课文</span>
+          <span class="card-title">武则天</span>
+          <span class="card-sub">Empress Wu Zetian</span>
+          <span class="card-type card-type-main">📖 课文</span>
+          <span class="card-arrow">→</span>
+        </a>
+        <a class="card" href="smart_reading_4_2b.html">
+          <span class="card-num">扩展阅读</span>
+          <span class="card-title">三只蚊子和一个阴影</span>
+          <span class="card-sub">Three Mosquitoes and a Shadow</span>
+          <span class="card-type card-type-ext">📗 扩展阅读</span>
+          <span class="card-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 4.3 -->
+    <div class="lesson-group">
+      <div class="lesson-group-label">4.3 · 第三课</div>
+      <div class="card-pair">
+        <a class="card" href="smart_reading_4_3.html">
+          <span class="card-num">课文</span>
+          <span class="card-title">女人</span>
+          <span class="card-sub">Women</span>
+          <span class="card-type card-type-main">📖 课文</span>
+          <span class="card-arrow">→</span>
+        </a>
+        <a class="card" href="smart_reading_4_3b.html">
+          <span class="card-num">扩展阅读</span>
+          <span class="card-title">写给母亲</span>
+          <span class="card-sub">A Letter to Mother</span>
+          <span class="card-type card-type-ext">📗 扩展阅读</span>
+          <span class="card-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 4.4 -->
+    <div class="lesson-group">
+      <div class="lesson-group-label">4.4 · 第四课</div>
+      <div class="card-pair">
+        <a class="card" href="smart_reading_4_4.html">
+          <span class="card-num">课文</span>
+          <span class="card-title">中国女性的困惑</span>
+          <span class="card-sub">The Dilemma of Chinese Working Women</span>
+          <span class="card-type card-type-main">📖 课文</span>
+          <span class="card-arrow">→</span>
+        </a>
+        <a class="card" href="smart_reading_4_4b.html">
+          <span class="card-num">扩展阅读</span>
+          <span class="card-title">不要娶职业女性</span>
+          <span class="card-sub">Don't Marry a Career Woman</span>
+          <span class="card-type card-type-ext">📗 扩展阅读</span>
+          <span class="card-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /unit4 -->
+</div><!-- /container -->
 </body>
 </html>
